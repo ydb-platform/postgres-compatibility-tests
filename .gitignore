@@ -3,3 +3,4 @@
 .DS_Store
 /languages/go/libpq/pq-*/
 /tmp
+/local

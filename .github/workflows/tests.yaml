@@ -1,0 +1,19 @@
+name: Tests
+
+on: [push, workflow_dispatch]
+
+jobs:
+  test-init:
+    runs-on: ubuntu-latest
+    outputs:
+      testmo-run-id: ${{ steps.run-tests.outputs.testmo-run-id }}
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 19
+          cache: npm
+
+      - run: |
+          echo "Install testmo-cli"

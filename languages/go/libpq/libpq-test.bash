@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# https://github.com/lib/pq
+
 set -eu
 
 [ -e ".tests-root-folder" ] || echo "Start from test root folder"
