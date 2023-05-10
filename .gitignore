@@ -4,3 +4,5 @@
 /languages/go/libpq/pq-*/
 /tmp
 /local
+/.idea
+/.vscode

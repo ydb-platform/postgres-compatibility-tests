@@ -29,7 +29,36 @@ export PQSSLCERTTEST_PATH=certs
 eval $(GIMME_GO_VERSION=1.20 gimme)
 cd src
 echo "Start test" >&2
-PQTEST_BINARY_PARAMETERS=no go test -json -test.timeout=30s -v > ../test-result.json || true
+
+SKIP_TESTS="^$"
+
+# Need check, SSL
+SKIP_TESTS="$SKIP_TESTS|ExampleConnectorWithNoticeHandler"
+
+# Skip unit tests
+SKIP_TESTS="$SKIP_TESTS|^Test.*ArrayScan|^TestGenericArrayValue|Test.*ArrayValue"
+for UNIT_TEST in \
+    TestParseArray \
+    TestParseArrayError \
+    TestArrayScanner \
+    TestArrayValuer \
+    TestBadConn \
+    TestBoolArrayValue \
+    TestByteaArrayValue \
+    TestCloseBadConn \
+    TestErrorDuringStartupClosesConn \
+    TestFloat64ArrayValue \
+    TestGenericArrayValue \
+    TestGenericArrayValueErrors \
+    TestGenericArrayValueUnsupported \
+    TestParseEnviron \
+    TestParseComplete
+    do
+        SKIP_TESTS="$SKIP_TESTS|^$UNIT_TEST\$"
+done
+echo "skip: $SKIP_TESTS"
+
+PQTEST_BINARY_PARAMETERS=no go test -json -test.timeout=30s -v -test.skip="$SKIP_TESTS" > ../test-result.json || true
 
 cd "$DIR"
 echo "Convert result" >&2
