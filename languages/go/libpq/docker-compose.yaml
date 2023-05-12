@@ -13,18 +13,25 @@ services:
       test: "/bin/sh /health_check"
       interval: 1s
       start_period: 10s
-  psycopg:
-    image: ydb-test/psycopg
+  ydb-reset-password:
     depends_on:
       ydb:
         condition: service_healthy
-    environment:
-      - PSYCOPG2_TESTDB=/local
-      - PSYCOPG2_TESTDB_HOST=ydb
-      - PSYCOPG2_TESTDB_USER=root
-      - PSYCOPG2_TESTDB_PASSWORD=1234
+    image: cr.yandex/yc/yandex-docker-local-ydb:trunk
+    command: /ydb -e grpc://ydb:2136 -d /local scripting yql -s "ALTER USER root PASSWORD NULL"
+  go-libpq:
+    depends_on:
+      ydb-reset-password:
+        condition: service_completed_successfully
+    image: ydb-test/go-pqlib
     build:
       context: .
+    environment:
+      - PGUSER=root
+      - PGHOST=ydb
+      - PGPORT=5432
+      - PQGOSSLTESTS=0
+      - PQSSLCERTTEST_PATH=certs
     volumes:
       - ./project-sources:/sources
-      - ../../../tmp/test-result/python-psycopg:/test-result
+      - ../../../tmp/test-result/go-libpq:/test-result

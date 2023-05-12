@@ -1,6 +1,8 @@
 *.tar.gz
 
 .DS_Store
+project-sources
+
 /languages/go/libpq/pq-*/
 /tmp
 /local

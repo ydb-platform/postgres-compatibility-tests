@@ -1,9 +1,9 @@
-FROM python:3.8
-WORKDIR /project
+FROM golang:1.20
 
+WORKDIR /project
 COPY docker-init.bash /docker-init.bash
 RUN /docker-init.bash
+
 COPY docker-start.bash /docker-start.bash
-COPY docker-start-test.py /docker-start-test.py
 
 CMD ["/docker-start.bash"]
