@@ -1,0 +1,30 @@
+version: "3"
+services:
+  ydb:
+    image: cr.yandex/yc/yandex-docker-local-ydb:trunk
+    environment:
+      - "YDB_DEFAULT_LOG_LEVEL=DEBUG"
+      - "GRPC_TLS_PORT=2135"
+      - "GRPC_PORT=2136"
+      - "MON_PORT=8765"
+      - "YDB_USE_IN_MEMORY_PDISKS=true"
+      - "POSTGRES_PASSWORD=password"
+    healthcheck:
+      test: "/bin/sh /health_check"
+      interval: 1s
+      start_period: 10s
+  psycopg:
+    image: ydb-test/psycopg
+    depends_on:
+      ydb:
+        condition: service_healthy
+    environment:
+      - PSYCOPG2_TESTDB=/local
+      - PSYCOPG2_TESTDB_HOST=ydb
+      - PSYCOPG2_TESTDB_USER=root
+      - PSYCOPG2_TESTDB_PASSWORD=1234
+    build:
+      context: .
+    command: tox -e 3.8
+    volumes:
+      - ../../../tmp/python-psycopg/src:/project
