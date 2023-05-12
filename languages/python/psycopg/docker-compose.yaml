@@ -25,6 +25,5 @@ services:
       - PSYCOPG2_TESTDB_PASSWORD=1234
     build:
       context: .
-    command: tox -e 3.8
     volumes:
       - ../../../tmp/python-psycopg/src:/project

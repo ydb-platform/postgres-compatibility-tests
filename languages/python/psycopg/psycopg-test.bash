@@ -15,4 +15,5 @@ cd "$TESTDIR"
 wget https://github.com/psycopg/psycopg2/archive/refs/tags/2.9.6.tar.gz -O psycopg2.tar.gz
 tar --strip-components=1 -zxvf psycopg2.tar.gz -C src
 
+cd "$LOCAL_DIR"
 docker-compose down -t 1 && docker-compose up --build --abort-on-container-exit
