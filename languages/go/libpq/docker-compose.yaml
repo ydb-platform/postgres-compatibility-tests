@@ -12,22 +12,17 @@ services:
     healthcheck:
       test: "/bin/sh /health_check"
       interval: 1s
-      start_period: 10s
-  ydb-reset-password:
+      start_period: 1m
+  go-libpq:
     depends_on:
       ydb:
         condition: service_healthy
-    image: cr.yandex/yc/yandex-docker-local-ydb:trunk
-    command: /ydb -e grpc://ydb:2136 -d /local scripting yql -s "ALTER USER root PASSWORD NULL"
-  go-libpq:
-    depends_on:
-      ydb-reset-password:
-        condition: service_completed_successfully
     image: ydb-test/go-pqlib
     build:
       context: .
     environment:
-      - PGUSER=root
+      - PGUSER=postgres
+      - PGPASSWORD=password
       - PGHOST=ydb
       - PGPORT=5432
       - PQGOSSLTESTS=0

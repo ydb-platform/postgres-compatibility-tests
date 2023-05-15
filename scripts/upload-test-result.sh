@@ -16,8 +16,8 @@ RESULTS="$FILENAME"
 
 docker build -f ./scripts/testmo-cli.Docker ./scripts/ -t ypct-testmo-cli
 docker run --rm -e "TESTMO_TOKEN=$TESTMO_TOKEN" -v "$DIR:/project" ypct-testmo-cli automation:run:submit \
-    --instance "$TESTMO_INSTANCE" \
-    --project-id $PROJECT_ID \
+    --instance "$TESTMO_URL" \
+    --project-id $TESTMO_PROJECT_ID \
     --name "$NAME" \
     --source "$SOURCE" \
     --results "/project/$RESULTS"

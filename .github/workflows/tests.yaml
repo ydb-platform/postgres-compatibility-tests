@@ -3,13 +3,13 @@ name: Tests
 on: [push, workflow_dispatch]
 
 env:
-  TESTMO_URL: https://bovoko8304.testmo.net
-  TESTMO_PROJECT_ID: 1
-
+  TESTMO_URL: ${{ vars.TESTMO_URL }}
+  TESTMO_PROJECT_ID: ${{ vars.TESTMO_PROJECT_ID }}
+  TESTMO_TOKEN: ${{ secrets.TESTMO_TOKEN }}
 
 jobs:
   test-init:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     outputs:
       testmo-run-id: ${{ steps.run-tests.outputs.testmo-run-id }}
 
@@ -18,30 +18,55 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 19
-          cache: npm
 
       - run: |
           echo "Install testmo-cli"
+          npm install -g @testmo/testmo-cli
 
-      # Optionally add a couple of fields such as the git hash and link to the build
       - run: |
-          npx testmo automation:resources:add-field --name git --type string \
-            --value ${GITHUB_SHA:0:7} --resources resources.json
-          RUN_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
-          npx testmo automation:resources:add-link --name build \
-            --url $RUN_URL --resources resources.json
-
-      # Create test run
-      - run: |
-          npx testmo automation:run:create \
-            --instance "$TESTMO_URL" \
-            --project-id $TESTMO_PROJECT_ID \
-            --name "Parallel mocha test run" \
-            --resources resources.json \
-            --source "unit-tests" > testmo-run-id.txt
-          ID=$(cat testmo-run-id.txt)
-          echo "testmo-run-id=$ID" >> $GITHUB_OUTPUT
-        env:
-          TESTMO_URL: ${{ secrets.TESTMO_URL }}
-          TESTMO_TOKEN: ${{ secrets.TESTMO_TOKEN }}
+          ./scripts/testmo-init-tests.bash
         id: run-tests
+
+  test:
+    needs: [test-init]
+    runs-on: ubuntu-20.04
+
+    strategy:
+      fail-fast: false
+      matrix:
+        script:
+          - ./languages/go/libpq/run-test.bash
+          - ./languages/python/psycopg2/run-test.bash
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 19
+
+      - run: scripts/install-tools.bash
+
+      - run: bash "${{ matrix.script }}"
+
+      - run: |
+          echo "Upload results"
+          scripts/testmo-upload-results.bash
+
+        env:
+          TESTMO_RUN_ID: ${{ needs.test-init.outputs.testmo-run-id }}
+
+  test-complete:
+    runs-on: ubuntu-20.04
+    needs: [test-init, test]
+    if: always()
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 19
+
+      - run: |
+          scripts/install-tools.bash
+          scripts/testmo-complete-tests.bash
+        env:
+          TESTMO_RUN_ID: ${{ needs.test-init.outputs.testmo-run-id }}

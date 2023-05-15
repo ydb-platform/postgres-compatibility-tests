@@ -13,18 +13,18 @@ services:
       test: "/bin/sh /health_check"
       interval: 1s
       start_period: 10s
-  psycopg:
-    image: ydb-test/psycopg
+  psycopg2:
+    image: ydb-test/psycopg2
     depends_on:
       ydb:
         condition: service_healthy
     environment:
       - PSYCOPG2_TESTDB=/local
       - PSYCOPG2_TESTDB_HOST=ydb
-      - PSYCOPG2_TESTDB_USER=root
-      - PSYCOPG2_TESTDB_PASSWORD=1234
+      - PSYCOPG2_TESTDB_USER=postgres
+      - PSYCOPG2_TESTDB_PASSWORD=password
     build:
       context: .
     volumes:
       - ./project-sources:/sources
-      - ../../../tmp/test-result/python-psycopg:/test-result
+      - ../../../tmp/test-result/python-psycopg2:/test-result

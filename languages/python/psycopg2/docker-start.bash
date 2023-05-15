@@ -11,4 +11,6 @@ cp -r /project/ /sources/
 cd /project
 
 echo "Start test"
-python /docker-start-test.py
+cp -f /docker-start-test.py ./
+python docker-start-test.py || true
+

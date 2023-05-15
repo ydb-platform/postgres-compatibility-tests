@@ -2,6 +2,8 @@
 
 set -eu
 
+echo "Start script"
+
 rm -rf /sources 2> /dev/null || true
 rm -rf /test-result 2> /dev/null || true
 
