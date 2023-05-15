@@ -4,7 +4,7 @@ on:
   push:
   workflow_dispatch:
   schedule:
-    - cron: '08 16 * * *'
+    - cron: '11 16 * * *'
 
 env:
   TESTMO_URL: ${{ vars.TESTMO_URL }}
