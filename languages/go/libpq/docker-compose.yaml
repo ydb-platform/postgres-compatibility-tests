@@ -29,6 +29,7 @@ services:
       - PGDATABASE=${YDB_PG_DATABASE:-/local}
       - PQGOSSLTESTS=0
       - PQSSLCERTTEST_PATH=certs
+      - YDB_PG_TESTNAME=${YDB_PG_TESTNAME:-}
     volumes:
       - ./project-sources:/sources
       - ../../../tmp/test-result/go-libpq:/test-result

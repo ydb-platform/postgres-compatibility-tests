@@ -25,6 +25,7 @@ services:
       - PSYCOPG2_TESTDB_PORT=${YDB_PG_PORT:-5432}
       - PSYCOPG2_TESTDB_USER=${YDB_PG_USER:-postgres}
       - PSYCOPG2_TESTDB_PASSWORD=${YDB_PG_PASSWORD:-password}
+      - YDB_PG_TESTNAME=${YDB_PG_TESTNAME:-}
     build:
       context: .
     volumes:

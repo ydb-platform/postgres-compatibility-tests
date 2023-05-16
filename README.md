@@ -24,7 +24,8 @@ run-test.bash scripts accept arguments with env variables:
 | --------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
 | YDB_PG_HOST     | connect to ydb in container | set postgres host, which will used by test suite. If set - ydb container will not be start and test container will start with host network |
 | YDB_PG_PORT     | 5432                        | set postgres port                                                                                                                          |
-| YDB_PG_DATABASE | /local                      | postgres database                                                                                          |
+| YDB_PG_DATABASE | /local                      | postgres database                                                                                                                          |
 | YDB_PG_USER     | postgres                    | postgres user, which will use in test for pg auth                                                                                          |
 | YDB_PG_PASSWORD | password                    | postgres password, which will use in test for pg auth                                                                                      |
+| YDB_PG_TESTNAME | Run all tests         | If set - test suite will run only this test |
 

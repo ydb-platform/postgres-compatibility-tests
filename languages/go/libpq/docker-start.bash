@@ -38,10 +38,18 @@ for UNIT_TEST in \
     do
         SKIP_TESTS="$SKIP_TESTS|^$UNIT_TEST\$"
 done
-echo "skip: $SKIP_TESTS"
+
+RUN_TESTS=""
+if [ -n "${YDB_PG_TESTNAME:-}" ]; then
+    SKIP_TESTS=""
+    RUN_TESTS="$YDB_PG_TESTNAME"
+fi
+
+echo "Run test: '$RUN_TESTS'"
+echo "Skip: '$SKIP_TESTS'"
 
 echo "Start test"
 
-PQTEST_BINARY_PARAMETERS=no go test -json -test.timeout=30s -v -test.skip="$SKIP_TESTS" > test-result.json || true
+PQTEST_BINARY_PARAMETERS=no go test -json -test.timeout=30s -v -test.run="$RUN_TESTS" -test.skip="$SKIP_TESTS" > test-result.json || true
 
 go-junit-report -parser gojson < test-result.json > /test-result/go-libpq.xml
