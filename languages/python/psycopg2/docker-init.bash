@@ -2,6 +2,11 @@
 
 set -eu
 
+apt-get update && apt-get install -y default-jre
+
+curl -L -o /junit-xml-merger.jar \
+    https://github.com/codeclou/java-junit-xml-merger/releases/download/1.0.1/junit-xml-merger.jar
+
 mkdir -p /project
 cd /project
 

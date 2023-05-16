@@ -12,5 +12,5 @@ print("Start tests: ", defaultTest)
 
 tests.unittest.main(
     defaultTest=defaultTest,
-    testRunner=xmlrunner.XMLTestRunner(output='/test-result'),
+    testRunner=xmlrunner.XMLTestRunner(output='/test-result/raw'),
 )

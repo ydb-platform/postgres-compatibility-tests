@@ -14,7 +14,7 @@ services:
       test: "/bin/sh /health_check"
       interval: 1s
       start_period: 10s
-  psycopg2:
+  project:
     image: ydb-test/psycopg2
     depends_on:
       ydb:
