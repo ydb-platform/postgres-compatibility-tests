@@ -8,7 +8,8 @@ services:
       - "GRPC_PORT=2136"
       - "MON_PORT=8765"
       - "YDB_USE_IN_MEMORY_PDISKS=true"
-      - "POSTGRES_PASSWORD=password"
+      - "POSTGRES_USER=${YDB_PG_USER:-postgres}"
+      - "POSTGRES_PASSWORD=${YDB_PG_PASSWORD:-password}"
     healthcheck:
       test: "/bin/sh /health_check"
       interval: 1s
@@ -19,10 +20,11 @@ services:
       ydb:
         condition: service_healthy
     environment:
-      - PSYCOPG2_TESTDB=/local
-      - PSYCOPG2_TESTDB_HOST=ydb
-      - PSYCOPG2_TESTDB_USER=postgres
-      - PSYCOPG2_TESTDB_PASSWORD=password
+      - PSYCOPG2_TESTDB=${YDB_PG_DATABASE:-/local}
+      - PSYCOPG2_TESTDB_HOST=${YDB_PG_HOST:-ydb}
+      - PSYCOPG2_TESTDB_PORT=${YDB_PG_PORT:-5432}
+      - PSYCOPG2_TESTDB_USER=${YDB_PG_USER:-postgres}
+      - PSYCOPG2_TESTDB_PASSWORD=${YDB_PG_PASSWORD:-password}
     build:
       context: .
     volumes:

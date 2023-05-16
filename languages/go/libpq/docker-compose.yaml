@@ -8,12 +8,13 @@ services:
       - "GRPC_PORT=2136"
       - "MON_PORT=8765"
       - "YDB_USE_IN_MEMORY_PDISKS=true"
-      - "POSTGRES_PASSWORD=password"
+      - "POSTGRES_USER=${YDB_PG_USER:-postgres}"
+      - "POSTGRES_PASSWORD=${YDB_PG_PASSWORD:-password}"
     healthcheck:
       test: "/bin/sh /health_check"
       interval: 1s
       start_period: 1m
-  go-libpq:
+  project:
     depends_on:
       ydb:
         condition: service_healthy
@@ -21,10 +22,11 @@ services:
     build:
       context: .
     environment:
-      - PGUSER=postgres
-      - PGPASSWORD=password
-      - PGHOST=ydb
-      - PGPORT=5432
+      - PGUSER=${YDB_PG_USER:-postgres}
+      - PGPASSWORD=${YDB_PG_PASSWORD:-password}
+      - PGHOST=${YDB_PG_HOST:-ydb}
+      - PGPORT=${YDB_PG_PORT:-5432}
+      - PGDATABASE=${YDB_PG_DATABASE:-/local}
       - PQGOSSLTESTS=0
       - PQSSLCERTTEST_PATH=certs
     volumes:
