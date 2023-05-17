@@ -16,5 +16,5 @@ if [ -z "${YDB_PG_HOST:-}" ]; then
     docker-compose up --abort-on-container-exit
 else
     [ "$YDB_PG_HOST" ] && export YDB_PG_HOST=host.docker.internal
-    docker-compose up --no-deps --remove-orphans --abort-on-container-exit
+    docker-compose up project --no-deps --remove-orphans --abort-on-container-exit
 fi
