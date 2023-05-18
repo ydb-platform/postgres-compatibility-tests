@@ -20,7 +20,8 @@ services:
         condition: service_healthy
     image: ydb-test/go-pqlib
     build:
-      context: .
+      context: ../../..
+      dockerfile: languages/go/libpq/Dockerfile
     environment:
       - PGUSER=${YDB_PG_USER:-postgres}
       - PGPASSWORD=${YDB_PG_PASSWORD:-password}

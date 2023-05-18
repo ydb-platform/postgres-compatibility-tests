@@ -8,7 +8,7 @@ rm -rf /sources 2> /dev/null || true
 rm -rf /test-result 2> /dev/null || true
 
 mkdir -p /sources
-cp -r /project/ /sources/
+cp -R /project/ /sources/
 
 cd /project
 
@@ -39,19 +39,20 @@ for UNIT_TEST in \
         SKIP_TESTS="$SKIP_TESTS|^$UNIT_TEST\$"
 done
 
-RUN_TESTS=""
+export YDB_PG_TESTNAME="${YDB_PG_TESTNAME:-}"  # set YDB_PG_TESTNAME to empty string if it not set
+
 if [ -n "${YDB_PG_TESTNAME:-}" ]; then
-    SKIP_TESTS=""
-    RUN_TESTS="$YDB_PG_TESTNAME"
+    SKIP_TESTS="^\$"
 fi
 
-echo "Run test: '$RUN_TESTS'"
-echo "Skip: '$SKIP_TESTS'"
+echo "Run test: '$YDB_PG_TESTNAME'"
 
 echo "Start test"
 
-PQTEST_BINARY_PARAMETERS=no go test -json -test.timeout=30s -v -test.run="$RUN_TESTS" -test.skip="$SKIP_TESTS" > test-result.json || true
+# PQTEST_BINARY_PARAMETERS=no go test -test.skip="$SKIP_TESTS"
 
-go-junit-report -parser gojson < test-result.json > /test-result/go-libpq.xml
+export SKIP_TESTS
 
-sed -e 's|classname="github.com/lib/pq"|classname="golang-lib-pq"|' -i /test-result/go-libpq.xml
+PQTEST_BINARY_PARAMETERS=no /go-run-separate-tests.bash
+
+sed -e 's|classname="github.com/lib/pq"|classname="golang-lib-pq"|' -i /test-result/result.xml

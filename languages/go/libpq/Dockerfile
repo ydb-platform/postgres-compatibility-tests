@@ -1,9 +1,13 @@
+# For docker context at root git directory
+
 FROM golang:1.20
 
 WORKDIR /project
-COPY docker-init.bash /docker-init.bash
+COPY languages/go/libpq/docker-init.bash /docker-init.bash
 RUN /docker-init.bash
 
-COPY docker-start.bash /docker-start.bash
+COPY scripts/go-run-separate-tests.bash /go-run-separate-tests.bash
 
-CMD ["/docker-start.bash"]
+COPY languages/go/libpq/docker-start.bash /docker-start.bash
+
+CMD [ "/docker-start.bash" ]

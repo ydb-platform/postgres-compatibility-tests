@@ -6,7 +6,7 @@ rm -rf /sources 2> /dev/null || true
 rm -rf /test-result 2> /dev/null || true
 
 mkdir -p /sources
-cp -r /project/ /sources/
+cp -R /project/ /sources/
 
 cd /project
 

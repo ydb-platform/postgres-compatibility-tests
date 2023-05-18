@@ -12,4 +12,5 @@ tar --strip-components=1 -zxvf libpq.tar.gz
 rm -f libpq.tar.gz
 
 # cache build dependencies
-go test -test.run=^XXX ./...
+go test -c -o /test.binary
+
