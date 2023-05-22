@@ -17,33 +17,6 @@ fi
 
 cd /project
 
-SKIP_TESTS="^$"
-
-# Need check, SSL
-SKIP_TESTS="$SKIP_TESTS|ExampleConnectorWithNoticeHandler"
-
-# Skip unit tests
-SKIP_TESTS="$SKIP_TESTS|^Test.*ArrayScan|^TestGenericArrayValue|Test.*ArrayValue"
-for UNIT_TEST in \
-    TestParseArray \
-    TestParseArrayError \
-    TestArrayScanner \
-    TestArrayValuer \
-    TestBadConn \
-    TestBoolArrayValue \
-    TestByteaArrayValue \
-    TestCloseBadConn \
-    TestErrorDuringStartupClosesConn \
-    TestFloat64ArrayValue \
-    TestGenericArrayValue \
-    TestGenericArrayValueErrors \
-    TestGenericArrayValueUnsupported \
-    TestParseEnviron \
-    TestParseComplete
-    do
-        SKIP_TESTS="$SKIP_TESTS|^$UNIT_TEST\$"
-done
-
 export YDB_PG_TESTNAME="${YDB_PG_TESTNAME:-}"  # set YDB_PG_TESTNAME to empty string if it not set
 
 if [ -n "${YDB_PG_TESTNAME:-}" ]; then
