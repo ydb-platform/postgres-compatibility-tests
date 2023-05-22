@@ -34,3 +34,5 @@ export SKIP_TESTS
 PQTEST_BINARY_PARAMETERS=no /go-run-separate-tests.bash
 
 sed -e 's|classname=""|classname="golang-lib-pq"|' -i /test-result/result.xml
+
+chmod -R a+rw /test-result/
