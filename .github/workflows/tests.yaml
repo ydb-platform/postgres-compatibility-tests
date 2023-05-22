@@ -38,9 +38,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        script:
-          - ./languages/go/libpq/run-test.bash
-          - ./languages/python/psycopg2/run-test.bash
+        tests:
+          - ./languages/go/libpq
+          - ./languages/python/psycopg2
 
     steps:
       - uses: actions/checkout@v3
@@ -50,11 +50,13 @@ jobs:
 
       - run: scripts/install-tools.bash
 
-      - run: bash "${{ matrix.script }}"
+      - run: bash ${{ matrix.tests }}/run-test.bash
 
       - run: |
           echo "Upload results"
-          scripts/testmo-upload-results.bash
+          sudo chmod -R a+rw ${{ matrix.tests }}/test-result
+          scripts/prepare-junit-xml-report.py --unit-test-file-path=${{ matrix.tests }}/unit-tests.txt --report-file-path=${{ matrix.tests }}/test-result/result.xml
+          scripts/testmo-upload-results.bash ${{ matrix.tests }}/test-result
 
         env:
           TESTMO_RUN_ID: ${{ needs.test-init.outputs.testmo-run-id }}

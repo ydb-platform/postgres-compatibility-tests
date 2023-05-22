@@ -4,6 +4,7 @@ set -eu
 
 ONE_TEST_TIMEOUT=5s
 TEST_BINARY=/test.binary
+[ -z "${SKIP_TESTS:-}" ] && SKIP_TESTS='^$'
 
 GO_LIST_FILTER="^Test"
 
@@ -12,6 +13,7 @@ if [ -n "${YDB_PG_TESTNAME:-}" ]; then
 fi
 
 TESTS=$($TEST_BINARY --test.list "$GO_LIST_FILTER" | sort)
+
 
 echo "Skip tests: '$SKIP_TESTS'"
 echo "Shell $SHELL"
