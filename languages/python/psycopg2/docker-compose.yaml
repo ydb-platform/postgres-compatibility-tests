@@ -30,4 +30,4 @@ services:
       context: .
     volumes:
       - ./project-sources:/sources
-      - ../../../tmp/test-result/python-psycopg2:/test-result
+      - ./test-result/:/test-result

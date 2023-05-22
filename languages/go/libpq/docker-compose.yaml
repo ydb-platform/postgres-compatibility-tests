@@ -33,4 +33,4 @@ services:
       - YDB_PG_TESTNAME=${YDB_PG_TESTNAME:-}
     volumes:
       - ./project-sources:/sources
-      - ../../../tmp/test-result/go-libpq:/test-result
+      - ./test-result/:/test-result
