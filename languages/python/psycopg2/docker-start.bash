@@ -27,3 +27,5 @@ rm -rf /test-result/raw
 
 sed -e 's/" name="/\./' -i /test-result/result.xml
 sed -e 's/<testcase classname="/<testcase classname="python-psycopg2" name="/' -i /test-result/result.xml
+
+chmod -R a+rw /test-result/

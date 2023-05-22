@@ -54,7 +54,7 @@ jobs:
 
       - run: |
           echo "Upload results"
-          chmod -R a+rw ${{ matrix.tests }}/test-result
+          sudo chmod -R a+rw ${{ matrix.tests }}/test-result
           scripts/prepare-junit-xml-report.py --unit-test-file-path=${{ matrix.tests }}/unit-tests.txt --report-file-path=${{ matrix.tests }}/test-result/result.xml
           scripts/testmo-upload-results.bash ${{ matrix.tests }}/test-result
 
