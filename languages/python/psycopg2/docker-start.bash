@@ -2,11 +2,17 @@
 
 set -eu
 
-rm -rf /sources 2> /dev/null || true
 rm -rf /test-result 2> /dev/null || true
 
 mkdir -p /sources
 cp -R /project/ /sources/
+
+if [ -z "$(ls /sources/)" ]; then
+    cp -Rn /project/ /sources/
+else
+    echo "Skip copy sources"
+    ls /sources/
+fi
 
 cd /project
 
