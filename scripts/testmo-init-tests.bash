@@ -8,6 +8,8 @@ else
     TESTMO_SOURCE="manual"
 fi
 
+TESTMO_SOURCE="${TESTMO_SOURCE/_/-}"  # Replace _ to - for workflow_dispatch
+
 RUN_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
 
 testmo automation:resources:add-field --name git --type string --value ${GITHUB_SHA} --resources resources.json
