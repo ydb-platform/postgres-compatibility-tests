@@ -1,0 +1,4 @@
+tickets:
+  - name: KIKIMR-18049
+    tests:
+      - golang-lib-pq/TestErrorDuringStartup
