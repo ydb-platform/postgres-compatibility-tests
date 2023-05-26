@@ -55,6 +55,9 @@ class JUnitTestSuites:
 
     @staticmethod
     def _skip_test(el: Element, reason: str):
+        if JUnitTestSuites._test_fullname(el) == "":
+            return
+
         classname = el.attrib["classname"]
         testname = el.attrib["name"]
         el.clear()
@@ -64,6 +67,15 @@ class JUnitTestSuites:
         skipped = Element("skipped", {"message": reason})
         el.append(skipped)
 
+    @staticmethod
+    def _test_fullname(el: Element) -> str:
+        classname = el.attrib["classname"] if "classname" in el.attrib else ""
+        testname = el.attrib["name"] if "name" in el.attrib else ""
+
+        if classname == "" and testname == "":
+            return ""
+
+        return "%s/%s" % (classname, testname)
     def merge_from_file(self, filepath: str):
         logger.info("import report from file: %s" % filepath)
         testsuites_xml = ElementTree()
@@ -88,9 +100,7 @@ class JUnitTestSuites:
         skip_dict = {reason.fullname(): reason for reason in skiplist}  # type: Dict[str, JUnitTestSuites.SetStatusReason]
 
         def process_testcase(el: Element):
-            classname = el.attrib["classname"]
-            testname = el.attrib["name"]
-            fullname = "%s/%s" % (classname, testname)
+            fullname = self._test_fullname(el)
             if fullname in skip_dict:
                 self._skip_test(el, skip_dict[fullname].reason)
 
