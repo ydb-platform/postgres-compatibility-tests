@@ -101,3 +101,4 @@ TestStringArrayScanUnsupported
 TestStringArrayValue
 TestStringWithNul
 TestTextDecodeIntoString
+TestHasCorrectRootGroupPermissions

@@ -20,7 +20,7 @@ class Config(DataClassYAMLMixin):
     @dataclass
     class TestsByTicket(DataClassYAMLMixin):
         name: str
-        tests: List[str]
+        tests: Dict[str, List[str]]  # Dict[class, testnames]
 
 
 class JUnitTestSuites:
@@ -121,16 +121,32 @@ def load_report(path: str):
 
 
 def get_skip_reasons(config: Config) -> List[JUnitTestSuites.SetStatusReason]:
-    res = []  # type: List[JUnitTestSuites.SetStatusReason]
+    reason_by_test = dict()  # type: Dict[str, JUnitTestSuites.SetStatusReason]
     for ticket in config.tickets:
-        for test in ticket.tests:
-            classname, testname = test.split("/", 1)
-            reason = JUnitTestSuites.SetStatusReason(
-                classname=classname,
-                testname=testname,
-                reason=ticket.name,
-            )
-            res.append(reason)
+        for classname, testnames in ticket.tests.items():
+            for testname in testnames:
+                reason = JUnitTestSuites.SetStatusReason(
+                    classname=classname,
+                    testname=testname,
+                    reason=ticket.name,
+                )
+                fullname = reason.fullname()
+                if fullname in reason_by_test:
+                    reason_by_test[fullname].reason += "," + ticket.name
+                else:
+                    reason_by_test[fullname] = reason
+
+    # Sort tickets
+    for reason in reason_by_test.values():
+        tickets = reason.reason.split(",")
+        tickets.sort()
+        reason.reason = ",".join(tickets)
+
+    res = []
+    for reason in reason_by_test.values():
+        res.append(reason)
+
+    res.sort(key=JUnitTestSuites.SetStatusReason.fullname)
 
     return res
 
