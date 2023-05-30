@@ -1,0 +1,8 @@
+services:
+  scripts:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /project
+    volumes:
+      - ../../:/project

@@ -1,0 +1,893 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="236" errors="1" failures="102" skipped="6">
+	<testsuite name="" tests="236" failures="102" errors="1" id="0" hostname="36cd0c3659ff" skipped="6" time="24.020" timestamp="2023-05-23T14:48:12Z">
+		<testcase name="Test64BitErrorChecking" classname="golang-lib-pq" time="0.390"></testcase>
+		<testcase name="TestAppendEncodedText" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestAppendEscapedText" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestAppendEscapedTextExistingBuffer" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestArrayScanBackend" classname="golang-lib-pq" time="0.630"></testcase>
+		<testcase name="TestArrayScanner" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestArrayValueBackend" classname="golang-lib-pq" time="0.300">
+			<failure message="Failed"><![CDATA[    array_test.go:1649: Expected [true false] to equal ARRAY[true, false], got pq: got 1 parameters but the statement requires 0
+    array_test.go:1649: Expected [[222 173] [190 239]] to equal ARRAY[E'\\xdead', E'\\xbeef'], got pq: got 1 parameters but the statement requires 0
+    array_test.go:1649: Expected [1.2 3.4] to equal ARRAY[1.2, 3.4], got pq: got 1 parameters but the statement requires 0
+    array_test.go:1649: Expected [1 2 3] to equal ARRAY[1, 2, 3], got pq: got 1 parameters but the statement requires 0
+    array_test.go:1649: Expected [a \b c" d,e] to equal ARRAY['a', E'\\b', 'c"', 'd,e'], got pq: got 1 parameters but the statement requires 0]]></failure>
+		</testcase>
+		<testcase name="TestArrayValuer" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestBadConn" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestBinaryByteSliceToInt" classname="golang-lib-pq" time="0.070">
+			<failure message="Failed"></failure>
+		</testcase>
+		<testcase name="TestBinaryByteSlicetoUUID" classname="golang-lib-pq" time="0.070">
+			<failure message="Failed"></failure>
+		</testcase>
+		<testcase name="TestBindError" classname="golang-lib-pq" time="0.030">
+			<failure message="Failed"><![CDATA[    conn_test.go:978: pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>:1:1: Error: CREATE TEMP TABLE not supported
+        ]]></failure>
+		</testcase>
+		<testcase name="TestBoolArrayScanBytes" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestBoolArrayScanEmpty" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestBoolArrayScanError" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestBoolArrayScanNil" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestBoolArrayScanString" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestBoolArrayScanUnsupported" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestBoolArrayValue" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestByteSliceToText" classname="golang-lib-pq" time="0.070">
+			<failure message="Failed"><![CDATA[    encode_test.go:534: pq: got 1 parameters but the statement requires 0]]></failure>
+		</testcase>
+		<testcase name="TestByteaArrayScanBytes" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestByteaArrayScanEmpty" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestByteaArrayScanError" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestByteaArrayScanNil" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestByteaArrayScanString" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestByteaArrayScanUnsupported" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestByteaArrayValue" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestByteaOutputFormatEncoding" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestByteaOutputFormats" classname="golang-lib-pq" time="0.020">
+			<failure message="Failed"><![CDATA[    conn_test.go:68: pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>:1:1: Error: RawStmt: alternative is not implemented yet : 281
+        ]]></failure>
+		</testcase>
+		<testcase name="TestCloseBadConn" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestCommit" classname="golang-lib-pq" time="0.030">
+			<failure message="Failed"><![CDATA[    conn_test.go:1356: pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>:1:1: Error: CREATE TEMP TABLE not supported
+        ]]></failure>
+		</testcase>
+		<testcase name="TestCommitInFailedTransaction" classname="golang-lib-pq" time="0.120">
+			<failure message="Failed"><![CDATA[    conn_test.go:121: expected ErrInFailedTransaction; got &errors.errorString{s:"unexpected command tag OK"}]]></failure>
+		</testcase>
+		<testcase name="TestCommitInFailedTransactionWithCancelContext" classname="golang-lib-pq" time="0.170">
+			<failure message="Failed"><![CDATA[    go19_test.go:97: expected ErrInFailedTransaction; got &errors.errorString{s:"unexpected command tag OK"}]]></failure>
+		</testcase>
+		<testcase name="TestConnClose" classname="golang-lib-pq" time="0.040"></testcase>
+		<testcase name="TestConnExecDeadlock" classname="golang-lib-pq" time="0.030"></testcase>
+		<testcase name="TestConnListen" classname="golang-lib-pq" time="0.030">
+			<failure message="Failed"><![CDATA[    notify_test.go:100: pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>:1:1: Error: RawStmt: alternative is not implemented yet : 267
+        ]]></failure>
+		</testcase>
+		<testcase name="TestConnPing" classname="golang-lib-pq" time="0.020"></testcase>
+		<testcase name="TestConnPrepareContext" classname="golang-lib-pq" time="0.280"></testcase>
+		<testcase name="TestConnPrepareContext/context.Background" classname="golang-lib-pq" time="0.140"></testcase>
+		<testcase name="TestConnPrepareContext/context.WithTimeout_exceeded" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestConnPrepareContext/context.WithTimeout" classname="golang-lib-pq" time="0.120"></testcase>
+		<testcase name="TestConnUnlisten" classname="golang-lib-pq" time="0.030">
+			<failure message="Failed"><![CDATA[    notify_test.go:124: pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>:1:1: Error: RawStmt: alternative is not implemented yet : 267
+        ]]></failure>
+		</testcase>
+		<testcase name="TestConnUnlistenAll" classname="golang-lib-pq" time="0.030">
+			<failure message="Failed"><![CDATA[    notify_test.go:163: pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>:1:1: Error: RawStmt: alternative is not implemented yet : 267
+        ]]></failure>
+		</testcase>
+		<testcase name="TestConnectorWithNoticeHandler_Simple" classname="golang-lib-pq" time="0.010">
+			<failure message="Failed"><![CDATA[    notice_test.go:48: pq: SSL is not enabled on the server]]></failure>
+		</testcase>
+		<testcase name="TestConnectorWithNotificationHandler_Simple" classname="golang-lib-pq" time="0.010">
+			<failure message="Failed"><![CDATA[    notify_test.go:610: pq: SSL is not enabled on the server]]></failure>
+		</testcase>
+		<testcase name="TestContextCancelBegin" classname="golang-lib-pq" time="0.070">
+			<failure message="Failed"><![CDATA[    go18_test.go:222: unexpected error: pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>: Error: Type annotation, code: 1030
+            <main>:1:1: Error: At function: RemovePrefixMembers, At function: PgSelect, At function: PgSetItem, At function: PgResultItem
+                <main>:2:8: Error: At function: PgCall
+                    <main>:2:8: Error: Unable to find an overload for proc pg_sleep with given argument types: (int4)]]></failure>
+		</testcase>
+		<testcase name="TestContextCancelExec" classname="golang-lib-pq" time="0.030">
+			<failure message="Failed"><![CDATA[    go18_test.go:94: unexpected error: pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>: Error: Type annotation, code: 1030
+            <main>:1:1: Error: At function: RemovePrefixMembers, At function: PgSelect, At function: PgSetItem, At function: PgResultItem
+                <main>:2:8: Error: At function: PgCall
+                    <main>:2:8: Error: Unable to find an overload for proc pg_sleep with given argument types: (int4)]]></failure>
+		</testcase>
+		<testcase name="TestContextCancelQuery" classname="golang-lib-pq" time="0.050">
+			<failure message="Failed"><![CDATA[    go18_test.go:132: unexpected error: pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>: Error: Type annotation, code: 1030
+            <main>:1:1: Error: At function: RemovePrefixMembers, At function: PgSelect, At function: PgSetItem, At function: PgResultItem
+                <main>:2:8: Error: At function: PgCall
+                    <main>:2:8: Error: Unable to find an overload for proc pg_sleep with given argument types: (int4)]]></failure>
+		</testcase>
+		<testcase name="TestCopyFromError" classname="golang-lib-pq" time="0.120">
+			<failure message="Failed"><![CDATA[    copy_test.go:332: pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>:1:1: Error: CREATE TEMP TABLE not supported
+        ]]></failure>
+		</testcase>
+		<testcase name="TestCopyInBinaryError" classname="golang-lib-pq" time="0.140">
+			<failure message="Failed"><![CDATA[    copy_test.go:307: pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>:1:1: Error: CREATE TEMP TABLE not supported
+        ]]></failure>
+		</testcase>
+		<testcase name="TestCopyInMultipleValues" classname="golang-lib-pq" time="0.120">
+			<failure message="Failed"><![CDATA[    copy_test.go:61: pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>:1:1: Error: CREATE TEMP TABLE not supported
+        ]]></failure>
+		</testcase>
+		<testcase name="TestCopyInRaiseStmtTrigger" classname="golang-lib-pq" time="0.040">
+			<failure message="Failed"><![CDATA[    conn_test.go:68: pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>:1:1: Error: RawStmt: alternative is not implemented yet : 281
+        ]]></failure>
+		</testcase>
+		<testcase name="TestCopyInSchemaStmt" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestCopyInStmt" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestCopyInStmtAffectedRows" classname="golang-lib-pq" time="0.030">
+			<failure message="Failed"><![CDATA[    conn_test.go:1780: pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>:1:1: Error: CREATE TEMP TABLE not supported
+        ]]></failure>
+		</testcase>
+		<testcase name="TestCopyInTypes" classname="golang-lib-pq" time="0.110">
+			<failure message="Failed"><![CDATA[    copy_test.go:200: pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>:1:1: Error: CREATE TEMP TABLE not supported
+        ]]></failure>
+		</testcase>
+		<testcase name="TestCopyInWrongType" classname="golang-lib-pq" time="0.130">
+			<failure message="Failed"><![CDATA[    copy_test.go:259: pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>:1:1: Error: CREATE TEMP TABLE not supported
+        ]]></failure>
+		</testcase>
+		<testcase name="TestCopyOutsideOfTxnError" classname="golang-lib-pq" time="0.020"></testcase>
+		<testcase name="TestCopyRespLoopConnectionError" classname="golang-lib-pq" time="0.240">
+			<failure message="Failed"><![CDATA[    copy_test.go:388: pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>:1:1: Error: CREATE TEMP TABLE not supported
+        ]]></failure>
+		</testcase>
+		<testcase name="TestCopySyntaxError" classname="golang-lib-pq" time="0.110">
+			<failure message="Failed"><![CDATA[    copy_test.go:360: expected syntax error, got  (pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>:2:5: Error: syntax error at end of input
+        )]]></failure>
+		</testcase>
+		<testcase name="TestDataType" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestDataTypeLength" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestDataTypeName" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestDataTypePrecisionScale" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestDecodeBool" classname="golang-lib-pq" time="0.150"></testcase>
+		<testcase name="TestDecodeUUIDBackend" classname="golang-lib-pq" time="0.070">
+			<failure message="Failed"><![CDATA[    uuid_test.go:41: Expected no error, got pq: got 1 parameters but the statement requires 0]]></failure>
+		</testcase>
+		<testcase name="TestDecodeUUIDBinaryError" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestEmptyQuery" classname="golang-lib-pq" time="0.200"></testcase>
+		<testcase name="TestEmptyResultSetColumns" classname="golang-lib-pq" time="0.250">
+			<failure message="Failed"><![CDATA[    conn_test.go:483: sql: expected 0 arguments, got 1]]></failure>
+		</testcase>
+		<testcase name="TestEncodeAndParseTs" classname="golang-lib-pq" time="1.700">
+			<failure message="Failed"><![CDATA[    encode_test.go:135: 0: could not send value "22001-02-03 00:00:00 +0000 +0000" to the database: pq: got 1 parameters but the statement requires 0
+    encode_test.go:135: 1: could not send value "2001-02-03 00:00:00 +0000 +0000" to the database: pq: got 1 parameters but the statement requires 0
+    encode_test.go:135: 2: could not send value "0000-12-31 00:00:00 +0000 +0000" to the database: pq: got 1 parameters but the statement requires 0
+    encode_test.go:135: 3: could not send value "-2000-02-03 00:00:00 +0000 +0000" to the database: pq: got 1 parameters but the statement requires 0
+    encode_test.go:135: 4: could not send value "2001-02-03 04:05:06 +0000 +0000" to the database: pq: got 1 parameters but the statement requires 0
+    encode_test.go:135: 5: could not send value "2001-02-03 04:05:06.000001 +0000 +0000" to the database: pq: got 1 parameters but the statement requires 0
+    encode_test.go:135: 6: could not send value "2001-02-03 04:05:06.00001 +0000 +0000" to the database: pq: got 1 parameters but the statement requires 0
+    encode_test.go:135: 7: could not send value "2001-02-03 04:05:06.0001 +0000 +0000" to the database: pq: got 1 parameters but the statement requires 0
+    encode_test.go:135: 8: could not send value "2001-02-03 04:05:06.001 +0000 +0000" to the database: pq: got 1 parameters but the statement requires 0
+    encode_test.go:135: 9: could not send value "2001-02-03 04:05:06.01 +0000 +0000" to the database: pq: got 1 parameters but the statement requires 0
+    encode_test.go:135: 10: could not send value "2001-02-03 04:05:06.1 +0000 +0000" to the database: pq: got 1 parameters but the statement requires 0
+    encode_test.go:135: 11: could not send value "2001-02-03 04:05:06.12 +0000 +0000" to the database: pq: got 1 parameters but the statement requires 0
+    encode_test.go:135: 12: could not send value "2001-02-03 04:05:06.123 +0000 +0000" to the database: pq: got 1 parameters but the statement requires 0
+    encode_test.go:135: 13: could not send value "2001-02-03 04:05:06.1234 +0000 +0000" to the database: pq: got 1 parameters but the statement requires 0
+    encode_test.go:135: 14: could not send value "2001-02-03 04:05:06.12345 +0000 +0000" to the database: pq: got 1 parameters but the statement requires 0
+    encode_test.go:135: 15: could not send value "2001-02-03 04:05:06.123456 +0000 +0000" to the database: pq: got 1 parameters but the statement requires 0
+    encode_test.go:135: 16: could not send value "2001-02-03 04:05:06.123 -0700 -0700" to the database: pq: got 1 parameters but the statement requires 0
+    encode_test.go:135: 17: could not send value "2001-02-03 04:05:06 -0700 -0700" to the database: pq: got 1 parameters but the statement requires 0
+    encode_test.go:135: 18: could not send value "2001-02-03 04:05:06 -0742 -0742" to the database: pq: got 1 parameters but the statement requires 0
+    encode_test.go:135: 19: could not send value "2001-02-03 04:05:06 -0730 -0730" to the database: pq: got 1 parameters but the statement requires 0
+    encode_test.go:135: 20: could not send value "2001-02-03 04:05:06 +0730 +0730" to the database: pq: got 1 parameters but the statement requires 0
+    encode_test.go:135: 21: could not send value "2001-02-03 04:05:06 +0700 +0700" to the database: pq: got 1 parameters but the statement requires 0
+    encode_test.go:135: 22: could not send value "-0010-02-03 04:05:06 +0000 +0000" to the database: pq: got 1 parameters but the statement requires 0
+    encode_test.go:135: 23: could not send value "-0010-02-03 04:05:06.123 +0000 +0000" to the database: pq: got 1 parameters but the statement requires 0
+    encode_test.go:135: 24: could not send value "-0010-02-03 04:05:06.123 -0700 -0700" to the database: pq: got 1 parameters but the statement requires 0
+    encode_test.go:135: 25: could not send value "0001-02-03 04:05:06.123 +0000 +0000" to the database: pq: got 1 parameters but the statement requires 0
+    encode_test.go:135: 26: could not send value "0000-02-03 04:05:06.123 +0000 +0000" to the database: pq: got 1 parameters but the statement requires 0
+    encode_test.go:135: 27: could not send value "0000-02-03 04:05:06.123 +0000 +0000" to the database: pq: got 1 parameters but the statement requires 0
+    encode_test.go:135: 28: could not send value "-0001-02-03 04:05:06.123 +0000 +0000" to the database: pq: got 1 parameters but the statement requires 0
+    encode_test.go:135: 29: could not send value "-0001-02-03 04:05:06.123 +0000 +0000" to the database: pq: got 1 parameters but the statement requires 0
+    encode_test.go:135: 30: could not send value "12345-02-03 04:05:06.1 +0000 +0000" to the database: pq: got 1 parameters but the statement requires 0
+    encode_test.go:135: 31: could not send value "123456-02-03 04:05:06.1 +0000 +0000" to the database: pq: got 1 parameters but the statement requires 0]]></failure>
+		</testcase>
+		<testcase name="TestEncodeDecode" classname="golang-lib-pq" time="0.090">
+			<failure message="Failed"><![CDATA[    conn_test.go:530: pq: got 3 parameters but the statement requires 0]]></failure>
+		</testcase>
+		<testcase name="TestErrorClass" classname="golang-lib-pq" time="0.290">
+			<failure message="Failed"></failure>
+		</testcase>
+		<testcase name="TestErrorDuringStartup" classname="golang-lib-pq" time="0.020">
+			<failure message="Failed"><![CDATA[    conn_test.go:637: expected invalid_authorization_specification or invalid_password, got  (pq: Invalid user)]]></failure>
+		</testcase>
+		<testcase name="TestErrorDuringStartupClosesConn" classname="golang-lib-pq" time="0.010"></testcase>
+		<testcase name="TestErrorOnExec" classname="golang-lib-pq" time="0.160">
+			<failure message="Failed"><![CDATA[    conn_test.go:786: pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>:1:1: Error: CREATE TEMP TABLE not supported
+        ]]></failure>
+		</testcase>
+		<testcase name="TestErrorOnQuery" classname="golang-lib-pq" time="0.220">
+			<failure message="Failed"><![CDATA[    conn_test.go:814: pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>:1:1: Error: CREATE TEMP TABLE not supported
+        ]]></failure>
+		</testcase>
+		<testcase name="TestErrorOnQueryRowSimpleQuery" classname="golang-lib-pq" time="0.150">
+			<failure message="Failed"><![CDATA[    conn_test.go:842: pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>:1:1: Error: CREATE TEMP TABLE not supported
+        ]]></failure>
+		</testcase>
+		<testcase name="TestErrorSQLState" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestExec" classname="golang-lib-pq" time="0.020">
+			<failure message="Failed"><![CDATA[    conn_test.go:235: pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>:1:1: Error: CREATE TEMP TABLE not supported
+        ]]></failure>
+		</testcase>
+		<testcase name="TestFloat32ArrayScanBytes" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestFloat32ArrayScanEmpty" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestFloat32ArrayScanError" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestFloat32ArrayScanNil" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestFloat32ArrayScanString" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestFloat32ArrayScanUnsupported" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestFloat32ArrayValue" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestFloat64ArrayScanBytes" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestFloat64ArrayScanEmpty" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestFloat64ArrayScanError" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestFloat64ArrayScanNil" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestFloat64ArrayScanString" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestFloat64ArrayScanUnsupported" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestFloat64ArrayValue" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestFormatAndParseTimestamp" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestFormatTs" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestFormatTsBackend" classname="golang-lib-pq" time="3.420">
+			<failure message="Failed"><![CDATA[    encode_test.go:196: 0: incorrect time format for date on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 0: incorrect time format for time on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 0: incorrect time format for timetz on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 0: incorrect time format for timestamp on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 0: incorrect time format for timestamptz on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 1: incorrect time format for date on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 1: incorrect time format for time on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 1: incorrect time format for timetz on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 1: incorrect time format for timestamp on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 1: incorrect time format for timestamptz on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 2: incorrect time format for date on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 2: incorrect time format for time on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 2: incorrect time format for timetz on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 2: incorrect time format for timestamp on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 2: incorrect time format for timestamptz on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 3: incorrect time format for date on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 3: incorrect time format for time on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 3: incorrect time format for timetz on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 3: incorrect time format for timestamp on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 3: incorrect time format for timestamptz on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 4: incorrect time format for date on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 4: incorrect time format for time on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 4: incorrect time format for timetz on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 4: incorrect time format for timestamp on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 4: incorrect time format for timestamptz on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 5: incorrect time format for date on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 5: incorrect time format for time on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 5: incorrect time format for timetz on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 5: incorrect time format for timestamp on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 5: incorrect time format for timestamptz on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 6: incorrect time format for date on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 6: incorrect time format for time on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 6: incorrect time format for timetz on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 6: incorrect time format for timestamp on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 6: incorrect time format for timestamptz on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 7: incorrect time format for date on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 7: incorrect time format for time on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 7: incorrect time format for timetz on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 7: incorrect time format for timestamp on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 7: incorrect time format for timestamptz on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 8: incorrect time format for date on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 8: incorrect time format for time on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 8: incorrect time format for timetz on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 8: incorrect time format for timestamp on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 8: incorrect time format for timestamptz on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 9: incorrect time format for date on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 9: incorrect time format for time on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 9: incorrect time format for timetz on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 9: incorrect time format for timestamp on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 9: incorrect time format for timestamptz on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 10: incorrect time format for date on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 10: incorrect time format for time on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 10: incorrect time format for timetz on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 10: incorrect time format for timestamp on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 10: incorrect time format for timestamptz on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 11: incorrect time format for date on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 11: incorrect time format for time on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 11: incorrect time format for timetz on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 11: incorrect time format for timestamp on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 11: incorrect time format for timestamptz on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 12: incorrect time format for date on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 12: incorrect time format for time on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 12: incorrect time format for timetz on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 12: incorrect time format for timestamp on the backend: pq: got 1 parameters but the statement requires 0
+    encode_test.go:196: 12: incorrect time format for timestamptz on the backend: pq: got 1 parameters but the statement requires 0]]></failure>
+		</testcase>
+		<testcase name="TestFullParseURL" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestGenericArrayScanDelimiter" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestGenericArrayScanErrors" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestGenericArrayScanScannerArrayBytes" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestGenericArrayScanScannerArrayString" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestGenericArrayScanScannerSliceBytes" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestGenericArrayScanScannerSliceEmpty" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestGenericArrayScanScannerSliceNil" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestGenericArrayScanScannerSliceString" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestGenericArrayScanUnsupported" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestGenericArrayValue" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestGenericArrayValueErrors" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestGenericArrayValueUnsupported" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestHasCorrectRootGroupPermissions" classname="golang-lib-pq" time="0.000">
+			<failure message="Failed"><![CDATA[    ssl_permissions_test.go:99: file owned by 0:0 with -rw-rw-rw-, expected "permissions for files not owned by root should be u=rw (0600) or less", got "permissions for root owned files should be u=rw,g=r (0640) or less"]]></failure>
+		</testcase>
+		<testcase name="TestIPv6LoopbackParseURL" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestInfinityTimestamp" classname="golang-lib-pq" time="0.840">
+			<failure message="Failed"><![CDATA[    encode_test.go:409: Scanning -/+infinity, expected error to match regexp "^sql: Scan error on column index 0(, name \"timestamp(tz)?\"|): unsupported", got "pq: got 1 parameters but the statement requires 0"
+    encode_test.go:409: Scanning -/+infinity, expected error to match regexp "^sql: Scan error on column index 0(, name \"timestamp(tz)?\"|): unsupported", got "pq: got 1 parameters but the statement requires 0"
+    encode_test.go:409: Scanning -/+infinity, expected error to match regexp "^sql: Scan error on column index 0(, name \"timestamp(tz)?\"|): unsupported", got "pq: got 1 parameters but the statement requires 0"
+    encode_test.go:409: Scanning -/+infinity, expected error to match regexp "^sql: Scan error on column index 0(, name \"timestamp(tz)?\"|): unsupported", got "pq: got 1 parameters but the statement requires 0"
+    encode_test.go:418: Scanning -/+infinity, expected no error, got "pq: got 1 parameters but the statement requires 0"
+    encode_test.go:422: Scanning -/+infinity, expected []byte, got <nil>
+    encode_test.go:425: Scanning -/+infinity, expected "-infinity", got ""
+    encode_test.go:418: Scanning -/+infinity, expected no error, got "pq: got 1 parameters but the statement requires 0"
+    encode_test.go:422: Scanning -/+infinity, expected []byte, got <nil>
+    encode_test.go:425: Scanning -/+infinity, expected "-infinity", got ""
+    encode_test.go:418: Scanning -/+infinity, expected no error, got "pq: got 1 parameters but the statement requires 0"
+    encode_test.go:422: Scanning -/+infinity, expected []byte, got <nil>
+    encode_test.go:425: Scanning -/+infinity, expected "infinity", got ""
+    encode_test.go:418: Scanning -/+infinity, expected no error, got "pq: got 1 parameters but the statement requires 0"
+    encode_test.go:422: Scanning -/+infinity, expected []byte, got <nil>
+    encode_test.go:425: Scanning -/+infinity, expected "infinity", got ""
+    encode_test.go:435: Scanning infinity, expected no error, got "pq: got 1 parameters but the statement requires 0"
+    encode_test.go:438: Scanning infinity, expected "2500-01-01 00:00:00 +0000 UTC", got "0001-01-01 00:00:00 +0000 UTC"
+    encode_test.go:443: Scanning infinity, expected no error, got "pq: got 1 parameters but the statement requires 0"
+    encode_test.go:446: Scanning Infinity, expected time "2500-01-01 00:00:00 +0000 UTC", got "0001-01-01 00:00:00 +0000 UTC"
+    encode_test.go:451: Scanning -infinity, expected no error, got "pq: got 1 parameters but the statement requires 0"
+    encode_test.go:454: Scanning -infinity, expected time "1500-01-01 00:00:00 +0000 UTC", got "0001-01-01 00:00:00 +0000 UTC"
+    encode_test.go:459: Scanning -infinity, expected no error, got "pq: got 1 parameters but the statement requires 0"
+    encode_test.go:462: Scanning -infinity, expected time "1500-01-01 00:00:00 +0000 UTC", got "0001-01-01 00:00:00 +0000 UTC"
+    encode_test.go:470: Encoding -infinity, expected no error, got "pq: got 1 parameters but the statement requires 0"
+    encode_test.go:473: Encoding -infinity, expected "-infinity", got ""
+    encode_test.go:477: Encoding -infinity, expected no error, got "pq: got 1 parameters but the statement requires 0"
+    encode_test.go:480: Encoding -infinity, expected "-infinity", got ""
+    encode_test.go:485: Encoding infinity, expected no error, got "pq: got 1 parameters but the statement requires 0"
+    encode_test.go:488: Encoding infinity, expected "infinity", got ""
+    encode_test.go:492: Encoding infinity, expected no error, got "pq: got 1 parameters but the statement requires 0"
+    encode_test.go:495: Encoding infinity, expected "infinity", got ""]]></failure>
+		</testcase>
+		<testcase name="TestInt32ArrayScanBytes" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestInt32ArrayScanEmpty" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestInt32ArrayScanError" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestInt32ArrayScanNil" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestInt32ArrayScanString" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestInt32ArrayScanUnsupported" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestInt32ArrayValue" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestInt64ArrayScanBytes" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestInt64ArrayScanEmpty" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestInt64ArrayScanError" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestInt64ArrayScanNil" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestInt64ArrayScanString" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestInt64ArrayScanUnsupported" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestInt64ArrayValue" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestInvalidProtocolParseURL" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestIsUTF8" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestIssue1046" classname="golang-lib-pq" time="0.120">
+			<failure message="Failed"><![CDATA[    issues_test.go:57: ctx.Err(): [<nil>]<nil>
+    issues_test.go:58: got err: [*pq.Error] pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>: Error: Type annotation, code: 1030
+            <main>:1:1: Error: At function: RemovePrefixMembers, At function: PgSelect, At function: PgSetItem, At function: PgResultItem
+                <main>:2:8: Error: At function: PgCall
+                    <main>:2:8: Error: Unable to find an overload for proc pg_sleep with given argument types: (int4)
+         expected errCode: 57014]]></failure>
+		</testcase>
+		<testcase name="TestIssue1062" classname="golang-lib-pq" time="0.000">
+			<error message="No test result found"><![CDATA[panic: test timed out after 5s
+running tests:
+	TestIssue1062 (5s)
+
+goroutine 325 [running]:
+testing.(*M).startAlarm.func1()
+	/usr/local/go/src/testing/testing.go:2241 +0x3c5
+created by time.goFunc
+	/usr/local/go/src/time/sleep.go:176 +0x32
+
+goroutine 1 [chan receive]:
+testing.(*T).Run(0xc000106d00, {0x819028?, 0x523385?}, 0x84fdd0)
+	/usr/local/go/src/testing/testing.go:1630 +0x405
+testing.runTests.func1(0xadfea0?)
+	/usr/local/go/src/testing/testing.go:2036 +0x45
+testing.tRunner(0xc000106d00, 0xc000163c88)
+	/usr/local/go/src/testing/testing.go:1576 +0x10b
+testing.runTests(0xc00012e3c0?, {0xadc480, 0xd0, 0xd0}, {0xc00011f2a8?, 0x100c000163d10?, 0xadf480?})
+	/usr/local/go/src/testing/testing.go:2034 +0x489
+testing.(*M).Run(0xc00012e3c0)
+	/usr/local/go/src/testing/testing.go:1906 +0x63a
+main.main()
+	_testmain.go:561 +0x1aa
+
+goroutine 19 [runnable]:
+syscall.Syscall(0x0?, 0x0?, 0x4a4c92?, 0x7ffff80000000000?)
+	/usr/local/go/src/syscall/syscall_linux.go:69 +0x27
+syscall.write(0xc00007e880?, {0xc00001e2a0?, 0x0?, 0x0?})
+	/usr/local/go/src/syscall/zsyscall_linux_amd64.go:939 +0x45
+syscall.Write(...)
+	/usr/local/go/src/syscall/syscall_unix.go:206
+internal/poll.ignoringEINTRIO(...)
+	/usr/local/go/src/internal/poll/fd_unix.go:794
+internal/poll.(*FD).Write(0xc00007e880, {0xc00001e2a0, 0x5, 0x5})
+	/usr/local/go/src/internal/poll/fd_unix.go:383 +0x385
+net.(*netFD).Write(0xc00007e880, {0xc00001e2a0?, 0x7f26ccf3d568?, 0x7f26ccf34108?})
+	/usr/local/go/src/net/fd_posix.go:96 +0x29
+net.(*conn).Write(0xc0000aa208, {0xc00001e2a0?, 0x7ae220?, 0xc000004e01?})
+	/usr/local/go/src/net/net.go:195 +0x45
+github.com/lib/pq.(*conn).sendSimpleMessage(...)
+	/project/conn.go:987
+github.com/lib/pq.(*conn).Close(0xc000004c00)
+	/project/conn.go:883 +0xd7
+github.com/lib/pq.(*conn).watchCancel.func2()
+	/project/conn_go18.go:134 +0xb7
+github.com/lib/pq.(*rows).Close(0xc0002021e0)
+	/project/conn.go:1555 +0xf9
+database/sql.(*Rows).close.func1()
+	/usr/local/go/src/database/sql/sql.go:3287 +0x2f
+database/sql.withLock({0x8b3c90, 0xc0000f2f30}, 0xc000165d98)
+	/usr/local/go/src/database/sql/sql.go:3405 +0x8c
+database/sql.(*Rows).close(0xc00007e980, {0x0, 0x0})
+	/usr/local/go/src/database/sql/sql.go:3286 +0x16d
+database/sql.(*Rows).Close(...)
+	/usr/local/go/src/database/sql/sql.go:3270
+database/sql.(*Rows).Next(0xc00007e980)
+	/usr/local/go/src/database/sql/sql.go:2955 +0x85
+database/sql.(*Row).Scan(0xc000165f20, {0xc000165f10?, 0x1, 0x1})
+	/usr/local/go/src/database/sql/sql.go:3342 +0x11a
+github.com/lib/pq.TestIssue1062(0xc000106ea0)
+	/project/issues_test.go:75 +0x17b
+testing.tRunner(0xc000106ea0, 0x84fdd0)
+	/usr/local/go/src/testing/testing.go:1576 +0x10b
+created by testing.(*T).Run
+	/usr/local/go/src/testing/testing.go:1629 +0x3ea
+
+goroutine 20 [select]:
+database/sql.(*DB).connectionOpener(0xc000118f70, {0x8b5930, 0xc0001002d0})
+	/usr/local/go/src/database/sql/sql.go:1218 +0x8d
+created by database/sql.OpenDB
+	/usr/local/go/src/database/sql/sql.go:791 +0x18d
+
+goroutine 92 [runnable]:
+database/sql.(*Rows).initContextClose.func1()
+	/usr/local/go/src/database/sql/sql.go:2924
+runtime.goexit()
+	/usr/local/go/src/runtime/asm_amd64.s:1598 +0x1
+created by database/sql.(*Rows).initContextClose
+	/usr/local/go/src/database/sql/sql.go:2924 +0x158]]></error>
+		</testcase>
+		<testcase name="TestIssue186" classname="golang-lib-pq" time="0.380">
+			<failure message="Failed"><![CDATA[    conn_test.go:1060: pq: got 3 parameters but the statement requires 0]]></failure>
+		</testcase>
+		<testcase name="TestIssue196" classname="golang-lib-pq" time="0.100">
+			<failure message="Failed"><![CDATA[    conn_test.go:1102: pq: got 2 parameters but the statement requires 0]]></failure>
+		</testcase>
+		<testcase name="TestIssue282" classname="golang-lib-pq" time="0.030">
+			<failure message="Failed"><![CDATA[    conn_test.go:1124: pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>:1:1: Error: VariableSetStmt, not supported name: search_path
+        ]]></failure>
+		</testcase>
+		<testcase name="TestIssue494" classname="golang-lib-pq" time="0.050">
+			<failure message="Failed"><![CDATA[    issues_test.go:17: pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>:1:1: Error: CREATE TEMP TABLE not supported
+        ]]></failure>
+		</testcase>
+		<testcase name="TestIssue617" classname="golang-lib-pq" time="0.060">
+			<failure message="Failed"><![CDATA[    go18_test.go:179: expected undefined table error, got pq: Status: SCHEME_ERROR
+        Issues: 
+        <main>: Error: Type annotation, code: 1030
+            <main>:2:15: Error: At function: KiReadTable!
+                <main>:2:15: Error: Cannot find table 'db.[/local/DOESNOTEXIST]' because it does not exist or you do not have access permissions. Please check correctness of table path and user permissions., code: 2003]]></failure>
+		</testcase>
+		<testcase name="TestListenerClose" classname="golang-lib-pq" time="0.040"></testcase>
+		<testcase name="TestListenerConnCloseWhileQueryIsExecuting" classname="golang-lib-pq" time="0.030"></testcase>
+		<testcase name="TestListenerFailedQuery" classname="golang-lib-pq" time="0.050">
+			<failure message="Failed"><![CDATA[    notify_test.go:444: pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>:1:1: Error: RawStmt: alternative is not implemented yet : 267
+        ]]></failure>
+		</testcase>
+		<testcase name="TestListenerListen" classname="golang-lib-pq" time="0.050">
+			<failure message="Failed"><![CDATA[    notify_test.go:345: pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>:1:1: Error: RawStmt: alternative is not implemented yet : 267
+        ]]></failure>
+		</testcase>
+		<testcase name="TestListenerPing" classname="golang-lib-pq" time="0.030"></testcase>
+		<testcase name="TestListenerReconnect" classname="golang-lib-pq" time="0.040">
+			<failure message="Failed"><![CDATA[    notify_test.go:492: pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>:1:1: Error: RawStmt: alternative is not implemented yet : 267
+        ]]></failure>
+		</testcase>
+		<testcase name="TestListenerUnlisten" classname="golang-lib-pq" time="0.020">
+			<failure message="Failed"><![CDATA[    notify_test.go:368: pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>:1:1: Error: RawStmt: alternative is not implemented yet : 267
+        ]]></failure>
+		</testcase>
+		<testcase name="TestListenerUnlistenAll" classname="golang-lib-pq" time="0.050">
+			<failure message="Failed"><![CDATA[    notify_test.go:406: pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>:1:1: Error: RawStmt: alternative is not implemented yet : 267
+        ]]></failure>
+		</testcase>
+		<testcase name="TestMinimalURL" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestMultipleEmptyResult" classname="golang-lib-pq" time="0.470">
+			<failure message="Failed"><![CDATA[    conn_test.go:1758: expected more result sets <nil>]]></failure>
+		</testcase>
+		<testcase name="TestMultipleResult" classname="golang-lib-pq" time="0.060">
+			<failure message="Failed"><![CDATA[    conn_test.go:1709: pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>:4:18: Error: Unknown cluster: information_schema
+        ]]></failure>
+		</testcase>
+		<testcase name="TestMultipleSimpleQuery" classname="golang-lib-pq" time="0.050">
+			<failure message="Failed"><![CDATA[    go18_test.go:20: pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>:2:10: Error: VariableSetStmt, not supported kind: 1
+        ]]></failure>
+		</testcase>
+		<testcase name="TestNewConnector_Connect" classname="golang-lib-pq" time="0.010">
+			<failure message="Failed"><![CDATA[    connector_test.go:38: pq: SSL is not enabled on the server]]></failure>
+		</testcase>
+		<testcase name="TestNewConnector_Driver" classname="golang-lib-pq" time="0.010">
+			<failure message="Failed"><![CDATA[    connector_test.go:58: pq: SSL is not enabled on the server]]></failure>
+		</testcase>
+		<testcase name="TestNewConnector_WorksWithOpenDB" classname="golang-lib-pq" time="0.010">
+			<failure message="Failed"><![CDATA[    connector_test.go:25: pq: SSL is not enabled on the server]]></failure>
+		</testcase>
+		<testcase name="TestNewListenerConn" classname="golang-lib-pq" time="0.030"></testcase>
+		<testcase name="TestNoData" classname="golang-lib-pq" time="0.750"></testcase>
+		<testcase name="TestNotifyExtra" classname="golang-lib-pq" time="0.040">
+			<failure message="Failed"><![CDATA[    conn_test.go:68: pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>:1:1: Error: RawStmt: alternative is not implemented yet : 281
+        ]]></failure>
+		</testcase>
+		<testcase name="TestNullAfterNonNull" classname="golang-lib-pq" time="0.750">
+			<failure message="Failed"><![CDATA[    conn_test.go:1314: sql: Scan error on column index 0, name "column0": converting driver.Value type []uint8 ("") to a int64: invalid syntax]]></failure>
+		</testcase>
+		<testcase name="TestOpenURL" classname="golang-lib-pq" time="0.270"></testcase>
+		<testcase name="TestParameterCountMismatch" classname="golang-lib-pq" time="0.730"></testcase>
+		<testcase name="TestParseArray" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestParseArrayError" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestParseComplete" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestParseEnviron" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestParseErrorInExtendedQuery" classname="golang-lib-pq" time="0.080">
+			<failure message="Failed"><![CDATA[    conn_test.go:1002: expected syntax error, got pq: got 1 parameters but the statement requires 0]]></failure>
+		</testcase>
+		<testcase name="TestParseOpts" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestParseTs" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestParseTsErrors" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestPgpass" classname="golang-lib-pq" time="0.120">
+			<failure message="Failed"><![CDATA[    conn_test.go:165: missing .pgpass, unexpected error &pq.Error{Severity:"", Code:"", Message:"Status: GENERIC_ERROR\nIssues: \n<main>:1:1: Error: alternative is not implemented yet : 142\n", Detail:"", Hint:"", Position:"", InternalPosition:"", InternalQuery:"", Where:"", Schema:"", Table:"", Column:"", DataTypeName:"", Constraint:"", File:"", Line:"", Routine:""}]]></failure>
+		</testcase>
+		<testcase name="TestPing" classname="golang-lib-pq" time="0.390">
+			<failure message="Failed"><![CDATA[    go19_test.go:67: unexpected command tag OK]]></failure>
+		</testcase>
+		<testcase name="TestQueryCancelRace" classname="golang-lib-pq" time="1.210">
+			<failure message="Failed"><![CDATA[    issues_test.go:120: expected cancelled error; err=&errors.errorString{s:"context canceled"}]]></failure>
+		</testcase>
+		<testcase name="TestQueryCancelledReused" classname="golang-lib-pq" time="0.030">
+			<failure message="Failed"><![CDATA[    issues_test.go:136: pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>:2:8: Error: Generator functions are not allowed in: SELECT
+        ]]></failure>
+		</testcase>
+		<testcase name="TestQueryRowBugWorkaround" classname="golang-lib-pq" time="0.020">
+			<failure message="Failed"><![CDATA[    conn_test.go:867: pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>:1:1: Error: CREATE TEMP TABLE not supported
+        ]]></failure>
+		</testcase>
+		<testcase name="TestQuickClose" classname="golang-lib-pq" time="0.530">
+			<failure message="Failed"><![CDATA[    conn_test.go:1694: unexpected command tag OK]]></failure>
+		</testcase>
+		<testcase name="TestQuoteIdentifier" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestQuoteLiteral" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestReadFloatPrecision" classname="golang-lib-pq" time="0.170"></testcase>
+		<testcase name="TestReconnect" classname="golang-lib-pq" time="0.270">
+			<failure message="Failed"><![CDATA[    conn_test.go:89: pq: got 1 parameters but the statement requires 0]]></failure>
+		</testcase>
+		<testcase name="TestReturning" classname="golang-lib-pq" time="0.020">
+			<failure message="Failed"><![CDATA[    conn_test.go:1019: pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>:1:1: Error: CREATE TEMP TABLE not supported
+        <main>:1:1: Error: column constraint not supported
+        ]]></failure>
+		</testcase>
+		<testcase name="TestRowsCloseBeforeDone" classname="golang-lib-pq" time="0.180"></testcase>
+		<testcase name="TestRowsColumnTypes" classname="golang-lib-pq" time="0.200">
+			<failure message="Failed"><![CDATA[    rows_test.go:195: (0) got: , want: INT4
+    rows_test.go:215: (0) got: interface {}, want: int32
+    rows_test.go:195: (1) got: , want: TEXT
+    rows_test.go:199: (1) got: 0, want: 9223372036854775807
+    rows_test.go:202: (1) got: false, want: true
+    rows_test.go:215: (1) got: interface {}, want: string]]></failure>
+		</testcase>
+		<testcase name="TestRowsResultTag" classname="golang-lib-pq" time="0.040">
+			<failure message="Failed"><![CDATA[    conn_test.go:1654: CREATE TEMP TABLE temp (a int): pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>:1:1: Error: CREATE TEMP TABLE not supported]]></failure>
+		</testcase>
+		<testcase name="TestRuntimeParameters" classname="golang-lib-pq" time="0.150">
+			<failure message="Failed"><![CDATA[    conn_test.go:1508: unexpected outcome false (was expecting true) for conninfo "options='-c search_path=pqgotest'"]]></failure>
+		</testcase>
+		<testcase name="TestSNISupport" classname="golang-lib-pq" time="0.010"></testcase>
+		<testcase name="TestSNISupport/SNI_is_set_by_default" classname="golang-lib-pq" time="0.010"></testcase>
+		<testcase name="TestSNISupport/SNI_is_passed_when_asked_for" classname="golang-lib-pq" time="0.010"></testcase>
+		<testcase name="TestSNISupport/SNI_is_not_passed_when_disabled" classname="golang-lib-pq" time="0.010"></testcase>
+		<testcase name="TestSNISupport/SNI_is_not_set_for_IPv4" classname="golang-lib-pq" time="0.010"></testcase>
+		<testcase name="TestSSLClientCertificates" classname="golang-lib-pq" time="0.000">
+			<skipped message="Skipped"><![CDATA[    ssl_test.go:29: PQGOSSLTESTS not enabled, skipping SSL tests]]></skipped>
+		</testcase>
+		<testcase name="TestSSLConnection" classname="golang-lib-pq" time="0.000">
+			<skipped message="Skipped"><![CDATA[    ssl_test.go:29: PQGOSSLTESTS not enabled, skipping SSL tests]]></skipped>
+		</testcase>
+		<testcase name="TestSSLRequireWithRootCert" classname="golang-lib-pq" time="0.000">
+			<skipped message="Skipped"><![CDATA[    ssl_test.go:29: PQGOSSLTESTS not enabled, skipping SSL tests]]></skipped>
+		</testcase>
+		<testcase name="TestSSLVerifyCA" classname="golang-lib-pq" time="0.000">
+			<skipped message="Skipped"><![CDATA[    ssl_test.go:29: PQGOSSLTESTS not enabled, skipping SSL tests]]></skipped>
+		</testcase>
+		<testcase name="TestSSLVerifyFull" classname="golang-lib-pq" time="0.000">
+			<skipped message="Skipped"><![CDATA[    ssl_test.go:29: PQGOSSLTESTS not enabled, skipping SSL tests]]></skipped>
+		</testcase>
+		<testcase name="TestScanNilTimestamp" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestScanTimestamp" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestSimpleParseURL" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestSimpleQuery" classname="golang-lib-pq" time="0.180"></testcase>
+		<testcase name="TestStatment" classname="golang-lib-pq" time="0.810"></testcase>
+		<testcase name="TestStmtExecContext" classname="golang-lib-pq" time="0.330">
+			<failure message="Failed"></failure>
+		</testcase>
+		<testcase name="TestStmtExecContext/context.Background" classname="golang-lib-pq" time="0.130">
+			<failure message="Failed"><![CDATA[    conn_test.go:1960: stmt.QueryContext() unexpected nil err got = pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>: Error: Type annotation, code: 1030
+            <main>:1:1: Error: At function: RemovePrefixMembers, At function: PgSelect, At function: PgSetItem, At function: PgResultItem
+                <main>:2:8: Error: At function: PgCall
+                    <main>:2:8: Error: Unable to find an overload for proc pg_sleep with given argument types: (int4)
+        , cancelExpected = false]]></failure>
+		</testcase>
+		<testcase name="TestStmtExecContext/context.WithTimeout_exceeded" classname="golang-lib-pq" time="0.100">
+			<failure message="Failed"><![CDATA[    conn_test.go:1962: stmt.QueryContext() got = pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>: Error: Type annotation, code: 1030
+            <main>:1:1: Error: At function: RemovePrefixMembers, At function: PgSelect, At function: PgSetItem, At function: PgResultItem
+                <main>:2:8: Error: At function: PgCall
+                    <main>:2:8: Error: Unable to find an overload for proc pg_sleep with given argument types: (int4)
+        , cancelExpected = true]]></failure>
+		</testcase>
+		<testcase name="TestStmtExecContext/context.WithTimeout" classname="golang-lib-pq" time="0.100">
+			<failure message="Failed"><![CDATA[    conn_test.go:1960: stmt.QueryContext() unexpected nil err got = pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>: Error: Type annotation, code: 1030
+            <main>:1:1: Error: At function: RemovePrefixMembers, At function: PgSelect, At function: PgSetItem, At function: PgResultItem
+                <main>:2:8: Error: At function: PgCall
+                    <main>:2:8: Error: Unable to find an overload for proc pg_sleep with given argument types: (int4)
+        , cancelExpected = false]]></failure>
+		</testcase>
+		<testcase name="TestStmtQueryContext" classname="golang-lib-pq" time="0.330">
+			<failure message="Failed"></failure>
+		</testcase>
+		<testcase name="TestStmtQueryContext/context.Background" classname="golang-lib-pq" time="0.130">
+			<failure message="Failed"><![CDATA[    conn_test.go:1903: stmt.QueryContext() unexpected nil err got = pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>: Error: Type annotation, code: 1030
+            <main>:1:1: Error: At function: RemovePrefixMembers, At function: PgSelect, At function: PgSetItem, At function: PgResultItem
+                <main>:2:8: Error: At function: PgCall
+                    <main>:2:8: Error: Unable to find an overload for proc pg_sleep with given argument types: (int4)
+        , cancelExpected = false]]></failure>
+		</testcase>
+		<testcase name="TestStmtQueryContext/context.WithTimeout_exceeded" classname="golang-lib-pq" time="0.100">
+			<failure message="Failed"><![CDATA[    conn_test.go:1905: stmt.QueryContext() got = pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>: Error: Type annotation, code: 1030
+            <main>:1:1: Error: At function: RemovePrefixMembers, At function: PgSelect, At function: PgSetItem, At function: PgResultItem
+                <main>:2:8: Error: At function: PgCall
+                    <main>:2:8: Error: Unable to find an overload for proc pg_sleep with given argument types: (int4)
+        , cancelExpected = true]]></failure>
+		</testcase>
+		<testcase name="TestStmtQueryContext/context.WithTimeout" classname="golang-lib-pq" time="0.100">
+			<failure message="Failed"><![CDATA[    conn_test.go:1903: stmt.QueryContext() unexpected nil err got = pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>: Error: Type annotation, code: 1030
+            <main>:1:1: Error: At function: RemovePrefixMembers, At function: PgSelect, At function: PgSetItem, At function: PgResultItem
+                <main>:2:8: Error: At function: PgCall
+                    <main>:2:8: Error: Unable to find an overload for proc pg_sleep with given argument types: (int4)
+        , cancelExpected = false]]></failure>
+		</testcase>
+		<testcase name="TestStringArrayScanBytes" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestStringArrayScanEmpty" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestStringArrayScanError" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestStringArrayScanNil" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestStringArrayScanString" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestStringArrayScanUnsupported" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestStringArrayValue" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestStringToBytea" classname="golang-lib-pq" time="0.080">
+			<failure message="Failed"><![CDATA[    encode_test.go:552: pq: got 1 parameters but the statement requires 0]]></failure>
+		</testcase>
+		<testcase name="TestStringToUUID" classname="golang-lib-pq" time="0.090">
+			<failure message="Failed"><![CDATA[    encode_test.go:628: pq: got 1 parameters but the statement requires 0]]></failure>
+		</testcase>
+		<testcase name="TestStringWithNul" classname="golang-lib-pq" time="0.070"></testcase>
+		<testcase name="TestTextByteSliceToInt" classname="golang-lib-pq" time="0.080">
+			<failure message="Failed"><![CDATA[    encode_test.go:655: pq: got 1 parameters but the statement requires 0]]></failure>
+		</testcase>
+		<testcase name="TestTextByteSliceToUUID" classname="golang-lib-pq" time="0.080">
+			<failure message="Failed"><![CDATA[    encode_test.go:578: pq: got 1 parameters but the statement requires 0]]></failure>
+		</testcase>
+		<testcase name="TestTextDecodeIntoString" classname="golang-lib-pq" time="0.000"></testcase>
+		<testcase name="TestTimeWithTimezone" classname="golang-lib-pq" time="0.610">
+			<failure message="Failed"></failure>
+		</testcase>
+		<testcase name="TestTimeWithTimezone/11:59:59+00:00_=&gt;_0000-01-01T11:59:59Z" classname="golang-lib-pq" time="0.050">
+			<failure message="Failed"><![CDATA[    encode_test.go:272: pq: got 1 parameters but the statement requires 0]]></failure>
+		</testcase>
+		<testcase name="TestTimeWithTimezone/11:59:59+04:00_=&gt;_0000-01-01T11:59:59+04:00" classname="golang-lib-pq" time="0.050">
+			<failure message="Failed"><![CDATA[    encode_test.go:272: pq: got 1 parameters but the statement requires 0]]></failure>
+		</testcase>
+		<testcase name="TestTimeWithTimezone/11:59:59+04:01:02_=&gt;_0000-01-01T11:59:59+04:01" classname="golang-lib-pq" time="0.050">
+			<failure message="Failed"><![CDATA[    encode_test.go:272: pq: got 1 parameters but the statement requires 0]]></failure>
+		</testcase>
+		<testcase name="TestTimeWithTimezone/11:59:59-04:01:02_=&gt;_0000-01-01T11:59:59-04:01" classname="golang-lib-pq" time="0.050">
+			<failure message="Failed"><![CDATA[    encode_test.go:272: pq: got 1 parameters but the statement requires 0]]></failure>
+		</testcase>
+		<testcase name="TestTimeWithTimezone/24:00+00_=&gt;_0000-01-02T00:00:00Z" classname="golang-lib-pq" time="0.050">
+			<failure message="Failed"><![CDATA[    encode_test.go:272: pq: got 1 parameters but the statement requires 0]]></failure>
+		</testcase>
+		<testcase name="TestTimeWithTimezone/24:00Z_=&gt;_0000-01-02T00:00:00Z" classname="golang-lib-pq" time="0.050">
+			<failure message="Failed"><![CDATA[    encode_test.go:272: pq: got 1 parameters but the statement requires 0]]></failure>
+		</testcase>
+		<testcase name="TestTimeWithTimezone/24:00-04:00_=&gt;_0000-01-02T00:00:00-04:00" classname="golang-lib-pq" time="0.050">
+			<failure message="Failed"><![CDATA[    encode_test.go:272: pq: got 1 parameters but the statement requires 0]]></failure>
+		</testcase>
+		<testcase name="TestTimeWithTimezone/24:00:00+00_=&gt;_0000-01-02T00:00:00Z" classname="golang-lib-pq" time="0.050">
+			<failure message="Failed"><![CDATA[    encode_test.go:272: pq: got 1 parameters but the statement requires 0]]></failure>
+		</testcase>
+		<testcase name="TestTimeWithTimezone/24:00:00.0+00_=&gt;_0000-01-02T00:00:00Z" classname="golang-lib-pq" time="0.050">
+			<failure message="Failed"><![CDATA[    encode_test.go:272: pq: got 1 parameters but the statement requires 0]]></failure>
+		</testcase>
+		<testcase name="TestTimeWithTimezone/24:00:00.000000+00_=&gt;_0000-01-02T00:00:00Z" classname="golang-lib-pq" time="0.050">
+			<failure message="Failed"><![CDATA[    encode_test.go:272: pq: got 1 parameters but the statement requires 0]]></failure>
+		</testcase>
+		<testcase name="TestTimeWithoutTimezone" classname="golang-lib-pq" time="0.400">
+			<failure message="Failed"></failure>
+		</testcase>
+		<testcase name="TestTimeWithoutTimezone/11:59:59_=&gt;_0000-01-01T11:59:59Z" classname="golang-lib-pq" time="0.050">
+			<failure message="Failed"><![CDATA[    encode_test.go:229: pq: got 1 parameters but the statement requires 0]]></failure>
+		</testcase>
+		<testcase name="TestTimeWithoutTimezone/24:00_=&gt;_0000-01-02T00:00:00Z" classname="golang-lib-pq" time="0.050">
+			<failure message="Failed"><![CDATA[    encode_test.go:229: pq: got 1 parameters but the statement requires 0]]></failure>
+		</testcase>
+		<testcase name="TestTimeWithoutTimezone/24:00:00_=&gt;_0000-01-02T00:00:00Z" classname="golang-lib-pq" time="0.060">
+			<failure message="Failed"><![CDATA[    encode_test.go:229: pq: got 1 parameters but the statement requires 0]]></failure>
+		</testcase>
+		<testcase name="TestTimeWithoutTimezone/24:00:00.0_=&gt;_0000-01-02T00:00:00Z" classname="golang-lib-pq" time="0.050">
+			<failure message="Failed"><![CDATA[    encode_test.go:229: pq: got 1 parameters but the statement requires 0]]></failure>
+		</testcase>
+		<testcase name="TestTimeWithoutTimezone/24:00:00.000000_=&gt;_0000-01-02T00:00:00Z" classname="golang-lib-pq" time="0.050">
+			<failure message="Failed"><![CDATA[    encode_test.go:229: pq: got 1 parameters but the statement requires 0]]></failure>
+		</testcase>
+		<testcase name="TestTimestampWithOutTimezone" classname="golang-lib-pq" time="0.070">
+			<failure message="Failed"><![CDATA[    encode_test.go:350: Could not run query: pq: got 1 parameters but the statement requires 0]]></failure>
+		</testcase>
+		<testcase name="TestTimestampWithTimeZone" classname="golang-lib-pq" time="0.130">
+			<failure message="Failed"><![CDATA[    encode_test.go:315: pq: Status: GENERIC_ERROR
+        Issues: 
+        <main>:1:1: Error: VariableSetStmt, not supported name: timezone
+        ]]></failure>
+		</testcase>
+		<testcase name="TestTxOptions" classname="golang-lib-pq" time="0.210">
+			<failure message="Failed"><![CDATA[    go18_test.go:305: pq: Status: INTERNAL_ERROR
+        Issues: 
+        <main>: Fatal: Execution, code: 1060
+            <main>: Fatal: Default error
+                <main>: Fatal: Internal error while executing transaction., code: 1
+                    <main>: Error: Unexpected exception: (yexception) ydb/library/yql/minikql/computation/mkql_value_builder.cpp:52: Terminate was called, reason(104): Error in function: current_setting, reason: unrecognized configuration parameter "transaction_isolation"
+        
+        ]]></failure>
+		</testcase>
+		<testcase name="TestXactMultiStmt" classname="golang-lib-pq" time="0.000">
+			<skipped message="Skipped"><![CDATA[    conn_test.go:1157: Skipping failing test]]></skipped>
+		</testcase>
+		<system-out><![CDATA[panic: interface conversion: error is *errors.errorString, not *pq.Error [recovered]
+	panic: interface conversion: error is *errors.errorString, not *pq.Error
+
+goroutine 19 [running]:
+testing.tRunner.func1.2({0x7c5280, 0xc00006e090})
+	/usr/local/go/src/testing/testing.go:1526 +0x24e
+testing.tRunner.func1()
+	/usr/local/go/src/testing/testing.go:1529 +0x39f
+panic({0x7c5280, 0xc00006e090})
+	/usr/local/go/src/runtime/panic.go:884 +0x213
+github.com/lib/pq.TestBinaryByteSliceToInt(0xc000083040)
+	/project/encode_test.go:681 +0x2fe
+testing.tRunner(0xc000083040, 0x84f9c8)
+	/usr/local/go/src/testing/testing.go:1576 +0x10b
+created by testing.(*T).Run
+	/usr/local/go/src/testing/testing.go:1629 +0x3ea
+panic: interface conversion: error is *errors.errorString, not *pq.Error [recovered]
+	panic: interface conversion: error is *errors.errorString, not *pq.Error
+
+goroutine 6 [running]:
+testing.tRunner.func1.2({0x7c5280, 0xc00009e180})
+	/usr/local/go/src/testing/testing.go:1526 +0x24e
+testing.tRunner.func1()
+	/usr/local/go/src/testing/testing.go:1529 +0x39f
+panic({0x7c5280, 0xc00009e180})
+	/usr/local/go/src/runtime/panic.go:884 +0x213
+github.com/lib/pq.TestBinaryByteSlicetoUUID(0xc0001284e0)
+	/project/encode_test.go:609 +0x34a
+testing.tRunner(0xc0001284e0, 0x84f9d0)
+	/usr/local/go/src/testing/testing.go:1576 +0x10b
+created by testing.(*T).Run
+	/usr/local/go/src/testing/testing.go:1629 +0x3ea
+panic: runtime error: slice bounds out of range [:2] with length 0 [recovered]
+	panic: runtime error: slice bounds out of range [:2] with length 0
+
+goroutine 6 [running]:
+testing.tRunner.func1.2({0x7f8760, 0xc000188018})
+	/usr/local/go/src/testing/testing.go:1526 +0x24e
+testing.tRunner.func1()
+	/usr/local/go/src/testing/testing.go:1529 +0x39f
+panic({0x7f8760, 0xc000188018})
+	/usr/local/go/src/runtime/panic.go:884 +0x213
+github.com/lib/pq.ErrorCode.Class(...)
+	/project/error.go:72
+github.com/lib/pq.TestErrorClass(0xc000094820)
+	/project/conn_test.go:1394 +0x37f
+testing.tRunner(0xc000094820, 0x84fbc0)
+	/usr/local/go/src/testing/testing.go:1576 +0x10b
+created by testing.(*T).Run
+	/usr/local/go/src/testing/testing.go:1629 +0x3ea]]></system-out>
+	</testsuite>
+</testsuites>

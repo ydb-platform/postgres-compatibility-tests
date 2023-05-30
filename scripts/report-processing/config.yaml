@@ -1,0 +1,115 @@
+tickets:
+  - name:  KIKIMR-17960 # CREATE TEMP TABLE
+    tests:
+      golang-lib-pq:
+        - TestBindError
+        - TestCommit
+        - TestCopyFromError
+        - TestCopyInBinaryError
+        - TestErrorDuringStartupClosesConn
+        - TestCommit
+        - TestCopyFromError
+        - TestCopyInBinaryError
+        - TestCopyInMultipleValues
+        - TestCopyInStmtAffectedRows
+        - TestCopyInTypes
+        - TestCopyInWrongType
+        - TestCopyRespLoopConnectionError
+        - TestErrorOnExec
+        - TestErrorOnQuery
+        - TestErrorOnQueryRowSimpleQuery
+        - TestExec
+        - TestIssue494
+
+  - name: KIKIMR-18080 # Parameter types
+    tests:
+      golang-lib-pq:
+        - TestArrayValueBackend
+
+  - name: KIKIMR-18115 # PG error format
+    tests:
+      golang-lib-pq:
+        - TestBinaryByteSliceToInt
+        - TestBinaryByteSlicetoUUID
+        - TestErrorClass
+
+  - name: KIKIMR-18122 # PG error codes and text
+    tests:
+      golang-lib-pq:
+        - TestCopySyntaxError
+
+  - name: KIKIMR-18049 # Pg Auth error
+    tests:
+      golang-lib-pq:
+        - TestErrorDuringStartup
+
+  - name: KIKIMR-18050 # Pg exnexisted table error
+    tests:
+      golang-lib-pq:
+        - TestIssue617
+
+  - name: KIKIMR-18116 # Prepare description
+    tests:
+      golang-lib-pq:
+        - TestByteSliceToText
+        - TestDecodeUUIDBackend
+        - TestEmptyResultSetColumns
+        - TestEncodeAndParseTs
+        - TestEncodeDecode
+        - TestFormatTsBackend
+        - TestInfinityTimestamp
+        - TestIssue186
+        - TestIssue196
+
+  - name: YQL-16021 # SHOW server_version_num, alternative is not implemented yet : 281
+    tests:
+      golang-lib-pq:
+        - TestByteaOutputFormats
+        - TestCopyInRaiseStmtTrigger
+
+  - name: KIKIMR-18118 # Fail transaction on error
+    tests:
+      golang-lib-pq:
+        - TestCommitInFailedTransaction
+        - TestCommitInFailedTransactionWithCancelContext
+
+  - name: KIKIMR-18119 # LISTEN Queries, alternative is not implemented yet : 267
+    tests:
+      golang-lib-pq:
+        - TestConnListen
+        - TestConnUnlisten
+        - TestConnUnlistenAll
+        - TestListenerFailedQuery
+        - TestListenerListen
+        - TestListenerReconnect
+        - TestListenerUnlisten
+        - TestListenerUnlistenAll
+
+  - name: KIKIMR-18060 # SSL Response
+    tests:
+      golang-lib-pq:
+        - TestConnectorWithNoticeHandler_Simple
+        - TestConnectorWithNotificationHandler_Simple
+
+  - name: KIKIMR-18120 # implicit cast params (pg_sleep)
+    tests:
+      golang-lib-pq:
+        - TestContextCancelBegin
+        - TestContextCancelExec
+        - TestContextCancelQuery
+        - TestIssue1046
+
+  - name: KIKIMR-18125 # SET LOCAL search_path
+    tests:
+      golang-lib-pq:
+        - TestIssue282
+
+  - name: KIKIMR-18059 # Multiply results
+    tests:
+      golang-lib-pq:
+        - TestMultipleEmptyResult
+
+  - name: KIKIMR-18147 # Information schema
+    tests:
+      golang-lib-pq:
+        - TestMultipleResult
