@@ -37,45 +37,66 @@ class JUnitTestSuites:
             return JUnitTestSuites.TestSuite(et)
 
     @dataclass
+    class TestCase:
+        xml: Element
+
+        @property
+        def name(self) -> str:
+            return self.xml.attrib.get("name", "")
+
+        @name.setter
+        def name(self, name):
+            self.xml.attrib["name"] = name
+
+        @property
+        def classname(self) -> str:
+            return self.xml.attrib.get("classname", "")
+
+        @classname.setter
+        def classname(self, classname):
+            self.xml.attrib["classname"] = classname
+
+        @property
+        def fullname(self) -> str:
+            if self.name == "" and self.classname == "":
+                return ""
+
+            return "%s/%s" % (self.classname, self.name)
+
+        @property
+        def is_passed(self):
+            return len(self.xml.getchildren()) == 0
+
+        def skip(self, reason: str):
+            classname = self.classname
+            testname = self.name
+
+            self.xml.clear()
+
+            self.classname = classname
+            self.name = testname
+
+            skipped = Element("skipped", {"message": reason})
+            self.xml.append(skipped)
+
+    @dataclass
     class SetStatusReason:
         classname: str
         testname: str
         reason: str
 
+        @property
         def fullname(self) -> str:
             return "%s/%s" % (self.classname, self.testname)
 
     def __init__(self):
         self.test_suites = []
 
-    def _foreach_testcase(self, callback: Callable[[Element], None]):
+    def foreach_testcase(self, callback: Callable[[JUnitTestSuites.TestCase], None]):
         for suite in self.test_suites:
             for testcase in suite.xml.iter("testcase"):
-                callback(testcase)
+                callback(JUnitTestSuites.TestCase(xml=testcase))
 
-    @staticmethod
-    def _skip_test(el: Element, reason: str):
-        if JUnitTestSuites._test_fullname(el) == "":
-            return
-
-        classname = el.attrib["classname"]
-        testname = el.attrib["name"]
-        el.clear()
-        el.attrib["classname"] = classname
-        el.attrib["name"] = testname
-
-        skipped = Element("skipped", {"message": reason})
-        el.append(skipped)
-
-    @staticmethod
-    def _test_fullname(el: Element) -> str:
-        classname = el.attrib["classname"] if "classname" in el.attrib else ""
-        testname = el.attrib["name"] if "name" in el.attrib else ""
-
-        if classname == "" and testname == "":
-            return ""
-
-        return "%s/%s" % (classname, testname)
     def merge_from_file(self, filepath: str):
         logger.info("import report from file: %s" % filepath)
         testsuites_xml = ElementTree()
@@ -93,27 +114,31 @@ class JUnitTestSuites:
         et.write(filepath)
 
     def skip_tests(self, skiplist: Iterable[JUnitTestSuites.SetStatusReason]):
-        """
-        :param tests: list of strings in format: "classname/testname"
-        :return: None
-        """
-        skip_dict = {reason.fullname(): reason for reason in skiplist}  # type: Dict[str, JUnitTestSuites.SetStatusReason]
+        skip_dict = dict()  # type: Dict[str, JUnitTestSuites.SetStatusReason]
+        for reason in skiplist:
+            skiplist[reason.fullname] = reason
 
-        def process_testcase(el: Element):
-            fullname = self._test_fullname(el)
-            if fullname in skip_dict:
-                self._skip_test(el, skip_dict[fullname].reason)
+        def process_testcase(tc: JUnitTestSuites.TestCase):
+            if tc.fullname in skip_dict:
+                tc.skip(skip_dict[tc.fullname].reason)
 
-        self._foreach_testcase(process_testcase)
+        self.foreach_testcase(process_testcase)
 
 
 def load_report(path: str):
+    logging.info("load junit xml report from: '%s'" % path)
     report = JUnitTestSuites()
 
     if os.path.isdir(path):
-        for root, _, files in os.walk("."):
+        for root, _, files in os.walk(path):
             for file in files:
-                report.merge_from_file(join(root, file))
+                filepath = join(root, file)
+                if not file.endswith(".xml"):
+                    logging.debug("skip merged report from: '%s'" % filepath)
+                    continue
+
+                logging.debug("merge report from: '%s'" % filepath)
+                report.merge_from_file(filepath)
     else:
         report.merge_from_file(path)
 
@@ -130,7 +155,7 @@ def get_skip_reasons(config: Config) -> List[JUnitTestSuites.SetStatusReason]:
                     testname=testname,
                     reason=ticket.name,
                 )
-                fullname = reason.fullname()
+                fullname = reason.fullname
                 if fullname in reason_by_test:
                     reason_by_test[fullname].reason += "," + ticket.name
                 else:
@@ -146,7 +171,9 @@ def get_skip_reasons(config: Config) -> List[JUnitTestSuites.SetStatusReason]:
     for reason in reason_by_test.values():
         res.append(reason)
 
-    res.sort(key=JUnitTestSuites.SetStatusReason.fullname)
+    def get_key(r: JUnitTestSuites.SetStatusReason):
+        return r.fullname
+    res.sort(key=get_key)
 
     return res
 
