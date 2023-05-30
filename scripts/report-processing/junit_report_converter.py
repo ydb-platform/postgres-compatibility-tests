@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import copy
 import logging
 from argparse import ArgumentParser
+from collections import OrderedDict
 from dataclasses import dataclass, field
 import os.path
 from os.path import dirname, join
@@ -37,7 +39,7 @@ class JUnitTestSuites:
 
         @staticmethod
         def create():
-            el = Element("testcase")
+            el = Element("testsuite")
 
             return JUnitTestSuites.TestSuite(xml=el)
 
@@ -66,7 +68,10 @@ class JUnitTestSuites:
                 error_tag: Optional[str],
                 error_message: Optional[str],
         ) -> JUnitTestSuites.TestCase:
-            el = Element("testcase", attrib={"classname": classname, "name": testname})
+            attrib = OrderedDict()
+            attrib["classname"] = classname
+            attrib["name"] = testname
+            el = Element("testcase", attrib=attrib)
             if error_tag is not None:
                 child = Element(error_tag, attrib={"message": error_message})
                 el.append(child)
@@ -201,6 +206,25 @@ def load_report(path: str):
     return report
 
 
+def get_test_names(report: JUnitTestSuites, skip_class: bool, only_passed: bool) -> List[str]:
+    res = []
+
+    def callback(testcase: JUnitTestSuites.TestCase):
+        if testcase.fullname == "":
+            return
+
+        if only_passed and not testcase.is_passed:
+            return
+
+        if skip_class:
+            res.append(testcase.name)
+        else:
+            res.append(testcase.fullname)
+
+    report.foreach_testcase(callback)
+    return res
+
+
 def get_skip_reasons(config: Config) -> List[JUnitTestSuites.SetStatusReason]:
     reason_by_test = dict()  # type: Dict[str, JUnitTestSuites.SetStatusReason]
     for ticket in config.tickets:
@@ -242,12 +266,23 @@ def _change_error_to_failure(report: JUnitTestSuites):
     report.foreach_testcase(callback)
 
 
-def _remove_tests(report: JUnitTestSuites, tests: List[str]):
+def _remove_tests(report: JUnitTestSuites, tests_to_remove_list: List[str]):
+    tests_to_remove = dict()
+
+    for test in tests_to_remove_list:
+        tests_to_remove[test] = True
+
+    for_remove = []  # type: List[JUnitTestSuites.TestCase]
     def clear_by_name(tc: JUnitTestSuites.TestCase):
-        if tc.fullname in tests:
-            tc.remove_from_suite()
+        if tc.fullname in tests_to_remove:
+            for_remove.append(tc)
+            del tests_to_remove[tc.fullname]
 
     report.foreach_testcase(clear_by_name)
+    for tc in for_remove:
+        tc.remove_from_suite()
+
+    assert tests_to_remove == {}
 
 
 def _append_unexisted_tests(report: JUnitTestSuites, full_test_list: List[str]):
@@ -292,6 +327,45 @@ def _read_file_lines(path: str) -> List[str]:
     return res
 
 
+def _check_test_list_equals(report: JUnitTestSuites, test_list: List[str]):
+    test_list_sorted = copy.copy(test_list)
+    test_list_sorted.sort()
+
+    report_tests = get_test_names(report, False, False)
+    report_tests.sort()
+
+    assert test_list_sorted == report_tests
+
+
+def _order_attributes(report: JUnitTestSuites):
+    def order(tc: JUnitTestSuites.TestCase):
+        attrib = copy.copy(tc.xml.attrib)
+        keys = list(attrib.keys())  # type: List[str]
+        try:
+            keys.remove("classname")
+        except ValueError:
+            pass
+
+        try:
+            keys.remove("name")
+        except ValueError:
+            pass
+
+        keys.sort()
+        new_attrib = OrderedDict()
+        if "classname" in attrib:
+            new_attrib["classname"] = attrib["classname"]
+        if "name" in attrib:
+            new_attrib["name"] = attrib["name"]
+
+        for key in keys:
+            new_attrib[key] = attrib[key]
+
+        tc.xml.attrib = new_attrib
+
+    report.foreach_testcase(order)
+
+
 def process_report(
         report: JUnitTestSuites,
         config: Config,
@@ -313,8 +387,11 @@ def process_report(
 
     _append_unexisted_tests(report, full_test_list)
 
+    _check_test_list_equals(report, full_test_list)
+
     _remove_tests(report, unit_tests)
 
+    _order_attributes(report)
 
 def main():
     parser = ArgumentParser()
