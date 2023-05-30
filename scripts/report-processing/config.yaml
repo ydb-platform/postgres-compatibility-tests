@@ -109,3 +109,7 @@ tickets:
       golang-lib-pq:
         - TestMultipleEmptyResult
 
+  - name: KIKIMR-18147 # Information schema
+    tests:
+      golang-lib-pq:
+        - TestMultipleResult
