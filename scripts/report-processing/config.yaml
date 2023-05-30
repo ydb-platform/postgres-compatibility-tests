@@ -1,3 +1,6 @@
+convert:
+  change_error_to_failure: True
+
 tickets:
   - name:  KIKIMR-17960 # CREATE TEMP TABLE
     tests:

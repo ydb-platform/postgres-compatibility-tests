@@ -15,7 +15,12 @@ logger = logging.Logger("junit-reporter-converter")
 
 @dataclass
 class Config(DataClassYAMLMixin):
+    convert: "Config.Convert" = field(default_factory=lambda: Config.Convert())
     tickets: List["Config.TestsByTicket"] = field(default_factory=lambda: [])
+
+    @dataclass
+    class Convert(DataClassYAMLMixin):
+        change_error_to_failure: bool = False
 
     @dataclass
     class TestsByTicket(DataClassYAMLMixin):
@@ -116,7 +121,7 @@ class JUnitTestSuites:
     def skip_tests(self, skiplist: Iterable[JUnitTestSuites.SetStatusReason]):
         skip_dict = dict()  # type: Dict[str, JUnitTestSuites.SetStatusReason]
         for reason in skiplist:
-            skiplist[reason.fullname] = reason
+            skip_dict[reason.fullname] = reason
 
         def process_testcase(tc: JUnitTestSuites.TestCase):
             if tc.fullname in skip_dict:
@@ -178,10 +183,20 @@ def get_skip_reasons(config: Config) -> List[JUnitTestSuites.SetStatusReason]:
     return res
 
 
+def _change_error_to_failure(report: JUnitTestSuites):
+    def callback(tc: JUnitTestSuites.TestCase):
+        for item in tc.xml.findall("error"):
+            item.tag = "failure"
+
+    report.foreach_testcase(callback)
+
+
 def process_report(report: JUnitTestSuites, config: Config):
     reasons = get_skip_reasons(config)
     report.skip_tests(reasons)
 
+    if config.convert.change_error_to_failure:
+        _change_error_to_failure(report)
 
 def main():
     parser = ArgumentParser()
