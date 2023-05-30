@@ -5,7 +5,7 @@ from argparse import ArgumentParser
 from dataclasses import dataclass, field
 import os.path
 from os.path import dirname, join
-from typing import List, Dict, Callable, Iterable
+from typing import List, Dict, Callable, Iterable, Optional
 from xml.etree.ElementTree import Element, ElementTree
 
 from mashumaro.mixins.yaml import DataClassYAMLMixin
@@ -31,8 +31,15 @@ class Config(DataClassYAMLMixin):
 class JUnitTestSuites:
     test_suites: List["JUnitTestSuites.TestSuite"]
 
+    @dataclass
     class TestSuite:
         xml: Element
+
+        @staticmethod
+        def create():
+            el = Element("testcase")
+
+            return JUnitTestSuites.TestSuite(xml=el)
 
         def __init__(self, xml: Element):
             self.xml = xml
@@ -41,9 +48,50 @@ class JUnitTestSuites:
         def parse_xml(et: Element) -> JUnitTestSuites.TestSuite:
             return JUnitTestSuites.TestSuite(et)
 
+        def append_testcase(self, tc: JUnitTestSuites.TestCase):
+            tc.suite = self
+            self.xml.append(tc.xml)
+
     @dataclass
     class TestCase:
         xml: Element
+        suite: JUnitTestSuites.TestSuite
+
+        @staticmethod
+        def create(
+                classname: str,
+                testname: str,
+                *,
+                suite: Optional[JUnitTestSuites.TestSuite] = None,
+                error_tag: Optional[str],
+                error_message: Optional[str],
+        ) -> JUnitTestSuites.TestCase:
+            el = Element("testcase", attrib={"classname": classname, "name": testname})
+            if error_tag is not None:
+                child = Element(error_tag, attrib={"message": error_message})
+                el.append(child)
+
+            return JUnitTestSuites.TestCase(xml=el, suite=suite)
+
+        @staticmethod
+        def create_from_fullname(
+                fullname: str,
+                *,
+                suite: Optional[JUnitTestSuites.TestSuite] = None,
+                error_tag: Optional[str],
+                error_message: Optional[str],
+        ):
+            parts = fullname.split("/", 1)
+            if len(parts) == 1:
+                parts.append("")
+
+            return JUnitTestSuites.TestCase.create(
+                parts[0],
+                parts[1],
+                suite=suite,
+                error_tag=error_tag,
+                error_message=error_message,
+            )
 
         @property
         def name(self) -> str:
@@ -71,6 +119,9 @@ class JUnitTestSuites:
         @property
         def is_passed(self):
             return len(self.xml.getchildren()) == 0
+
+        def remove_from_suite(self):
+            self.suite.xml.remove(self.xml)
 
         def skip(self, reason: str):
             classname = self.classname
@@ -100,7 +151,7 @@ class JUnitTestSuites:
     def foreach_testcase(self, callback: Callable[[JUnitTestSuites.TestCase], None]):
         for suite in self.test_suites:
             for testcase in suite.xml.iter("testcase"):
-                callback(JUnitTestSuites.TestCase(xml=testcase))
+                callback(JUnitTestSuites.TestCase(xml=testcase, suite=suite))
 
     def merge_from_file(self, filepath: str):
         logger.info("import report from file: %s" % filepath)
@@ -191,18 +242,88 @@ def _change_error_to_failure(report: JUnitTestSuites):
     report.foreach_testcase(callback)
 
 
-def process_report(report: JUnitTestSuites, config: Config):
+def _remove_tests(report: JUnitTestSuites, tests: List[str]):
+    def clear_by_name(tc: JUnitTestSuites.TestCase):
+        if tc.fullname in tests:
+            tc.remove_from_suite()
+
+    report.foreach_testcase(clear_by_name)
+
+
+def _append_unexisted_tests(report: JUnitTestSuites, full_test_list: List[str]):
+    tests_to_append = set(full_test_list)
+
+    def remove_test(tc: JUnitTestSuites.TestCase):
+        tests_to_append.remove(tc.fullname)
+
+    report.foreach_testcase(remove_test)
+
+    tests_to_append_list = list(tests_to_append)
+    tests_to_append_list.sort()
+
+    suite = JUnitTestSuites.TestSuite.create()
+    suite_is_empty = True
+    for test_fullname in tests_to_append_list:
+        suite_is_empty = False
+        tc = JUnitTestSuites.TestCase.create_from_fullname(
+            test_fullname,
+            error_tag="failure",
+            error_message="the test not started",
+        )
+        suite.append_testcase(tc)
+
+    if not suite_is_empty:
+        report.test_suites.append(suite)
+
+
+def _read_file_lines(path: str) -> List[str]:
+    if not path:
+        return []
+
+    with open(path, "tr") as f:
+        lines = f.readlines()
+
+    res = []  # type: List[str]
+    for line in lines:
+        line = line.strip()
+        if line:
+            res.append(line)
+
+    return res
+
+
+def process_report(
+        report: JUnitTestSuites,
+        config: Config,
+        *,
+        unit_tests: Optional[List[str]],
+        full_test_list: Optional[List[str]],
+):
+    if unit_tests is None:
+        unit_tests = []
+
+    if full_test_list is None:
+        full_test_list = []
+
     reasons = get_skip_reasons(config)
     report.skip_tests(reasons)
 
     if config.convert.change_error_to_failure:
         _change_error_to_failure(report)
 
+    _append_unexisted_tests(report, full_test_list)
+
+    _remove_tests(report, unit_tests)
+
+
 def main():
     parser = ArgumentParser()
     parser.add_argument("--config", default=join(dirname(__file__), "config.yaml"))
-    parser.add_argument("--input-reports", default="result-example.xml")
-    parser.add_argument("--output-report", default="processed-example.xml")
+    parser.add_argument("--test-dir", type=str)
+    parser.add_argument("--input-reports", default="test-result/raw", help="relative to test-dir")
+    parser.add_argument("--output-report", default="test-result/result.xml", help="relative to test-dir")
+    parser.add_argument("--full-test-list", default="full-test-list.txt", help="relative to test-dir")
+    parser.add_argument("--list-unit-test", default="unit-tests.txt", help="relative to test-dir")
     args = parser.parse_args()
 
     config = Config()
@@ -211,11 +332,24 @@ def main():
             data = f.read()
         config = Config.from_yaml(data)
 
-    report = load_report(args.input_reports)
+    def normalize_path(test_dir: str, path: str) -> str:
+        if os.path.isabs(path):
+           return path
+        return join(test_dir, path)
 
-    process_report(report, config)
+    report = load_report(normalize_path(args.test_dir, args.input_reports))
 
-    report.save_to_file(args.output_report)
+    unit_tests = []
+    if args.list_unit_test:
+        unit_tests = _read_file_lines(normalize_path(args.test_dir, args.list_unit_test))
+
+    full_test_list = []
+    if args.full_test_list:
+        full_test_list = _read_file_lines(normalize_path(args.test_dir, args.full_test_list))
+
+    process_report(report, config, unit_tests=unit_tests, full_test_list=full_test_list)
+
+    report.save_to_file(normalize_path(args.test_dir, args.output_report))
 
 
 if __name__ == '__main__':

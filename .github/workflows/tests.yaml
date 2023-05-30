@@ -56,6 +56,9 @@ jobs:
           echo "Postprocessing results"
           sudo chmod -R a+rw ${{ matrix.tests }}/test-result
           ./scripts/post-process-report.bash "${{ matrix.tests }}"
+          
+          echo "Remove raw results"
+          rm -rf /test-result/raw
 
       - run: |
           echo "Upload results"

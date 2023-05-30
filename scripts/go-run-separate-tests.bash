@@ -28,7 +28,7 @@ for TEST_NAME in $TESTS; do
     fi
     CMD="$TEST_BINARY --test.run '^$TEST_NAME\$' --test.v --test.timeout='$ONE_TEST_TIMEOUT'"
     echo "$CMD"
-    bash -c "$CMD" >> /test-result/result.txt 2>&1 || true
+    bash -c "$CMD" >> /test-result/raw/result.txt 2>&1 || true
 done
 
-go-junit-report < /test-result/result.txt > /test-result/result.xml
+go-junit-report < /test-result/raw/result.txt > /test-result/raw/result.xml

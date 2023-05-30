@@ -29,12 +29,6 @@ def write_report(report: ET.ElementTree, file_path: str):
     report.write(file_path)
 
 
-def remove_tests(report: ET.ElementTree, tests: List[str]):
-    for testcase in report.iter(tag="testcase"):
-        if testcase.attrib.get("name", "") in tests:
-            testcase.clear()
-
-
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--report-file-path", required=True)
