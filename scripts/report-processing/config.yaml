@@ -24,6 +24,8 @@ tickets:
         - TestExec
         - TestIssue494
         - TestQueryRowBugWorkaround
+        - TestReturning
+        - TestRowsResultTag
 
   - name: KIKIMR-18080 # Parameter types
     tests:
@@ -65,6 +67,35 @@ tickets:
         - TestIssue186
         - TestIssue196
         - TestParseErrorInExtendedQuery
+        - TestReconnect
+        - TestRuntimeParameters
+        - TestStringToBytea
+        - TestStringToUUID
+        - TestTextByteSliceToInt
+        - TestTextByteSliceToUUID
+        - TestTimeWithTimezone
+        - TestTimeWithTimezone/11:59:59+00:00_=>_0000-01-01T11:59:59Z
+        - TestTimeWithTimezone/11:59:59+04:00_=>_0000-01-01T11:59:59+04:00
+        - TestTimeWithTimezone/11:59:59+04:01:02_=>_0000-01-01T11:59:59+04:01
+        - TestTimeWithTimezone/11:59:59-04:01:02_=>_0000-01-01T11:59:59-04:01
+        - TestTimeWithTimezone/24:00+00_=>_0000-01-02T00:00:00Z
+        - TestTimeWithTimezone/24:00Z_=>_0000-01-02T00:00:00Z
+        - TestTimeWithTimezone/24:00-04:00_=>_0000-01-02T00:00:00-04:00
+        - TestTimeWithTimezone/24:00:00+00_=>_0000-01-02T00:00:00Z
+        - TestTimeWithTimezone/24:00:00.0+00_=>_0000-01-02T00:00:00Z
+        - TestTimeWithTimezone/24:00:00.000000+00_=>_0000-01-02T00:00:00Z
+        - TestTimeWithoutTimezone
+        - TestTimeWithoutTimezone/11:59:59_=>_0000-01-01T11:59:59Z
+        - TestTimeWithoutTimezone/24:00_=>_0000-01-02T00:00:00Z
+        - TestTimeWithoutTimezone/24:00:00_=>_0000-01-02T00:00:00Z
+        - TestTimeWithoutTimezone/24:00:00.0_=>_0000-01-02T00:00:00Z
+        - TestTimeWithoutTimezone/24:00:00.000000_=>_0000-01-02T00:00:00Z
+        - TestTimestampWithOutTimezone
+
+  - name: KIKIMR-18184  # Prepared queries
+    tests:
+      golang-lib-pq:
+        - TestStatment
 
   - name: YQL-16021 # SHOW server_version_num, alternative is not implemented yet : 281
     tests:
@@ -107,6 +138,14 @@ tickets:
         - TestContextCancelExec
         - TestContextCancelQuery
         - TestIssue1046
+        - TestStmtExecContext
+        - TestStmtExecContext/context.Background
+        - TestStmtExecContext/context.WithTimeout_exceeded
+        - TestStmtExecContext/context.WithTimeout
+        - TestStmtQueryContext
+        - TestStmtQueryContext/context.Background
+        - TestStmtQueryContext/context.WithTimeout_exceeded
+        - TestStmtQueryContext/context.WithTimeout
 
   - name: KIKIMR-18178 # SELECT USER. alternative is not implemented yet : 142
     tests:
@@ -122,6 +161,7 @@ tickets:
     tests:
       golang-lib-pq:
         - TestMultipleSimpleQuery
+        - TestTimestampWithTimeZone
 
   - name: KIKIMR-18059 # Multiply results
     tests:
@@ -147,3 +187,14 @@ tickets:
     tests:
       golang-lib-pq:
         - TestQueryCancelledReused
+
+  - name: KIKIMR-17958
+    tests:
+      golang-lib-pq:
+        - TestQuickClose
+
+  - name: KIKIMR-18186  # select current_setting
+    tests:
+      golang-lib-pq:
+        - TestTxOptions
+
