@@ -51,7 +51,7 @@ tickets:
       golang-lib-pq:
         - TestIssue617
 
-  - name: KIKIMR-18116 # Prepare description
+  - name: KIKIMR-18116 # Prepare description. expected syntax error, got pq: got 1 parameters but the statement requires 0
     tests:
       golang-lib-pq:
         - TestByteSliceToText
@@ -63,6 +63,7 @@ tickets:
         - TestInfinityTimestamp
         - TestIssue186
         - TestIssue196
+        - TestParseErrorInExtendedQuery
 
   - name: YQL-16021 # SHOW server_version_num, alternative is not implemented yet : 281
     tests:
@@ -106,6 +107,11 @@ tickets:
         - TestContextCancelQuery
         - TestIssue1046
 
+  - name: KIKIMR-18178 # SELECT USER. alternative is not implemented yet : 142
+    tests:
+      golang-lib-pq:
+        - TestPgpass
+
   - name: KIKIMR-18125 # SET LOCAL search_path
     tests:
       golang-lib-pq:
@@ -125,3 +131,18 @@ tickets:
     tests:
       golang-lib-pq:
         - TestMultipleResult
+
+  - name: KIKIMR-18177 # Return NULL
+    tests:
+      golang-lib-pq:
+        - TestNullAfterNonNull
+
+  - name: KIKIMR-18180 # Cancel process request by client command
+    tests:
+      golang-lib-pq:
+        - TestQueryCancelRace
+
+  - name: KIKIMR-18181 # Select generators
+    tests:
+      golang-lib-pq:
+        - TestQueryCancelledReused
