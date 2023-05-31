@@ -2,7 +2,9 @@
 
 FROM golang:1.20
 
-WORKDIR /project
+WORKDIR /project/sources/
+
+COPY languages/go/libpq/patch.diff /patch.diff
 COPY languages/go/libpq/docker-init.bash /docker-init.bash
 RUN /docker-init.bash
 

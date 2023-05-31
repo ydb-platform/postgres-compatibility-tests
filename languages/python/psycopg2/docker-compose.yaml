@@ -29,5 +29,5 @@ services:
     build:
       context: .
     volumes:
-      - ./project-sources:/sources
+      - ./exchange:/exchange
       - ./test-result/:/test-result

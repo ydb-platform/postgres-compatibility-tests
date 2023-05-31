@@ -1,0 +1,62 @@
+Common subdirectories: /original-sources/.github and ./.github
+Common subdirectories: /original-sources/auth and ./auth
+Common subdirectories: /original-sources/certs and ./certs
+diff -c /original-sources/conn_test.go ./conn_test.go
+*** /original-sources/conn_test.go	Wed Apr 26 04:34:24 2023
+--- ./conn_test.go	Wed May 31 11:53:58 2023
+***************
+*** 318,324 ****
+  
+  	if !r1.Next() {
+  		if r.Err() != nil {
+! 			t.Fatal(r1.Err())
+  		}
+  		t.Fatal("expected row")
+  	}
+--- 318,324 ----
+  
+  	if !r1.Next() {
+  		if r.Err() != nil {
+! 			t.Fatal(r.Err())
+  		}
+  		t.Fatal("expected row")
+  	}
+***************
+*** 1290,1296 ****
+  
+  	if !r.Next() {
+  		if r.Err() != nil {
+! 			t.Fatal(err)
+  		}
+  		t.Fatal("expected row")
+  	}
+--- 1290,1296 ----
+  
+  	if !r.Next() {
+  		if r.Err() != nil {
+! 			t.Fatal(r.Err())
+  		}
+  		t.Fatal("expected row")
+  	}
+***************
+*** 1305,1311 ****
+  
+  	if !r.Next() {
+  		if r.Err() != nil {
+! 			t.Fatal(err)
+  		}
+  		t.Fatal("expected row")
+  	}
+--- 1305,1311 ----
+  
+  	if !r.Next() {
+  		if r.Err() != nil {
+! 			t.Fatal(r.Err())
+  		}
+  		t.Fatal("expected row")
+  	}
+Common subdirectories: /original-sources/example and ./example
+Common subdirectories: /original-sources/hstore and ./hstore
+Common subdirectories: /original-sources/oid and ./oid
+Common subdirectories: /original-sources/scram and ./scram
+Only in ./: test.binary

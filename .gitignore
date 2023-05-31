@@ -1,6 +1,7 @@
 *.tar.gz
 
 .DS_Store
+exchange
 project-sources
 test-result
 

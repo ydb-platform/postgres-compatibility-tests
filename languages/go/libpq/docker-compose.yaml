@@ -32,5 +32,5 @@ services:
       - PQSSLCERTTEST_PATH=certs
       - YDB_PG_TESTNAME=${YDB_PG_TESTNAME:-}
     volumes:
-      - ./project-sources:/sources
+      - ./exchange:/exchange
       - ./test-result/:/test-result

@@ -4,25 +4,24 @@ set -eu
 
 rm -rf /test-result 2> /dev/null || true
 
+mkdir -p /exchange
 mkdir -p /test-result/raw
 
-mkdir -p /sources
-cp -R /project/ /sources/
-
-if [ -z "$(ls /sources/)" ]; then
-    cp -Rn /project/ /sources/
+if [ -e /common/sources ]; then
+    echo "Skip prepare sources, because it is exist"
 else
-    echo "Skip copy sources"
-    ls /sources/
+    echo "Copy sources"
+    mkdir -p /exchange/sources
+    cp -R /project/sources/. /exchange/sources
 fi
 
-cd /project
+cd /project/sources/
 
 echo "Start test"
 cp -f /docker-start-test.py ./
 python docker-start-test.py || true
 
-echo "Remove unprinted chars"
+echo "Remove unprinted chars and fix classname"
 for FILE in $(ls /test-result/raw); do
   tr -dc '[:print:]\n' < /test-result/raw/$FILE > /test-result/tmp.xml
   mv /test-result/tmp.xml /test-result/raw/$FILE

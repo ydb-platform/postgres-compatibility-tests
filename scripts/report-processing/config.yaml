@@ -69,6 +69,7 @@ tickets:
       golang-lib-pq:
         - TestByteaOutputFormats
         - TestCopyInRaiseStmtTrigger
+        - TestNotifyExtra
 
   - name: KIKIMR-18118 # Fail transaction on error
     tests:
@@ -93,6 +94,9 @@ tickets:
       golang-lib-pq:
         - TestConnectorWithNoticeHandler_Simple
         - TestConnectorWithNotificationHandler_Simple
+        - TestNewConnector_Connect
+        - TestNewConnector_Driver
+        - TestNewConnector_WorksWithOpenDB
 
   - name: KIKIMR-18120 # implicit cast params (pg_sleep)
     tests:
@@ -106,6 +110,11 @@ tickets:
     tests:
       golang-lib-pq:
         - TestIssue282
+
+  - name: KIKIMR-18174 # SET time zone
+    tests:
+      golang-lib-pq:
+        - TestMultipleSimpleQuery
 
   - name: KIKIMR-18059 # Multiply results
     tests:
