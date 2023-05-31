@@ -23,6 +23,7 @@ tickets:
         - TestErrorOnQueryRowSimpleQuery
         - TestExec
         - TestIssue494
+        - TestQueryRowBugWorkaround
 
   - name: KIKIMR-18080 # Parameter types
     tests:

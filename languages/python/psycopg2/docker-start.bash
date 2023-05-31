@@ -7,7 +7,7 @@ rm -rf /test-result 2> /dev/null || true
 mkdir -p /exchange
 mkdir -p /test-result/raw
 
-if [ -e /common/sources ]; then
+if [ -e /exchange/sources ]; then
     echo "Skip prepare sources, because it is exist"
 else
     echo "Copy sources"
