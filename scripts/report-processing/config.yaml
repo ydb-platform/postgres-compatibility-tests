@@ -188,7 +188,7 @@ tickets:
       golang-lib-pq:
         - TestQueryCancelledReused
 
-  - name: KIKIMR-17958
+  - name: KIKIMR-17958  # Begin/Commit wire tags
     tests:
       golang-lib-pq:
         - TestQuickClose
@@ -197,4 +197,9 @@ tickets:
     tests:
       golang-lib-pq:
         - TestTxOptions
+
+  - name: KIKIMR-18179  # Support rollback
+    tests:
+      golang-lib-pq:
+        - TestPing
 
