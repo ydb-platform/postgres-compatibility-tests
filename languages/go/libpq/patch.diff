@@ -3,7 +3,7 @@ Common subdirectories: /original-sources/auth and ./auth
 Common subdirectories: /original-sources/certs and ./certs
 diff -c /original-sources/conn_test.go ./conn_test.go
 *** /original-sources/conn_test.go	Wed Apr 26 04:34:24 2023
---- ./conn_test.go	Wed May 31 11:53:58 2023
+--- ./conn_test.go	Wed May 31 14:50:19 2023
 ***************
 *** 318,324 ****
   
@@ -55,6 +55,23 @@ diff -c /original-sources/conn_test.go ./conn_test.go
   		}
   		t.Fatal("expected row")
   	}
+***************
+*** 1501,1507 ****
+  		}
+  
+  		value, success := tryGetParameterValue()
+! 		if success != test.success && !test.success {
+  			t.Fatalf("%v: unexpected error: %v", test.conninfo, err)
+  		}
+  		if success != test.success {
+--- 1501,1507 ----
+  		}
+  
+  		value, success := tryGetParameterValue()
+! 		if success != test.success && !success {
+  			t.Fatalf("%v: unexpected error: %v", test.conninfo, err)
+  		}
+  		if success != test.success {
 Common subdirectories: /original-sources/example and ./example
 Common subdirectories: /original-sources/hstore and ./hstore
 Common subdirectories: /original-sources/oid and ./oid
