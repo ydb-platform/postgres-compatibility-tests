@@ -14,6 +14,7 @@ services:
       test: "/bin/sh /health_check"
       interval: 1s
       start_period: 1m
+    network_mode: host
   project:
     depends_on:
       ydb:
@@ -22,6 +23,7 @@ services:
     build:
       context: ../../..
       dockerfile: languages/go/libpq/Dockerfile
+      network: host
     environment:
       - PGUSER=${YDB_PG_USER:-postgres}
       - PGPASSWORD=${YDB_PG_PASSWORD:-password}
@@ -31,6 +33,7 @@ services:
       - PQGOSSLTESTS=0
       - PQSSLCERTTEST_PATH=certs
       - YDB_PG_TESTNAME=${YDB_PG_TESTNAME:-}
+    network_mode: host
     volumes:
       - ./exchange:/exchange
       - ./test-result/:/test-result

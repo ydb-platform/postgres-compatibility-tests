@@ -28,6 +28,8 @@ services:
       - YDB_PG_TESTNAME=${YDB_PG_TESTNAME:-}
     build:
       context: .
+      network: host
+    network_mode: ${YDB_PG_PROJECT_HOSTMODE:-bridge}
     volumes:
       - ./exchange:/exchange
       - ./test-result/:/test-result
