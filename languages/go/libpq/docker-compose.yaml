@@ -32,7 +32,11 @@ services:
       - PQGOSSLTESTS=0
       - PQSSLCERTTEST_PATH=certs
       - YDB_PG_TESTNAME=${YDB_PG_TESTNAME:-}
-    network_mode: ${YDB_PG_PROJECT_NETWORK:-service:ydb}
+    network_mode: ${YDB_PG_NETWORK_MODE:-service:ydb}
     volumes:
       - ./exchange:/exchange
       - ./test-result/:/test-result
+networks:
+  default:
+    name: host
+    external: ${YDB_PG_NETWORK_EXTERNAL:-false}

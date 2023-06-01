@@ -29,7 +29,11 @@ services:
     build:
       context: .
       network: host
-    network_mode: ${YDB_PG_PROJECT_NETWORK:-service:ydb}
+    network_mode: ${YDB_PG_NETWORK_MODE:-service:ydb}
     volumes:
       - ./exchange:/exchange
       - ./test-result/:/test-result
+networks:
+  default:
+    name: host
+    external: ${YDB_PG_NETWORK_EXTERNAL:-false}
