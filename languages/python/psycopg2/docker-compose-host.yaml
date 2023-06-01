@@ -1,24 +1,9 @@
 version: "3"
 services:
-  ydb:
-    image: cr.yandex/yc/yandex-docker-local-ydb:trunk
-    environment:
-      - "YDB_DEFAULT_LOG_LEVEL=DEBUG"
-      - "GRPC_TLS_PORT=2135"
-      - "GRPC_PORT=2136"
-      - "MON_PORT=8765"
-      - "YDB_USE_IN_MEMORY_PDISKS=true"
-      - "POSTGRES_USER=${YDB_PG_USER:-postgres}"
-      - "POSTGRES_PASSWORD=${YDB_PG_PASSWORD:-password}"
-    healthcheck:
-      test: "/bin/sh /health_check"
-      interval: 1s
-      start_period: 10s
   project:
+    network_mode: host
+
     image: ydb-test/psycopg2
-    depends_on:
-      ydb:
-        condition: service_healthy
     environment:
       - PSYCOPG2_TESTDB=${YDB_PG_DATABASE:-/local}
       - PSYCOPG2_TESTDB_HOST=${YDB_PG_HOST:-ydb}

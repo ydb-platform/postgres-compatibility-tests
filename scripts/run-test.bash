@@ -11,7 +11,5 @@ docker-compose down -t 1 && docker-compose build
 if [ -z "${YDB_PG_HOST:-}" ]; then
     docker-compose up --abort-on-container-exit
 else
-    export YDB_PG_NETWORK_EXTERNAL=true
-    export YDB_PG_NETWORK_MODE=host
-    docker-compose up project --no-deps --remove-orphans --abort-on-container-exit
+    docker-compose -f docker-compose-host.yaml up project --no-deps --remove-orphans --abort-on-container-exit
 fi
