@@ -16,8 +16,6 @@ All test suites has same befaviour
 
 For manual run tests you have to install docker, docker-composer and run script run-test.bash from test suite folder.
 
-> YDB_PG_HOST `localhost` will internally change to `host.docker.internal`. It allow connect to host, but service must listen `[::]` or `0.0.0.0` IP address, instead of localhost.
-
 run-test.bash scripts accept arguments with env variables:
 
 | Var name        | Default                     | Description                                                                                                                                |
