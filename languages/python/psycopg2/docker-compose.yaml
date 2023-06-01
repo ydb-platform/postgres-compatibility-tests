@@ -29,7 +29,7 @@ services:
     build:
       context: .
       network: host
-    network_mode: ${YDB_PG_PROJECT_HOSTMODE:-bridge}
+    network_mode: ${YDB_PG_PROJECT_NETWORK:-service:ydb}
     volumes:
       - ./exchange:/exchange
       - ./test-result/:/test-result

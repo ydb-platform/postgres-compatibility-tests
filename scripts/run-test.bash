@@ -9,9 +9,8 @@ cd "$TESTDIR"
 docker-compose down -t 1 && docker-compose build
 
 if [ -z "${YDB_PG_HOST:-}" ]; then
-    export YDB_PG_PROJECT_HOSTMODE=host
     docker-compose up --abort-on-container-exit
 else
-    [ "$YDB_PG_HOST" ] && export YDB_PG_HOST=host.docker.internal
+    export YDB_PG_PROJECT_NETWORK=host
     docker-compose up project --no-deps --remove-orphans --abort-on-container-exit
 fi

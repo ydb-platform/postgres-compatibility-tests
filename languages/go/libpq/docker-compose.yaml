@@ -14,7 +14,6 @@ services:
       test: "/bin/sh /health_check"
       interval: 1s
       start_period: 1m
-    network_mode: host
   project:
     depends_on:
       ydb:
@@ -33,7 +32,7 @@ services:
       - PQGOSSLTESTS=0
       - PQSSLCERTTEST_PATH=certs
       - YDB_PG_TESTNAME=${YDB_PG_TESTNAME:-}
-    network_mode: host
+    network_mode: ${YDB_PG_PROJECT_NETWORK:-service:ydb}
     volumes:
       - ./exchange:/exchange
       - ./test-result/:/test-result
