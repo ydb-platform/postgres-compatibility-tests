@@ -203,3 +203,16 @@ tickets:
       golang-lib-pq:
         - TestPing
 
+  - name: KIKIMR-18190  # DateRange type
+    tests:
+      python-psycopg2:
+        - tests.test_types_extras.RangeCasterTestCase.test_adapt_date_range
+        - tests.test_types_extras.RangeCasterTestCase.test_adapt_number_range
+        - tests.test_types_extras.RangeCasterTestCase.test_adapt_numeric_range
+        - tests.test_types_extras.RangeCasterTestCase.test_cast_date
+        - tests.test_types_extras.RangeCasterTestCase.test_cast_empty
+        - tests.test_types_extras.RangeCasterTestCase.test_cast_inf
+        - tests.test_types_extras.RangeCasterTestCase.test_cast_null
+        - tests.test_types_extras.RangeCasterTestCase.test_cast_numbers
+        - tests.test_types_extras.RangeCasterTestCase.test_cast_timestamp
+        - tests.test_types_extras.RangeCasterTestCase.test_cast_timestamptz
