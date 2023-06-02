@@ -31,12 +31,19 @@ jobs:
           ./scripts/testmo-init-tests.bash
         id: run-tests
 
-      - run: |
+      - name: Echo version to summary
+        run: |
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           
-          echo "Version:" >> $GITHUB_STEP_SUMMARY
-          docker run --rm cr.yandex/yc/yandex-docker-local-ydb:trunk /ydbd -V >> $GITHUB_STEP_SUMMARY
+          VERSION="$(docker run --rm cr.yandex/yc/yandex-docker-local-ydb:trunk /ydbd -V)"
+          
+          cat <<EOF >> $GITHUB_STEP_SUMMARY
+          ## YDB version in details:
+          ```
+          $VERSION
+          ```
+          EOF
 
   test:
     needs: [test-init]
