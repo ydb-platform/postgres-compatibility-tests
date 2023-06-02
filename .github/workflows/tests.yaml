@@ -33,16 +33,15 @@ jobs:
 
       - name: Echo version to summary
         run: |
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          
           VERSION="$(docker run --rm cr.yandex/yc/yandex-docker-local-ydb:trunk /ydbd -V)"
           
           cat <<EOF >> $GITHUB_STEP_SUMMARY
+          
+          
           ## YDB version in details:
-          ```
+          \`\`\`
           $VERSION
-          ```
+          \`\`\`
           EOF
 
   test:
