@@ -36,7 +36,7 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           
           echo "Version:" >> $GITHUB_STEP_SUMMARY
-          docker run --rm -it cr.yandex/yc/yandex-docker-local-ydb:trunk /ydbd -V >> $GITHUB_STEP_SUMMARY
+          docker run --rm cr.yandex/yc/yandex-docker-local-ydb:trunk /ydbd -V >> $GITHUB_STEP_SUMMARY
 
   test:
     needs: [test-init]
