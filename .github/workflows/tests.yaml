@@ -31,6 +31,13 @@ jobs:
           ./scripts/testmo-init-tests.bash
         id: run-tests
 
+      - run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          echo "Version:" >> $GITHUB_STEP_SUMMARY
+          docker run --rm -it cr.yandex/yc/yandex-docker-local-ydb:trunk /ydbd -V >> $GITHUB_STEP_SUMMARY
+
   test:
     needs: [test-init]
     runs-on: ubuntu-20.04

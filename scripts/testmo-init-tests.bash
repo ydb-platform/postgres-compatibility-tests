@@ -29,3 +29,5 @@ echo "testmo-run-id=$ID"
 echo "$GITHUB_OUTPUT"
 
 echo "testmo-run-id=$ID" >> "$GITHUB_OUTPUT"
+
+echo "Testmo report: https://nebius.testmo.net/automation/runs/view/$ID" >> $GITHUB_STEP_SUMMARY
