@@ -379,13 +379,13 @@ def process_report(
     if full_test_list is None:
         full_test_list = []
 
-    reasons = get_skip_reasons(config)
-    report.skip_tests(reasons)
-
     if config.convert.change_error_to_failure:
         _change_error_to_failure(report)
 
     _append_unexisted_tests(report, full_test_list)
+
+    reasons = get_skip_reasons(config)
+    report.skip_tests(reasons)
 
     _check_test_list_equals(report, full_test_list)
 
