@@ -293,3 +293,13 @@ tickets:
         - tests.test_types_extras.JsonbTestCase.test_register_default
         - tests.test_types_extras.TypesExtrasTests.testINET
         - tests.test_types_extras.TypesExtrasTests.test_point_array
+
+  - name: KIKIMR-18191  # Cannot find table 'db.[/local/pg_namespace]'
+    tests:
+      python-psycopg2:
+        - tests.test_types_extras.RangeCasterTestCase.test_rang_weird_name
+
+  - name: KIKIMR-18073  # Tables without primary key
+    tests:
+      python-psycopg2:
+        - tests.test_psycopg2_dbapi20.Psycopg2Tests.test_None
