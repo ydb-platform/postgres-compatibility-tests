@@ -7,7 +7,7 @@ from collections import OrderedDict
 from dataclasses import dataclass, field
 import os.path
 from os.path import dirname, join
-from typing import List, Dict, Callable, Iterable, Optional
+from typing import List, Dict, Callable, Iterable, Optional, Union
 from xml.etree.ElementTree import Element, ElementTree
 
 from mashumaro.mixins.yaml import DataClassYAMLMixin
@@ -166,13 +166,13 @@ class JUnitTestSuites:
             testsuite = JUnitTestSuites.TestSuite.parse_xml(testsuite_xml)
             self.test_suites.append(testsuite)
 
-    def save_to_file(self, filepath: str):
+    def save_to_file(self, file_or_filename):
         root = Element("testsuites")
         for suite in self.test_suites:
             root.append(suite.xml)
 
         et = ElementTree(root)
-        et.write(filepath)
+        et.write(file_or_filename, encoding="utf-8")
 
     def skip_tests(self, skiplist: Iterable[JUnitTestSuites.SetStatusReason]):
         skip_dict = dict()  # type: Dict[str, JUnitTestSuites.SetStatusReason]
