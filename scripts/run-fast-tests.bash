@@ -10,8 +10,7 @@ TESTS=(
   languages/python/psycopg2
 )
 
-rm -rf ./tmp/
-
+rm -rf ./tmp/results
 mkdir -p ./tmp/results
 
 for TESTDIR in ${TESTS[@]}; do
@@ -22,3 +21,4 @@ for TESTDIR in ${TESTS[@]}; do
 done
 
 scripts/run-script.bash python scripts/report-processing/merge-results.py --input-reports=./tmp/results > ./tmp/full-result.xml
+echo "Result was output to: $PWD/tmp/full-result.xml"
