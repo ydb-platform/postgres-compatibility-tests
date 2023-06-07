@@ -3,6 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      network: host
     working_dir: /project
     volumes:
       - ../../:/project
