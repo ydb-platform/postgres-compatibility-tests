@@ -11,7 +11,7 @@ YDB_PG_ALLTEST_RESULT_PATH="${YDB_PG_ALLTEST_RESULT_PATH:-$PWD/tmp/last-run-resu
 
 TESTS=(
   languages/go/libpq
-#  languages/python/psycopg2
+  languages/python/psycopg2
 )
 
 rm -rf ./tmp/run-results
