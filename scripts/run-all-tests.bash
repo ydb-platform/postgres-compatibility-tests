@@ -2,12 +2,12 @@
 
 set -eu
 
-YDB_PG_ALLTESTS_RESULT_NAME="${YDB_PG_ALLTESTS_RESULT_NAME:-last}"
-
 if [ ! -e .tests-root-folder ]; then
   echo "Run from project root folder"
   exit 1
 fi
+
+YDB_PG_ALLTEST_RESULT_PATH="${YDB_PG_ALLTEST_RESULT_PATH:-$PWD/tmp/last-run-result.xml}"
 
 TESTS=(
   languages/go/libpq
@@ -26,9 +26,7 @@ for TESTDIR in ${TESTS[@]}; do
   cp "$TESTDIR/test-result/result.xml" "./tmp/run-results/$RESULT_XML"
 done
 
-RUN_RESULT_PATH="$PWD/tmp/alltest-result/$YDB_PG_ALLTESTS_RESULT_NAME.xml"
 scripts/run-script.bash python scripts/report-processing/merge-results.py --input-reports=./tmp/run-results \
-  > "$RUN_RESULT_PATH"
+  > "$YDB_PG_ALLTEST_RESULT_PATH"
 
-echo "Result was output to: $RUN_RESULT_PATH" >&2
-
+echo "Result was output to: $YDB_PG_ALLTEST_RESULT_PATH" >&2
