@@ -56,6 +56,8 @@ class JUnitTestSuites:
 
     @dataclass
     class TestCase:
+        OK_STATUS = "OK"
+
         xml: Element
         suite: JUnitTestSuites.TestSuite
 
@@ -123,7 +125,15 @@ class JUnitTestSuites:
 
         @property
         def is_passed(self):
-            return len(self.xml.getchildren()) == 0
+            return self.status() == JUnitTestSuites.TestCase.OK_STATUS
+
+        def status(self) -> str:
+            children = list(self.xml)
+            if len(children) == 0:
+                return JUnitTestSuites.TestCase.OK_STATUS
+
+            child = children[0]
+            return child.tag.upper()
 
         def remove_from_suite(self):
             self.suite.xml.remove(self.xml)

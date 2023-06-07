@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker-compose -f scripts/report-processing/docker-compose.yaml run scripts "$@"
+docker-compose -f scripts/report-processing/docker-compose.yaml run --build scripts "$@"
