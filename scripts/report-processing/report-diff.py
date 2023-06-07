@@ -93,6 +93,13 @@ def _show_diff(diff: List[_DiffItem]):
     for test in broken:
         print_state(test)
 
+    if sys.stdout.isatty():
+        print(colorama.Fore.GREEN, "fixed: ", len(fixed), colorama.Fore.RESET, sep='')
+        print(colorama.Fore.RED, "broken: ", len(broken), colorama.Fore.RESET, sep='')
+    else:
+        print("fixed: ", len(fixed), sep='')
+        print("broken: ", len(broken), sep='', end='')
+
     print(colorama.Fore.RESET)
 
 
