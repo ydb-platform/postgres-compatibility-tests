@@ -20,12 +20,14 @@ mkdir -p ./tmp/alltest-result
 
 
 for TESTDIR in ${TESTS[@]}; do
+  echo "Run test: $TESTDIR"
   RESULT_XML="${TESTDIR////_}.xml"
   ./scripts/run-test.bash "$TESTDIR"
   ./scripts/post-process-report.bash "$TESTDIR"
   cp "$TESTDIR/test-result/result.xml" "./tmp/run-results/$RESULT_XML"
 done
 
+echo "Merge results"
 scripts/run-script.bash python scripts/report-processing/merge-results.py --input-reports=./tmp/run-results \
   > "$YDB_PG_ALLTEST_RESULT_PATH"
 
