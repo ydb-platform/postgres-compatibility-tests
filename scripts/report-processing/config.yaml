@@ -26,6 +26,30 @@ tickets:
         - TestQueryRowBugWorkaround
         - TestReturning
         - TestRowsResultTag
+        - TestCopyInRaiseStmtTrigger
+      python-psycopg2:
+        - tests.test_transaction.TransactionTests.test_commit
+        - tests.test_transaction.TransactionTests.test_failed_commit
+        - tests.test_transaction.TransactionTests.test_rollback
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictConnCursorArgs
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithNamedCursorFetchAll
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithNamedCursorFetchMany
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithNamedCursorFetchManyNoarg
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithNamedCursorFetchOne
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithNamedCursorIter
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithNamedCursorIterRowNumber
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithNamedCursorNotGreedy
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithPlainCursorFetchAll
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithPlainCursorFetchMany
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithPlainCursorFetchManyNoarg
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithPlainCursorFetchOne
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithPlainCursorIter
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithPlainCursorIterRowNumber
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testPickleDictRow
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testUpdateRow
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.test_copy
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.test_iter_methods
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.test_order
 
   - name: KIKIMR-18080 # Parameter types
     tests:
@@ -97,13 +121,6 @@ tickets:
       golang-lib-pq:
         - TestStatment
 
-  - name: YQL-16021 # SHOW server_version_num, alternative is not implemented yet : 281
-    tests:
-      golang-lib-pq:
-        - TestByteaOutputFormats
-        - TestCopyInRaiseStmtTrigger
-        - TestNotifyExtra
-
   - name: KIKIMR-18118 # Fail transaction on error
     tests:
       golang-lib-pq:
@@ -121,6 +138,7 @@ tickets:
         - TestListenerReconnect
         - TestListenerUnlisten
         - TestListenerUnlistenAll
+        - TestNotifyExtra
 
   - name: KIKIMR-18060 # SSL Response
     tests:
@@ -226,3 +244,50 @@ tickets:
     tests:
       python-psycopg2:
         - tests.test_psycopg2_dbapi20.Psycopg2Tests.test_None
+        - tests.test_connection.SignalTestCase.test_bug_551_no_returning
+        - tests.test_connection.SignalTestCase.test_bug_551_returning
+
+
+  - name: KIKIMR-18275  # VariableSetStmt, not supported name
+    tests:
+      golang-lib-pq:
+        - TestByteaOutputFormats
+      python-psycopg2:
+        - tests.test_connection.TransactionControlTests.test_idempotence_check
+        - tests.test_connection.TransactionControlTests.test_mixing_session_attribs
+
+  - name: KIKIMR-18276  # SHOW, unrecognized configuration parameter
+    tests:
+      python-psycopg2:
+        - tests.test_psycopg2_dbapi20.Psycopg2TPCTests.test_commit_in_tpc_fails
+        - tests.test_psycopg2_dbapi20.Psycopg2TPCTests.test_rollback_in_tpc_fails
+        - tests.test_psycopg2_dbapi20.Psycopg2TPCTests.test_tpc_begin
+        - tests.test_psycopg2_dbapi20.Psycopg2TPCTests.test_tpc_begin_in_tpc_transaction_fails
+        - tests.test_psycopg2_dbapi20.Psycopg2TPCTests.test_tpc_begin_in_transaction_fails
+        - tests.test_psycopg2_dbapi20.Psycopg2TPCTests.test_tpc_commit_with_prepare
+        - tests.test_psycopg2_dbapi20.Psycopg2TPCTests.test_tpc_commit_without_prepare
+        - tests.test_psycopg2_dbapi20.Psycopg2TPCTests.test_tpc_rollback_with_prepare
+        - tests.test_psycopg2_dbapi20.Psycopg2TPCTests.test_tpc_rollback_without_prepare
+        - tests.test_psycopg2_dbapi20.Psycopg2TPCTests.test_xid
+        - tests.test_connection.TransactionControlTests.test_set_default
+        - tests.test_connection.TransactionControlTests.test_set_deferrable
+        - tests.test_connection.TransactionControlTests.test_set_isolation_level
+        - tests.test_connection.TransactionControlTests.test_set_isolation_level_str
+        - tests.test_connection.TransactionControlTests.test_set_read_only
+        - tests.test_connection.TransactionControlTests.test_setattr_deferrable
+        - tests.test_connection.TransactionControlTests.test_setattr_read_only
+
+  - name: KIKIMR-18279 # DELETE without filter
+    tests:
+      python-psycopg2:
+        - tests.test_with.WithConnectionTestCase.test_cant_reenter
+        - tests.test_with.WithConnectionTestCase.test_subclass_commit
+        - tests.test_with.WithConnectionTestCase.test_subclass_rollback
+        - tests.test_with.WithConnectionTestCase.test_with_autocommit
+        - tests.test_with.WithConnectionTestCase.test_with_autocommit_pgerror
+        - tests.test_with.WithConnectionTestCase.test_with_autocommit_pyerror
+        - tests.test_with.WithConnectionTestCase.test_with_closed
+        - tests.test_with.WithConnectionTestCase.test_with_connect_idiom
+        - tests.test_with.WithConnectionTestCase.test_with_error_db
+        - tests.test_with.WithConnectionTestCase.test_with_error_python
+        - tests.test_with.WithConnectionTestCase.test_with_ok
