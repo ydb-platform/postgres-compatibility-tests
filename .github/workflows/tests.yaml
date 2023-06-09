@@ -73,6 +73,12 @@ jobs:
           echo "Remove raw results"
           rm -rf /test-result/raw
 
+      - uses: actions/upload-artifact@v3
+        name: "upload test result artifacts"
+        with:
+          name: test-result
+          path: "**/test-result/*.xml"
+
       - run: |
           echo "Upload results"
           scripts/testmo-upload-results.bash ${{ matrix.tests }}/test-result
