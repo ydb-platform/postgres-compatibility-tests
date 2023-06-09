@@ -14,22 +14,12 @@ env:
 jobs:
   test-init:
     runs-on: ubuntu-20.04
-    outputs:
-      testmo-run-id: ${{ steps.run-tests.outputs.testmo-run-id }}
 
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: 19
-
-      - run: |
-          echo "Install testmo-cli"
-          npm install -g @testmo/testmo-cli
-
-      - run: |
-          ./scripts/testmo-init-tests.bash
-        id: run-tests
 
       - name: Echo version to summary
         run: |
@@ -79,13 +69,6 @@ jobs:
           name: test-result
           path: "**/test-result/*.xml"
 
-      - run: |
-          echo "Upload results"
-          scripts/testmo-upload-results.bash ${{ matrix.tests }}/test-result
-
-        env:
-          TESTMO_RUN_ID: ${{ needs.test-init.outputs.testmo-run-id }}
-
   test-complete:
     runs-on: ubuntu-20.04
     needs: [test-init, test]
@@ -96,8 +79,13 @@ jobs:
         with:
           node-version: 19
 
+      - name: Download a test-results
+        uses: actions/download-artifact@v3
+        with:
+          name: test-result
+
       - run: |
           scripts/install-tools.bash
-          scripts/testmo-complete-tests.bash
+          scripts/upload-test-result.bash
         env:
           TESTMO_RUN_ID: ${{ needs.test-init.outputs.testmo-run-id }}
