@@ -29,7 +29,7 @@ testmo automation:run:create \
         > testmo-run-id.txt
 
 TESTMO_RUN_ID=$(cat testmo-run-id.txt)
-echo "Testmo report: https://nebius.testmo.net/automation/runs/view/$ID" >> $GITHUB_STEP_SUMMARY
+echo "Testmo report: https://nebius.testmo.net/automation/runs/view/$TESTMO_RUN_ID" >> $GITHUB_STEP_SUMMARY
 
 testmo automation:run:submit-thread \
             --instance "$TESTMO_URL" \
