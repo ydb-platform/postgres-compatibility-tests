@@ -2,6 +2,9 @@
 
 set -eu
 
+[ -e ".tests-root-folder" ] || echo "Start from test root folder"
+[ -e ".tests-root-folder" ] || exit 1
+
 if [ -n "${GITHUB_EVENT_NAME:-}" ]; then
     TESTMO_SOURCE="github-$GITHUB_EVENT_NAME"
 else
@@ -21,13 +24,17 @@ testmo automation:run:create \
     --instance "$TESTMO_URL" \
     --project-id "$TESTMO_PROJECT_ID" \
     --name "YDB Postgres compatibility" \
+    --source "$TESTMO_SOURCE" \
     --resources resources.json \
-    --source "$TESTMO_SOURCE" > testmo-run-id.txt
+        > testmo-run-id.txt
 
-ID=$(cat testmo-run-id.txt)
-echo "testmo-run-id=$ID"
-echo "$GITHUB_OUTPUT"
+TESTMO_RUN_ID=$(cat testmo-run-id.txt)
+echo "Testmo report: https://nebius.testmo.net/automation/runs/view/$TESTMO_RUN_ID" >> $GITHUB_STEP_SUMMARY
 
-echo "testmo-run-id=$ID" >> "$GITHUB_OUTPUT"
+testmo automation:run:submit-thread \
+            --instance "$TESTMO_URL" \
+            --run-id "$TESTMO_RUN_ID" \
+            --results "**/test-result/*.xml"
 
-echo "Testmo report: https://nebius.testmo.net/automation/runs/view/$ID" >> $GITHUB_STEP_SUMMARY
+testmo automation:run:complete --instance "$TESTMO_URL" --run-id "$TESTMO_RUN_ID"
+
