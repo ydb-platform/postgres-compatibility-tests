@@ -20,10 +20,6 @@ RUN_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
 testmo automation:resources:add-field --name git --type string --value ${GITHUB_SHA} --resources resources.json
 testmo automation:resources:add-link --name build --url $RUN_URL --resources resources.json
 
-DIR="$PWD"
-PROJECT_ID=1
-RESULTS="$FILENAME"
-
 testmo automation:run:submit \
     --instance "$TESTMO_URL" \
     --project-id "$TESTMO_PROJECT_ID" \
