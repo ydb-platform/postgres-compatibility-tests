@@ -462,4 +462,3 @@ tickets:
     tests:
       python-psycopg2:
         - tests.test_types_extras.AdaptTypeTestCase.test_none_in_record
-        -
