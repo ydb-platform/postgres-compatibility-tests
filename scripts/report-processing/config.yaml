@@ -50,11 +50,66 @@ tickets:
         - tests.test_extras_dictcursor.ExtrasDictCursorTests.test_copy
         - tests.test_extras_dictcursor.ExtrasDictCursorTests.test_iter_methods
         - tests.test_extras_dictcursor.ExtrasDictCursorTests.test_order
+        - tests.test_async.AsyncTests.test_async_after_async
+        - tests.test_async.AsyncTests.test_async_callproc
+        - tests.test_async.AsyncTests.test_async_connection_error_message
+        - tests.test_async.AsyncTests.test_async_cursor_gone
+        - tests.test_async.AsyncTests.test_async_dont_read_all
+        - tests.test_async.AsyncTests.test_async_executemany
+        - tests.test_async.AsyncTests.test_async_fetch_wrong_cursor
+        - tests.test_async.AsyncTests.test_async_iter
+        - tests.test_async.AsyncTests.test_async_named_cursor
+        - tests.test_async.AsyncTests.test_async_scroll
+        - tests.test_async.AsyncTests.test_async_select
+        - tests.test_async.AsyncTests.test_async_subclass
+        - tests.test_async.AsyncTests.test_close
+        - tests.test_async.AsyncTests.test_close
+        - tests.test_async.AsyncTests.test_connection_setup
+        - tests.test_async.AsyncTests.test_copy_no_hang
+        - tests.test_async.AsyncTests.test_copy_while_async
+        - tests.test_async.AsyncTests.test_error
+        - tests.test_async.AsyncTests.test_error_two_cursors
+        - tests.test_async.AsyncTests.test_fetch_after_async
+        - tests.test_async.AsyncTests.test_flush_on_write
+        - tests.test_async.AsyncTests.test_lobject_while_async
+        - tests.test_async.AsyncTests.test_non_block_after_notification
+        - tests.test_async.AsyncTests.test_notices
+        - tests.test_async.AsyncTests.test_notify
+        - tests.test_async.AsyncTests.test_poll_conn_for_notification
+        - tests.test_async.AsyncTests.test_poll_noop
+        - tests.test_async.AsyncTests.test_reset_while_async
+        - tests.test_async.AsyncTests.test_rollback_while_async
+        - tests.test_async.AsyncTests.test_scroll
+        - tests.test_async.AsyncTests.test_set_parameters_while_async
+        - tests.test_async.AsyncTests.test_stop_on_first_error
+        - tests.test_async.AsyncTests.test_sync_poll
+        - tests.test_copy.CopyTests.test_copy_bytes
+        - tests.test_copy.CopyTests.test_copy_expert_file_refcount
+        - tests.test_copy.CopyTests.test_copy_expert_textiobase
+        - tests.test_copy.CopyTests.test_copy_from
+        - tests.test_copy.CopyTests.test_copy_from_cols
+        - tests.test_copy.CopyTests.test_copy_from_cols_err
+        - tests.test_copy.CopyTests.test_copy_from_insane_size
+        - tests.test_copy.CopyTests.test_copy_from_propagate_error
+        - tests.test_copy.CopyTests.test_copy_from_segfault
+        - tests.test_copy.CopyTests.test_copy_funny_names
+        - tests.test_copy.CopyTests.test_copy_no_column_limit
+        - tests.test_copy.CopyTests.test_copy_query
+        - tests.test_copy.CopyTests.test_copy_rowcount
+        - tests.test_copy.CopyTests.test_copy_rowcount_error
+        - tests.test_copy.CopyTests.test_copy_text
+        - tests.test_copy.CopyTests.test_copy_to
+        - tests.test_copy.CopyTests.test_copy_to_propagate_error
+        - tests.test_copy.CopyTests.test_copy_to_segfault
+        - tests.test_types_extras.AdaptTypeTestCase.test_from_tables
 
   - name: KIKIMR-18080 # Parameter types
     tests:
       golang-lib-pq:
         - TestArrayValueBackend
+      python-psycopg2:
+        - tests.test_quote.QuotingTestCase.test_binary
+        - tests.test_quote.QuotingTestCase.test_string
 
   - name: KIKIMR-18115 # PG error format
     tests:
@@ -67,6 +122,9 @@ tickets:
     tests:
       golang-lib-pq:
         - TestCopySyntaxError
+      python-psycopg2:
+        - tests.test_errors.ErrorsTests.test_exception_class
+        - tests.test_errors.ErrorsTests.test_exception_class_fallback
 
   - name: KIKIMR-18049 # Pg Auth error
     tests:
@@ -201,10 +259,19 @@ tickets:
       golang-lib-pq:
         - TestQueryCancelRace
 
-  - name: KIKIMR-18181 # Select generators
+  - name: KIKIMR-18181 # Select generators, alternative is not implemented yet : 304
     tests:
       golang-lib-pq:
         - TestQueryCancelledReused
+      python-psycopg2:
+        - tests.test_cursor.NamedCursorTests.test_iter_named_cursor_default_itersize
+        - tests.test_cursor.NamedCursorTests.test_iter_named_cursor_efficient
+        - tests.test_cursor.NamedCursorTests.test_iter_named_cursor_itersize
+        - tests.test_cursor.NamedCursorTests.test_iter_named_cursor_rownumber
+        - tests.test_cursor.NamedCursorTests.test_named_cursor_stealing
+        - tests.test_cursor.NamedCursorTests.test_scroll
+        - tests.test_cursor.NamedCursorTests.test_scroll_named
+        - tests.test_cursor.NamedCursorTests.test_stolen_named_cursor_close
 
   - name: KIKIMR-17958  # Begin/Commit wire tags
     tests:
@@ -239,6 +306,10 @@ tickets:
     tests:
       python-psycopg2:
         - tests.test_types_extras.RangeCasterTestCase.test_rang_weird_name
+        - tests.test_types_extras.AdaptTypeTestCase.test_composite_namespace
+        - tests.test_types_extras.AdaptTypeTestCase.test_composite_namespace_path
+        - tests.test_types_extras.AdaptTypeTestCase.test_composite_not_found
+        - tests.test_types_extras.AdaptTypeTestCase.test_composite_weird_name
 
   - name: KIKIMR-18073  # Tables without primary key
     tests:
@@ -246,6 +317,9 @@ tickets:
         - tests.test_psycopg2_dbapi20.Psycopg2Tests.test_None
         - tests.test_connection.SignalTestCase.test_bug_551_no_returning
         - tests.test_connection.SignalTestCase.test_bug_551_returning
+        - tests.test_cursor.NamedCursorTests.test_invalid_name
+        - tests.test_cursor.NamedCursorTests.test_not_scrollable
+        - tests.test_cursor.NamedCursorTests.test_scrollable
 
 
   - name: KIKIMR-18275  # VariableSetStmt, not supported name
@@ -255,6 +329,9 @@ tickets:
       python-psycopg2:
         - tests.test_connection.TransactionControlTests.test_idempotence_check
         - tests.test_connection.TransactionControlTests.test_mixing_session_attribs
+        - tests.test_quote.QuotingTestCase.test_bytes
+        - tests.test_quote.QuotingTestCase.test_koi8
+        - tests.test_quote.QuotingTestCase.test_latin1
 
   - name: KIKIMR-18276  # SHOW, unrecognized configuration parameter
     tests:
@@ -276,6 +353,8 @@ tickets:
         - tests.test_connection.TransactionControlTests.test_set_read_only
         - tests.test_connection.TransactionControlTests.test_setattr_deferrable
         - tests.test_connection.TransactionControlTests.test_setattr_read_only
+        - tests.test_connection.TestEncryptPassword.test_encrypt_server
+        - tests.test_quote.QuotingTestCase.test_unicode
 
   - name: KIKIMR-18279 # DELETE without filter
     tests:
@@ -291,3 +370,96 @@ tickets:
         - tests.test_with.WithConnectionTestCase.test_with_error_db
         - tests.test_with.WithConnectionTestCase.test_with_error_python
         - tests.test_with.WithConnectionTestCase.test_with_ok
+
+  - name: KIKIMR-18327 # Large objects
+    tests:
+      python-psycopg2:
+        - tests.test_lobject.LargeObjectTruncateTests.test_truncate
+        - tests.test_lobject.LargeObjectTruncateTests.test_truncate_after_close
+        - tests.test_lobject.LargeObjectTruncateTests.test_truncate_after_commit
+
+  - name: KIKIMR-18329  # pg_type table
+    tests:
+      python-psycopg:
+        - tests.test_types_extras.HstoreTestCase.test_array_cast
+        - tests.test_types_extras.HstoreTestCase.test_array_cast_oid
+        - tests.test_types_extras.HstoreTestCase.test_array_cast_oid
+        - tests.test_types_extras.HstoreTestCase.test_non_dbapi_connection
+        - tests.test_types_extras.HstoreTestCase.test_oid
+        - tests.test_types_extras.HstoreTestCase.test_register_conn
+        - tests.test_types_extras.HstoreTestCase.test_register_curs
+        - tests.test_types_extras.HstoreTestCase.test_register_globally
+        - tests.test_types_extras.HstoreTestCase.test_roundtrip
+        - tests.test_types_extras.HstoreTestCase.test_roundtrip_array
+        - tests.test_types_extras.JsonTestCase.test_loads
+        - tests.test_types_extras.JsonTestCase.test_no_conn_curs
+        - tests.test_types_extras.JsonTestCase.test_null
+        - tests.test_types_extras.JsonTestCase.test_register_globally
+        - tests.test_types_extras.JsonTestCase.test_register_on_connection
+        - tests.test_types_extras.JsonTestCase.test_register_on_cursor
+
+  - name: KIKIMR-18330  # drop table
+    tests:
+      python-psycopg:
+        - tests.test_connection.ConnectionTwoPhaseTests.test_cancel_fails_prepared
+        - tests.test_connection.ConnectionTwoPhaseTests.test_recovered_xids
+        - tests.test_connection.ConnectionTwoPhaseTests.test_status_after_recover
+        - tests.test_connection.ConnectionTwoPhaseTests.test_tpc_commit
+        - tests.test_connection.ConnectionTwoPhaseTests.test_tpc_commit_one_phase
+        - tests.test_connection.ConnectionTwoPhaseTests.test_tpc_commit_recovered
+        - tests.test_connection.ConnectionTwoPhaseTests.test_tpc_recover_non_dbapi_connection
+        - tests.test_connection.ConnectionTwoPhaseTests.test_tpc_rollback
+        - tests.test_connection.ConnectionTwoPhaseTests.test_tpc_rollback_one_phase
+        - tests.test_connection.ConnectionTwoPhaseTests.test_tpc_rollback_recovered
+        - tests.test_connection.ConnectionTwoPhaseTests.test_unparsed_roundtrip
+        - tests.test_connection.ConnectionTwoPhaseTests.test_xid_construction
+        - tests.test_connection.ConnectionTwoPhaseTests.test_xid_encoding
+        - tests.test_connection.ConnectionTwoPhaseTests.test_xid_from_string
+        - tests.test_connection.ConnectionTwoPhaseTests.test_xid_roundtrip
+        - tests.test_connection.ConnectionTwoPhaseTests.test_xid_to_string
+        - tests.test_connection.ConnectionTwoPhaseTests.test_xid_unicode
+        - tests.test_connection.ConnectionTwoPhaseTests.test_xid_unicode_unparsed
+        - tests.test_cursor.NamedCursorTests.test_withhold
+        - tests.test_cursor.NamedCursorTests.test_withhold_autocommit
+        - tests.test_cursor.NamedCursorTests.test_withhold_no_begin
+
+  - name: KIKIMR-18332 # pg_catalog
+    tests:
+      python-psycopg2:
+        - tests.test_cursor.NamedCursorTests.test_named_noop_close
+
+  - name: KIKIMR-18333 # create type, alternative is not implemented yet : 316
+    tests:
+      python-psycopg2:
+        - tests.test_types_extras.RangeCasterTestCase.test_range_escaping
+        - tests.test_types_extras.RangeCasterTestCase.test_register_range_adapter
+
+  - name: KIKIMR-18334 # pg_range
+    tests:
+      python-psycopg2:
+        - tests.test_types_extras.RangeCasterTestCase.test_range_not_found
+
+  - name: KIKIMR-18335  # create scheme rs, alternative is not implemented yet : 292
+    tests:
+      python-psycopg2:
+        - tests.test_types_extras.RangeCasterTestCase.test_schema_range
+
+  - name: KIKIMR-18336  # savepoint
+    tests:
+      python-psycopg2:
+        - tests.test_types_extras.AdaptTypeTestCase.test_cast_composite
+        - tests.test_types_extras.AdaptTypeTestCase.test_cast_nested
+        - tests.test_types_extras.AdaptTypeTestCase.test_composite_array
+        - tests.test_types_extras.AdaptTypeTestCase.test_empty_string
+        - tests.test_types_extras.AdaptTypeTestCase.test_non_dbapi_connection
+        - tests.test_types_extras.AdaptTypeTestCase.test_register_globally
+        - tests.test_types_extras.AdaptTypeTestCase.test_register_on_connection
+        - tests.test_types_extras.AdaptTypeTestCase.test_register_on_cursor
+        - tests.test_types_extras.AdaptTypeTestCase.test_subclass
+        - tests.test_types_extras.AdaptTypeTestCase.test_wrong_schema
+
+  - name: KIKIMR-18336  # record, alternative is not implemented yet : 138 (curs.execute("SELECT %s;", [(42, None)]))
+    tests:
+      python-psycopg2:
+        - tests.test_types_extras.AdaptTypeTestCase.test_none_in_record
+        -
