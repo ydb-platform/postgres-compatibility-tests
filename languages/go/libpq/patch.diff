@@ -1,79 +1,40 @@
-Common subdirectories: /original-sources/.github and ./.github
-Common subdirectories: /original-sources/auth and ./auth
-Common subdirectories: /original-sources/certs and ./certs
-diff -c /original-sources/conn_test.go ./conn_test.go
-*** /original-sources/conn_test.go	Wed Apr 26 04:34:24 2023
---- ./conn_test.go	Wed May 31 14:50:19 2023
-***************
-*** 318,324 ****
-  
-  	if !r1.Next() {
-  		if r.Err() != nil {
-! 			t.Fatal(r1.Err())
-  		}
-  		t.Fatal("expected row")
-  	}
---- 318,324 ----
-  
-  	if !r1.Next() {
-  		if r.Err() != nil {
-! 			t.Fatal(r.Err())
-  		}
-  		t.Fatal("expected row")
-  	}
-***************
-*** 1290,1296 ****
-  
-  	if !r.Next() {
-  		if r.Err() != nil {
-! 			t.Fatal(err)
-  		}
-  		t.Fatal("expected row")
-  	}
---- 1290,1296 ----
-  
-  	if !r.Next() {
-  		if r.Err() != nil {
-! 			t.Fatal(r.Err())
-  		}
-  		t.Fatal("expected row")
-  	}
-***************
-*** 1305,1311 ****
-  
-  	if !r.Next() {
-  		if r.Err() != nil {
-! 			t.Fatal(err)
-  		}
-  		t.Fatal("expected row")
-  	}
---- 1305,1311 ----
-  
-  	if !r.Next() {
-  		if r.Err() != nil {
-! 			t.Fatal(r.Err())
-  		}
-  		t.Fatal("expected row")
-  	}
-***************
-*** 1501,1507 ****
-  		}
-  
-  		value, success := tryGetParameterValue()
-! 		if success != test.success && !test.success {
-  			t.Fatalf("%v: unexpected error: %v", test.conninfo, err)
-  		}
-  		if success != test.success {
---- 1501,1507 ----
-  		}
-  
-  		value, success := tryGetParameterValue()
-! 		if success != test.success && !success {
-  			t.Fatalf("%v: unexpected error: %v", test.conninfo, err)
-  		}
-  		if success != test.success {
-Common subdirectories: /original-sources/example and ./example
-Common subdirectories: /original-sources/hstore and ./hstore
-Common subdirectories: /original-sources/oid and ./oid
-Common subdirectories: /original-sources/scram and ./scram
-Only in ./: test.binary
+diff -ruN /original-sources/conn_test.go ./conn_test.go
+--- /original-sources/conn_test.go	2023-04-26 04:34:24.000000000 +0000
++++ ./conn_test.go	2023-05-31 14:50:19.000000000 +0000
+@@ -318,7 +318,7 @@
+ 
+ 	if !r1.Next() {
+ 		if r.Err() != nil {
+-			t.Fatal(r1.Err())
++			t.Fatal(r.Err())
+ 		}
+ 		t.Fatal("expected row")
+ 	}
+@@ -1290,7 +1290,7 @@
+ 
+ 	if !r.Next() {
+ 		if r.Err() != nil {
+-			t.Fatal(err)
++			t.Fatal(r.Err())
+ 		}
+ 		t.Fatal("expected row")
+ 	}
+@@ -1305,7 +1305,7 @@
+ 
+ 	if !r.Next() {
+ 		if r.Err() != nil {
+-			t.Fatal(err)
++			t.Fatal(r.Err())
+ 		}
+ 		t.Fatal("expected row")
+ 	}
+@@ -1501,7 +1501,7 @@
+ 		}
+ 
+ 		value, success := tryGetParameterValue()
+-		if success != test.success && !test.success {
++		if success != test.success && !success {
+ 			t.Fatalf("%v: unexpected error: %v", test.conninfo, err)
+ 		}
+ 		if success != test.success {
+Binary files /original-sources/test.binary and ./test.binary differ

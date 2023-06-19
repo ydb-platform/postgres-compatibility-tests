@@ -16,7 +16,7 @@ rm -f libpq.tar.gz
 mkdir -p /project/sources/
 cp -R /original-sources/. /project/sources/
 
-[ -e /patch.diff ] && patch -c -d /project/sources/ < /patch.diff
+[ -e /patch.diff ] && patch -s -p0 < /patch.diff
 
 cd /project/sources/
 
