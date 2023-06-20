@@ -102,6 +102,26 @@ tickets:
         - tests.test_copy.CopyTests.test_copy_to_propagate_error
         - tests.test_copy.CopyTests.test_copy_to_segfault
         - tests.test_types_extras.AdaptTypeTestCase.test_from_tables
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_bad_col_names
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_cache
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_cursor_args
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_executemany
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_fetchall
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_fetchmany
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_fetchmany_noarg
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_fetchone
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_iter
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_max_cache
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_minimal_generation
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_named
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_named_fetchall
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_named_fetchmany
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_named_fetchone
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_named_rownumber
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_no_result_no_surprise
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_nonascii_name
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_not_greedy
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_record_updated
 
   - name: KIKIMR-18080 # Parameter types
     tests:
@@ -397,6 +417,7 @@ tickets:
         - tests.test_types_extras.JsonTestCase.test_register_globally
         - tests.test_types_extras.JsonTestCase.test_register_on_connection
         - tests.test_types_extras.JsonTestCase.test_register_on_cursor
+        - tests.test_types_extras.JsonTestCase.test_type_not_available
 
   - name: KIKIMR-18330  # drop table
     tests:
@@ -462,3 +483,29 @@ tickets:
     tests:
       python-psycopg2:
         - tests.test_types_extras.AdaptTypeTestCase.test_none_in_record
+
+  - name: KIKIMR-18376  # parse startup connection options
+    tests:
+      python-psycopg2:
+        - tests.test_types_extras.JsonTestCase.test_scs
+
+  - name: KIKIMR-18375  # receive connection parameters on startup
+    tests:
+      python-psycopg2:
+        - tests.test_types_extras.JsonTestCase.test_scs
+
+  - name: KIKIMR-18378  # use startup connection options
+    tests:
+      python-psycopg2:
+        - tests.test_types_extras.JsonTestCase.test_scs
+
+  - name: KIKIMR-18406  # null column len -1
+    tests:
+      python-psycopg2:
+        - tests.test_ipaddress.NetworkingTestCase.test_cidr_cast
+        - tests.test_ipaddress.NetworkingTestCase.test_inet_cast
+
+  - name: KIKIMR-18406  # CREATE FUNCTION, alternative is not implemented yet : 261
+    tests:
+      python-psycopg2:
+        - tests.test_cursor.CursorTests.test_callproc_dict
