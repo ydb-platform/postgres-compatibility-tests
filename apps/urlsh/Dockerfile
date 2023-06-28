@@ -6,6 +6,7 @@ WORKDIR /project/sources/
 
 COPY apps/urlsh/patch.diff /patch.diff
 COPY apps/urlsh/docker-init.bash /docker-init.bash
+
 RUN /docker-init.bash
 
 COPY scripts/go-run-separate-tests.bash /go-run-separate-tests.bash

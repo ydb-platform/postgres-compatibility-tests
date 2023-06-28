@@ -1,0 +1,28 @@
+diff -ruN /original-sources/cache/redis_test.go ./cache/redis_test.go
+--- /original-sources/cache/redis_test.go	2022-10-24 12:15:25.000000000 +0000
++++ ./cache/redis_test.go	2023-06-28 16:15:38.000000000 +0000
+@@ -10,6 +10,7 @@
+ )
+ 
+ func TestConnection(t *testing.T) {
++	t.Skip("no need for postgres test")
+ 	key := "APP_CACHE_HOST"
+ 	old := os.Getenv(key)
+ 
+@@ -26,6 +27,7 @@
+ }
+ 
+ func TestDeactivateURL(t *testing.T) {
++	t.Skip("no need for postgres test")
+ 	t.Run("deactivate", func(t *testing.T) {
+ 		urlModel := model.URL{ShortCode: "testCode", OriginURL: "http://local-host/url"}
+ 
+@@ -37,6 +39,7 @@
+ }
+ 
+ func TestLookupURL(t *testing.T) {
++	t.Skip("no need for postgres test")
+ 	t.Run("save + lookup", func(t *testing.T) {
+ 		urlModel := model.URL{ShortCode: util.RandomString(8), OriginURL: "http://local-host/abc/def/ghi"}
+ 
+Binary files /original-sources/controller-test.binary and ./controller-test.binary differ

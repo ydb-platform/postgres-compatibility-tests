@@ -30,8 +30,8 @@ echo "Run test: '$YDB_PG_TESTNAME'"
 
 echo "Start test"
 
-go test -test.v $TEST_RUN ./... > test-result.txt || true
-go-junit-report < test-result.txt > /test-result/raw/result.xml
+go test -test.v $TEST_RUN ./... > /test-result/raw/result.txt || true
+go-junit-report < /test-result/raw/result.txt > /test-result/raw/result.xml
 
 # Remove unprintable chars
 tr -dc '[:print:]\n' < /test-result/raw/result.xml > /test-result/tmp.xml
