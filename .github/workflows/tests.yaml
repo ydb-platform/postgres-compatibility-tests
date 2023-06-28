@@ -42,6 +42,7 @@ jobs:
       fail-fast: false
       matrix:
         tests:
+          - ./apps/urlsh
           - ./languages/go/libpq
           - ./languages/python/psycopg2
 
