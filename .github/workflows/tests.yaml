@@ -35,7 +35,7 @@ jobs:
           EOF
 
   test:
-#    needs: [test-init]
+    needs: [test-init]
     runs-on: ubuntu-20.04
 
     strategy:
@@ -68,7 +68,7 @@ jobs:
         name: "upload test result artifacts"
         with:
           name: test-result
-          path: "**/test-result/*.xml"
+          path: "**/test-result/**"
 
   test-complete:
     runs-on: ubuntu-20.04
