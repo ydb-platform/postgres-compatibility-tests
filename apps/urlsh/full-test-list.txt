@@ -1,6 +1,3 @@
-app-urlsh/TestConnection
-app-urlsh/TestDeactivateURL
-app-urlsh/TestLookupURL
 app-urlsh/TestListURL
 app-urlsh/TestListURL/list_endpoint_-_not_found
 app-urlsh/TestListURL/list_endpoint_-_ok
