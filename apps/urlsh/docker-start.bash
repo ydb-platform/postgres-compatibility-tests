@@ -33,4 +33,8 @@ echo "Start test"
 go test -test.v $TEST_RUN ./... > test-result.txt || true
 go-junit-report < test-result.txt > /test-result/raw/result.xml
 
+# Remove unprintable chars
+tr -dc '[:print:]\n' < /test-result/raw/result.xml > /test-result/tmp.xml
+mv -f /test-result/tmp.xml /test-result/raw/result.xml
+
 sed -e 's|classname="[^"]*"|classname="app-urlsh"|' -i /test-result/raw/result.xml
