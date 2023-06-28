@@ -19,6 +19,7 @@ TESTS=$($TEST_BINARY --test.list "$GO_LIST_FILTER" | sort)
 echo "Skip tests: '$SKIP_TESTS'"
 echo "Shell $SHELL"
 
+rm -f /test-result/raw/result.txt
 for TEST_NAME in $TESTS; do
     echo -n "Test: $TEST_NAME "
     if echo "$TEST_NAME" | grep -Eq "$SKIP_TESTS"; then
