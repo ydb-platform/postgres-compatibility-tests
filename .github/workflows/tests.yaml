@@ -35,7 +35,7 @@ jobs:
           EOF
 
   test:
-    needs: [test-init]
+#    needs: [test-init]
     runs-on: ubuntu-20.04
 
     strategy:
