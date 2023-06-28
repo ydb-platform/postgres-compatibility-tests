@@ -33,4 +33,4 @@ echo "Start test"
 go test -test.v $TEST_RUN ./... > test-result.txt || true
 go-junit-report < test-result.txt > /test-result/raw/result.xml
 
-sed -e 's|classname=""|classname="app-urlsh"|' -i /test-result/raw/result.xml
+sed -e 's|classname="[^"]*"|classname="app-urlsh"|' -i /test-result/raw/result.xml
