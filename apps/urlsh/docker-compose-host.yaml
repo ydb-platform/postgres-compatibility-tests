@@ -1,0 +1,16 @@
+version: "3"
+services:
+  project:
+    network_mode: host
+
+    image: ydb-test/app-urlsh
+    build:
+      context: ../../
+      dockerfile: apps/urlsh/Dockerfile
+      network: host
+    environment:
+      - DATABASE_URL=postgres://${YDB_PG_USER:-postgres}:${YDB_PG_PASSWORD:-password}@${YDB_PG_HOST:-ydb}:${YDB_PG_PORT:-5432}${YDB_PG_DATABASE:-/local}
+      - YDB_PG_TESTNAME=${YDB_PG_TESTNAME:-}
+    volumes:
+      - ./exchange:/exchange
+      - ./test-result/:/test-result

@@ -42,6 +42,7 @@ jobs:
       fail-fast: false
       matrix:
         tests:
+          - ./apps/urlsh
           - ./languages/go/libpq
           - ./languages/python/psycopg2
 
@@ -67,7 +68,7 @@ jobs:
         name: "upload test result artifacts"
         with:
           name: test-result
-          path: "**/test-result/*.xml"
+          path: "**/test-result/**"
 
   test-complete:
     runs-on: ubuntu-20.04

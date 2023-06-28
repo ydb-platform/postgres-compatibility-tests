@@ -13,8 +13,8 @@ rm -f psycopg2.tar.gz
 
 mkdir -p /project/sources/
 cp -R /original-sources/. /project/sources/
-cd /project/sources/
 
+cd /project/sources/
 [ -e /patch.diff ] && patch -s -p0 < /patch.diff
 
 python setup.py build

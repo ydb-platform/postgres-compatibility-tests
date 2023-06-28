@@ -1,0 +1,33 @@
+version: "3"
+services:
+  ydb:
+    image: cr.yandex/yc/yandex-docker-local-ydb:trunk
+    environment:
+      - "YDB_DEFAULT_LOG_LEVEL=DEBUG"
+      - "GRPC_TLS_PORT=2135"
+      - "GRPC_PORT=2136"
+      - "MON_PORT=8765"
+      - "YDB_USE_IN_MEMORY_PDISKS=true"
+      - "POSTGRES_USER=${YDB_PG_USER:-postgres}"
+      - "POSTGRES_PASSWORD=${YDB_PG_PASSWORD:-password}"
+    healthcheck:
+      test: "/bin/sh /health_check"
+      interval: 1s
+      start_period: 1m
+  project:
+    depends_on:
+      ydb:
+        condition: service_healthy
+
+    image: ydb-test/app-urlsh
+    build:
+      context: ../../
+      dockerfile: apps/urlsh/Dockerfile
+      network: host
+    environment:
+      - DATABASE_URL=postgres://${YDB_PG_USER:-postgres}:${YDB_PG_PASSWORD:-password}@${YDB_PG_HOST:-ydb}:${YDB_PG_PORT:-5432}${YDB_PG_DATABASE:-/local}
+      - YDB_PG_TESTNAME=${YDB_PG_TESTNAME:-}
+      - APP_ENV=test
+    volumes:
+      - ./exchange:/exchange
+      - ./test-result/:/test-result
