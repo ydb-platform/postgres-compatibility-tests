@@ -66,4 +66,85 @@ diff -ruN /original-sources/cache/redis_test.go ./cache/redis_test.go
 -		})
 -	})
 -}
+diff -ruN /original-sources/common/random.go ./common/random.go
+--- /original-sources/common/random.go	1970-01-01 00:00:00.000000000 +0000
++++ ./common/random.go	2023-06-29 13:19:54.000000000 +0000
+@@ -0,0 +1,15 @@
++package common
++
++import (
++	"crypto/rand"
++	"encoding/binary"
++)
++
++func RandID() uint {
++	var res uint32
++	err := binary.Read(rand.Reader, binary.LittleEndian, &res)
++	if err != nil {
++		panic(err)
++	}
++	return uint(res)
++}
 Binary files /original-sources/controller-test.binary and ./controller-test.binary differ
+diff -ruN /original-sources/model/keyword.go ./model/keyword.go
+--- /original-sources/model/keyword.go	2022-10-24 12:15:25.000000000 +0000
++++ ./model/keyword.go	2023-06-29 13:26:01.000000000 +0000
+@@ -1,7 +1,17 @@
+ package model
+ 
++import (
++	"github.com/adhocore/urlsh/common"
++	"gorm.io/gorm"
++)
++
+ // Keyword is model for keywords
+ type Keyword struct {
+ 	ID      uint   `json:"-" gorm:"primaryKey"`
+-	Keyword string `json:"keyword" gorm:"size:25;unique;not null"`
++	Keyword string `json:"keyword" gorm:"size:25"`
++}
++
++func (keyword *Keyword) BeforeCreate(tx *gorm.DB) (err error) {
++	keyword.ID = common.RandID()
++	return nil
+ }
+diff -ruN /original-sources/model/url.go ./model/url.go
+--- /original-sources/model/url.go	2022-10-24 12:15:25.000000000 +0000
++++ ./model/url.go	2023-06-29 13:33:01.000000000 +0000
+@@ -1,16 +1,20 @@
+ package model
+ 
+-import "time"
++import (
++	"github.com/adhocore/urlsh/common"
++	"gorm.io/gorm"
++	"time"
++)
+ 
+ // URL is model for short urls
+ type URL struct {
+ 	ID        uint      `json:"-" gorm:"primaryKey"`
+-	ShortCode string    `json:"short_code" gorm:"size:12;uniqueIndex;not null"`
+-	OriginURL string    `json:"origin_url" gorm:"size:2048;index;not null"`
+-	Hits      uint      `json:"hits" gorm:"default:0;not null"`
+-	Deleted   bool      `json:"is_deleted" gorm:"default:false;not null"`
+-	CreatedAt time.Time `json:"-" gorm:"not null"`
+-	UpdatedAt time.Time `json:"-" gorm:"not null"`
++	ShortCode string    `json:"short_code" gorm:"size:12"`
++	OriginURL string    `json:"origin_url" gorm:"size:2048;index"`
++	Hits      uint      `json:"hits" gorm:""`
++	Deleted   bool      `json:"is_deleted" gorm:""`
++	CreatedAt time.Time `json:"-" gorm:""`
++	UpdatedAt time.Time `json:"-" gorm:""`
+ 	ExpiresOn time.Time `json:"expires_on"`
+ 	Keywords  []Keyword `json:"-" gorm:"many2many:url_keywords"`
+ }
+@@ -24,3 +28,8 @@
+ 
+ 	return urlModel.ExpiresOn.In(time.UTC).After(time.Now().In(time.UTC))
+ }
++
++func (urlModel *URL) BeforeCreate(tx *gorm.DB) (err error) {
++	urlModel.ID = common.RandID()
++	return nil
++}
