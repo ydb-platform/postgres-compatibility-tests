@@ -505,7 +505,12 @@ tickets:
         - tests.test_ipaddress.NetworkingTestCase.test_cidr_cast
         - tests.test_ipaddress.NetworkingTestCase.test_inet_cast
 
-  - name: KIKIMR-18406  # CREATE FUNCTION, alternative is not implemented yet : 261
+  - name: KIKIMR-18409  # null column len -1
+    tests:
+      python-psycopg2:
+        - tests.test_cursor.CursorTests.test_description_attribs
+
+  - name: KIKIMR-18408  # CREATE FUNCTION, alternative is not implemented yet : 261
     tests:
       python-psycopg2:
         - tests.test_cursor.CursorTests.test_callproc_dict
