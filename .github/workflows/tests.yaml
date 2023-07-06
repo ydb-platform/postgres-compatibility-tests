@@ -23,7 +23,7 @@ jobs:
 
       - name: Echo version to summary
         run: |
-          VERSION="$(docker run --rm cr.yandex/yc/yandex-docker-local-ydb:trunk /ydbd -V)"
+          VERSION="$(docker run --rm ghcr.io/nikitka/local-ydb:latest /ydbd -V)"
           
           cat <<EOF >> $GITHUB_STEP_SUMMARY
           
