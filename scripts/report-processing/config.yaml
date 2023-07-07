@@ -227,7 +227,7 @@ tickets:
         - TestNewConnector_Driver
         - TestNewConnector_WorksWithOpenDB
 
-  - name: KIKIMR-18120 # implicit cast params (pg_sleep)
+  - name: YQL-16173 # implicit cast params (pg_sleep)
     tests:
       golang-lib-pq:
         - TestContextCancelBegin
