@@ -142,6 +142,7 @@ tickets:
     tests:
       golang-lib-pq:
         - TestCopySyntaxError
+        - TestParseErrorInExtendedQuery
       python-psycopg2:
         - tests.test_errors.ErrorsTests.test_exception_class
         - tests.test_errors.ErrorsTests.test_exception_class_fallback
@@ -160,6 +161,7 @@ tickets:
     tests:
       golang-lib-pq:
         - TestStatment
+        - TestDecodeUUIDBackend
 
   - name: KIKIMR-18119 # LISTEN Queries, alternative is not implemented yet : 267
     tests:
@@ -459,3 +461,21 @@ tickets:
     tests:
       python-psycopg2:
         - tests.test_cursor.CursorTests.test_callproc_dict
+
+  - name: YQL-16190 # Parse date and time
+    tests:
+      golang-lib-pq:
+        - TestEncodeAndParseTs
+        - TestFormatTsBackend
+        - TestInfinityTimestamp
+
+  - name: YQL-15730 # Implicit cast for operators
+    tests:
+      golang-lib-pq:
+        - TestEncodeDecode
+        - TestIssue196
+
+  - name: KIKIMR-18594  # table without primary key
+    tests:
+      golang-lib-pq:
+        - TestIssue186
