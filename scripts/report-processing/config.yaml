@@ -123,25 +123,11 @@ tickets:
         - tests.test_extras_dictcursor.NamedTupleCursorTest.test_not_greedy
         - tests.test_extras_dictcursor.NamedTupleCursorTest.test_record_updated
 
-  - name: KIKIMR-18080 # Parameter types
-    tests:
-      golang-lib-pq:
-        - TestArrayValueBackend
-      python-psycopg2:
-        - tests.test_quote.QuotingTestCase.test_binary
-        - tests.test_quote.QuotingTestCase.test_string
-
-  - name: KIKIMR-18115 # PG error format
-    tests:
-      golang-lib-pq:
-        - TestBinaryByteSliceToInt
-        - TestBinaryByteSlicetoUUID
-        - TestErrorClass
-
   - name: KIKIMR-18122 # PG error codes and text
     tests:
       golang-lib-pq:
         - TestCopySyntaxError
+        - TestParseErrorInExtendedQuery
       python-psycopg2:
         - tests.test_errors.ErrorsTests.test_exception_class
         - tests.test_errors.ErrorsTests.test_exception_class_fallback
@@ -156,54 +142,11 @@ tickets:
       golang-lib-pq:
         - TestIssue617
 
-  - name: KIKIMR-18116 # Prepare description. expected syntax error, got pq: got 1 parameters but the statement requires 0
-    tests:
-      golang-lib-pq:
-        - TestByteSliceToText
-        - TestDecodeUUIDBackend
-        - TestEmptyResultSetColumns
-        - TestEncodeAndParseTs
-        - TestEncodeDecode
-        - TestFormatTsBackend
-        - TestInfinityTimestamp
-        - TestIssue186
-        - TestIssue196
-        - TestParseErrorInExtendedQuery
-        - TestReconnect
-        - TestRuntimeParameters
-        - TestStringToBytea
-        - TestStringToUUID
-        - TestTextByteSliceToInt
-        - TestTextByteSliceToUUID
-        - TestTimeWithTimezone
-        - TestTimeWithTimezone/11:59:59+00:00_=>_0000-01-01T11:59:59Z
-        - TestTimeWithTimezone/11:59:59+04:00_=>_0000-01-01T11:59:59+04:00
-        - TestTimeWithTimezone/11:59:59+04:01:02_=>_0000-01-01T11:59:59+04:01
-        - TestTimeWithTimezone/11:59:59-04:01:02_=>_0000-01-01T11:59:59-04:01
-        - TestTimeWithTimezone/24:00+00_=>_0000-01-02T00:00:00Z
-        - TestTimeWithTimezone/24:00Z_=>_0000-01-02T00:00:00Z
-        - TestTimeWithTimezone/24:00-04:00_=>_0000-01-02T00:00:00-04:00
-        - TestTimeWithTimezone/24:00:00+00_=>_0000-01-02T00:00:00Z
-        - TestTimeWithTimezone/24:00:00.0+00_=>_0000-01-02T00:00:00Z
-        - TestTimeWithTimezone/24:00:00.000000+00_=>_0000-01-02T00:00:00Z
-        - TestTimeWithoutTimezone
-        - TestTimeWithoutTimezone/11:59:59_=>_0000-01-01T11:59:59Z
-        - TestTimeWithoutTimezone/24:00_=>_0000-01-02T00:00:00Z
-        - TestTimeWithoutTimezone/24:00:00_=>_0000-01-02T00:00:00Z
-        - TestTimeWithoutTimezone/24:00:00.0_=>_0000-01-02T00:00:00Z
-        - TestTimeWithoutTimezone/24:00:00.000000_=>_0000-01-02T00:00:00Z
-        - TestTimestampWithOutTimezone
-
   - name: KIKIMR-18184  # Prepared queries
     tests:
       golang-lib-pq:
         - TestStatment
-
-  - name: KIKIMR-18118 # Fail transaction on error
-    tests:
-      golang-lib-pq:
-        - TestCommitInFailedTransaction
-        - TestCommitInFailedTransactionWithCancelContext
+        - TestDecodeUUIDBackend
 
   - name: KIKIMR-18119 # LISTEN Queries, alternative is not implemented yet : 267
     tests:
@@ -218,7 +161,7 @@ tickets:
         - TestListenerUnlistenAll
         - TestNotifyExtra
 
-  - name: KIKIMR-18060 # SSL Response
+  - name: KIKIMR-18060 # SSL support
     tests:
       golang-lib-pq:
         - TestConnectorWithNoticeHandler_Simple
@@ -268,11 +211,6 @@ tickets:
     tests:
       golang-lib-pq:
         - TestMultipleResult
-
-  - name: KIKIMR-18177 # Return NULL
-    tests:
-      golang-lib-pq:
-        - TestNullAfterNonNull
 
   - name: KIKIMR-18180 # Cancel process request by client command
     tests:
@@ -499,13 +437,7 @@ tickets:
       python-psycopg2:
         - tests.test_types_extras.JsonTestCase.test_scs
 
-  - name: KIKIMR-18406  # null column len -1
-    tests:
-      python-psycopg2:
-        - tests.test_ipaddress.NetworkingTestCase.test_cidr_cast
-        - tests.test_ipaddress.NetworkingTestCase.test_inet_cast
-
-  - name: KIKIMR-18409  # null column len -1
+  - name: KIKIMR-18409  # -1 for columns with variable len types
     tests:
       python-psycopg2:
         - tests.test_cursor.CursorTests.test_description_attribs
@@ -514,3 +446,21 @@ tickets:
     tests:
       python-psycopg2:
         - tests.test_cursor.CursorTests.test_callproc_dict
+
+  - name: YQL-16190 # Parse date and time
+    tests:
+      golang-lib-pq:
+        - TestEncodeAndParseTs
+        - TestFormatTsBackend
+        - TestInfinityTimestamp
+
+  - name: YQL-15730 # Implicit cast for operators
+    tests:
+      golang-lib-pq:
+        - TestEncodeDecode
+        - TestIssue196
+
+  - name: KIKIMR-18594  # table without primary key
+    tests:
+      golang-lib-pq:
+        - TestIssue186

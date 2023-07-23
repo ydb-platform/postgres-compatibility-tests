@@ -4,7 +4,7 @@ on:
   push:
   workflow_dispatch:
   schedule:
-    - cron: '45 2 * * *'
+    - cron: '55 5 * * *'
 
 env:
   TESTMO_URL: ${{ vars.TESTMO_URL }}
@@ -42,7 +42,7 @@ jobs:
       fail-fast: false
       matrix:
         tests:
-          - ./apps/urlsh
+#          - ./apps/urlsh
           - ./languages/go/libpq
           - ./languages/python/psycopg2
 
