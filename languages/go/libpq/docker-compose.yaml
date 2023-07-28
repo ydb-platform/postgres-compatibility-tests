@@ -8,8 +8,8 @@ services:
       - "GRPC_PORT=2136"
       - "MON_PORT=8765"
       - "YDB_USE_IN_MEMORY_PDISKS=true"
-      - "POSTGRES_USER=${YDB_PG_USER:-postgres}"
-      - "POSTGRES_PASSWORD=${YDB_PG_PASSWORD:-password}"
+      - "POSTGRES_USER=${YDB_PG_USER:-root}"
+      - "POSTGRES_PASSWORD=${YDB_PG_PASSWORD:-1234}"
     healthcheck:
       test: "/bin/sh /health_check"
       interval: 1s
@@ -25,8 +25,8 @@ services:
       dockerfile: languages/go/libpq/Dockerfile
       network: host
     environment:
-      - PGUSER=${YDB_PG_USER:-postgres}
-      - PGPASSWORD=${YDB_PG_PASSWORD:-password}
+      - PGUSER=${YDB_PG_USER:-root}
+      - PGPASSWORD=${YDB_PG_PASSWORD:-1234}
       - PGHOST=${YDB_PG_HOST:-ydb}
       - PGPORT=${YDB_PG_PORT:-5432}
       - PGDATABASE=${YDB_PG_DATABASE:-/local}

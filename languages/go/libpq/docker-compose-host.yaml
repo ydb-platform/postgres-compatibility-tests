@@ -9,8 +9,8 @@ services:
       dockerfile: languages/go/libpq/Dockerfile
       network: host
     environment:
-      - PGUSER=${YDB_PG_USER:-postgres}
-      - PGPASSWORD=${YDB_PG_PASSWORD:-password}
+      - PGUSER=${YDB_PG_USER:-root}
+      - PGPASSWORD=${YDB_PG_PASSWORD:-1234}
       - PGHOST=${YDB_PG_HOST:-ydb}
       - PGPORT=${YDB_PG_PORT:-5432}
       - PGDATABASE=${YDB_PG_DATABASE:-/local}
