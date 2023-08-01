@@ -14,7 +14,7 @@ docker run --rm -d --name postgres_bench_data -e POSTGRES_PASSWORD=password post
 echo "Wait postgres init" 1>&2
 sleep 10
 docker exec -e PGPASSWORD=password postgres_bench_data pgbench -U postgres -h localhost -d postgres -i
-docker exec -e PGPASSWORD=password postgres_bench_data pg_dump -U postgres -h localhost -d postgres -a --column-inserts --rows-per-insert=1 | \
+docker exec -e PGPASSWORD=password postgres_bench_data pg_dump -U postgres -h localhost -d postgres -a --column-inserts --rows-per-insert=1000 | \
   ./apps/pgbench/pg_dump_data_patch_format.sh
 
 docker rm -fv postgres_bench_data >/dev/null 2>&1 || true
