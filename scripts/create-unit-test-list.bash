@@ -10,7 +10,7 @@ docker rm -f "$CONTAINER_NAME" || true
 docker run --detach --name=$CONTAINER_NAME -p $PG_PORT:5432 -e POSTGRES_PASSWORD=bad-password --rm postgres:14
 
 echo "Wait postgres start"
-sleep 5
+sleep 10
 
 YDB_PG_HOST=localhost YDB_PG_PORT=$PG_PORT YDB_PG_DATABASE=postgres "$TEST_DIR/run-test.bash"
 

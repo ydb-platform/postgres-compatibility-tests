@@ -296,14 +296,14 @@ def _remove_tests(report: JUnitTestSuites, tests_to_remove_list: List[str]):
 
 
 def _append_unexisted_tests(report: JUnitTestSuites, full_test_list: List[str]):
-    tests_to_append = set(full_test_list)
+    tests_to_append_list = full_test_list.copy()
 
     def remove_test(tc: JUnitTestSuites.TestCase):
-        tests_to_append.remove(tc.fullname)
+        print("remove: ", tc.fullname)
+        tests_to_append_list.remove(tc.fullname)
 
     report.foreach_testcase(remove_test)
 
-    tests_to_append_list = list(tests_to_append)
     tests_to_append_list.sort()
 
     suite = JUnitTestSuites.TestSuite.create()

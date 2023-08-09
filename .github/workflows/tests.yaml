@@ -23,11 +23,11 @@ jobs:
 
       - name: Echo version to summary
         run: |
-          VERSION="$(docker run --rm ghcr.io/ydb-platform/local-ydb:trunk /ydbd -V)"
-          
+          VERSION="$(docker run --rm cr.yandex/yc/yandex-docker-local-ydb:trunk /ydbd -V)"
+
           cat <<EOF >> $GITHUB_STEP_SUMMARY
-          
-          
+
+
           ## YDB version in details:
           \`\`\`
           $VERSION
@@ -45,6 +45,7 @@ jobs:
 #          - ./apps/urlsh
           - ./languages/go/libpq
           - ./languages/python/psycopg2
+          # - ./languages/java/jdbc
 
     steps:
       - uses: actions/checkout@v3
@@ -60,12 +61,13 @@ jobs:
           echo "Postprocessing results"
           sudo chmod -R a+rw ${{ matrix.tests }}/test-result
           ./scripts/post-process-report.bash "${{ matrix.tests }}"
-          
+
           echo "Remove raw results"
           rm -rf /test-result/raw
 
       - uses: actions/upload-artifact@v3
         name: "upload test result artifacts"
+        if: always()
         with:
           name: test-result
           path: "**/test-result/**"
