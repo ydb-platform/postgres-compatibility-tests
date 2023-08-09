@@ -1,0 +1,20 @@
+version: "3"
+services:
+  project:
+    network_mode: host
+
+    image: ydb-test/java-pgjdbc
+    build:
+      context: .
+      dockerfile: Dockerfile
+      network: host
+    environment:
+      - YDB_PG_USER=${YDB_PG_USER:-root}
+      - YDB_PG_PASSWORD=${YDB_PG_PASSWORD:-1234}
+      - YDB_PG_HOST=${YDB_PG_HOST:-ydb}
+      - YDB_PG_PORT=${YDB_PG_PORT:-5432}
+      - YDB_PG_DATABASE=${YDB_PG_DATABASE:-local}
+      - YDB_PG_TESTNAME=${YDB_PG_TESTNAME:-}
+    volumes:
+      - ./exchange:/exchange
+      - ./test-result/:/test-result
