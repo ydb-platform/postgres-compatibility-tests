@@ -20,7 +20,7 @@ services:
       ydb:
         condition: service_healthy
     environment:
-      - PSYCOPG2_TESTDB=${YDB_PG_DATABASE:-/local}
+      - PSYCOPG2_TESTDB=${YDB_PG_DATABASE:-local}
       - PSYCOPG2_TESTDB_HOST=${YDB_PG_HOST:-ydb}
       - PSYCOPG2_TESTDB_PORT=${YDB_PG_PORT:-5432}
       - PSYCOPG2_TESTDB_USER=${YDB_PG_USER:-root}

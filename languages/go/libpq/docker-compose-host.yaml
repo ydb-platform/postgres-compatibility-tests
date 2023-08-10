@@ -13,7 +13,7 @@ services:
       - PGPASSWORD=${YDB_PG_PASSWORD:-1234}
       - PGHOST=${YDB_PG_HOST:-ydb}
       - PGPORT=${YDB_PG_PORT:-5432}
-      - PGDATABASE=${YDB_PG_DATABASE:-/local}
+      - PGDATABASE=${YDB_PG_DATABASE:-local}
       - PQGOSSLTESTS=0
       - PQSSLCERTTEST_PATH=certs
       - YDB_PG_TESTNAME=${YDB_PG_TESTNAME:-}
