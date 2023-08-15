@@ -321,7 +321,7 @@ tickets:
         - tests.test_connection.TestEncryptPassword.test_encrypt_server
         - tests.test_quote.QuotingTestCase.test_unicode
 
-  - name: KIKIMR-18998 # Status field after commit
+  - name: KIKIMR-18998 # Status idle after commit
     tests:
       golang-lib-pq:
         - TestQuickClose
