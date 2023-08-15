@@ -230,7 +230,7 @@ tickets:
       golang-lib-pq:
         - TestPing
 
-  - name: KIKIMR-18190  # DateRange type
+  - name: YQL-16313  # DateRange type
     tests:
       python-psycopg2:
         - tests.test_types_extras.RangeCasterTestCase.test_adapt_date_range
