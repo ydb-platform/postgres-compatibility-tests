@@ -21,6 +21,9 @@ cd /project/sources/
 
 export YDB_PG_TESTNAME="${YDB_PG_TESTNAME:-}"  # set YDB_PG_TESTNAME to empty string if it not set
 
+# echo "workaround drop if exists by create tables"
+# echo "CREATE TABLE test_statement (stub_id int primary key)" | PGPASSWORD=$YDB_PG_PASSWORD psql -h $YDB_PG_HOST -U $YDB_PG_USER -d $YDB_PG_DATABASE -p $YDB_PG_PORT
+
 cat <<EOF > build.local.properties
 server=$YDB_PG_HOST
 port=$YDB_PG_PORT
