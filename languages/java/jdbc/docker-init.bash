@@ -24,4 +24,6 @@ cd /project/sources/
 # prebuild tests
 
 # write unexisted server for fast stub fail al tests, but build all of them
-./gradlew postgresql:test -m
+# ./gradlew postgresql:test -m
+./gradlew test --continue --no-daemon --tests "org.postgresql.test.jdbc2.StatementTest.testParsingDollarQuotes" || true
+./gradlew --stop

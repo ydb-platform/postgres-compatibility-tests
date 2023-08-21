@@ -39,9 +39,9 @@ echo
 # ./gradlew postgresql:test
 # ./gradlew test --offline --no-daemon --no-rebuild --build-cache $YDB_PG_TESTNAME
 if [ -z "$YDB_PG_TESTNAME" ]; then
-    ./gradlew postgresql:test --continue >/test-result/gradle.log 2>&1 || true
+    ./gradlew --no-configuration-cache postgresql:test --build-cache --no-daemon --continue >/test-result/gradle.log 2>&1 || true
 else
-    ./gradlew test --continue --tests "$YDB_PG_TESTNAME" 2>&1 | tee /test-result/gradle.log || true
+    ./gradlew --no-configuration-cache test --build-cache --continue --no-daemon --tests "$YDB_PG_TESTNAME" 2>&1 | tee /test-result/gradle.log || true
 fi
 
 mv ./pgjdbc/build/test-results /test-result/raw
