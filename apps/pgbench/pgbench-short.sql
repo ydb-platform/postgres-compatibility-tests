@@ -1,7 +1,7 @@
-drop table pgbench_history;
-drop table pgbench_tellers;
-drop table pgbench_accounts;
-drop table pgbench_branches;
+drop table IF EXISTS pgbench_history;
+drop table IF EXISTS pgbench_tellers;
+drop table IF EXISTS pgbench_accounts;
+drop table IF EXISTS pgbench_branches;
 
 -- create table pgbench_history(tid int, bid int, aid int, delta int, mtime timestamp, filler char(22), primary key (mtime));
 create table pgbench_history(tid int, bid int, aid int, delta int, mtime timestamptz, filler char(22), primary key (mtime));
