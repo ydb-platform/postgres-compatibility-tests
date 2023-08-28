@@ -15,6 +15,7 @@ else
     echo "Copy sources"
     mkdir -p /exchange/sources
     cp -R /project/sources/. /exchange/sources
+    chmod -R og+rw /exchange/sources
 fi
 
 cd /project/sources/
