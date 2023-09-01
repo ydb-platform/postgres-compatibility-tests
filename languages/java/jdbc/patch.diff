@@ -1,0 +1,73 @@
+diff -ruN /original-sources/.gradle/buildOutputCleanup/cache.properties ./.gradle/buildOutputCleanup/cache.properties
+--- /original-sources/.gradle/buildOutputCleanup/cache.properties	1970-01-01 00:00:00.000000000 +0000
++++ ./.gradle/buildOutputCleanup/cache.properties	2023-07-28 11:01:57.479448968 +0000
+@@ -0,0 +1,2 @@
++#Fri Jul 28 11:00:26 GMT 2023
++gradle.version=7.5.1
+diff -ruN /original-sources/buildSrc/.gradle/buildOutputCleanup/cache.properties ./buildSrc/.gradle/buildOutputCleanup/cache.properties
+--- /original-sources/buildSrc/.gradle/buildOutputCleanup/cache.properties	1970-01-01 00:00:00.000000000 +0000
++++ ./buildSrc/.gradle/buildOutputCleanup/cache.properties	2023-07-28 11:01:57.419447382 +0000
+@@ -0,0 +1,2 @@
++#Fri Jul 28 10:59:40 GMT 2023
++gradle.version=7.5.1
+diff -ruN /original-sources/buildSrc/build/kotlin/buildSrcjar-classes.txt ./buildSrc/build/kotlin/buildSrcjar-classes.txt
+--- /original-sources/buildSrc/build/kotlin/buildSrcjar-classes.txt	1970-01-01 00:00:00.000000000 +0000
++++ ./buildSrc/build/kotlin/buildSrcjar-classes.txt	2023-07-28 11:01:57.423447488 +0000
+@@ -0,0 +1 @@
++/project/sources/buildSrc/build/classes/kotlin/main/org/postgresql/buildtools/JavaCommentPreprocessorTask$inputDirectories$1$1.class:/project/sources/buildSrc/build/classes/kotlin/main/org/postgresql/buildtools/JavaCommentPreprocessorTask$run$$inlined$apply$lambda$1.class:/project/sources/buildSrc/build/classes/kotlin/main/org/postgresql/buildtools/JavaCommentPreprocessorTask.class
+\ No newline at end of file
+diff -ruN /original-sources/buildSrc/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/counters.tab ./buildSrc/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/counters.tab
+--- /original-sources/buildSrc/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/counters.tab	1970-01-01 00:00:00.000000000 +0000
++++ ./buildSrc/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/counters.tab	2023-07-28 11:01:57.420447409 +0000
+@@ -0,0 +1,2 @@
++1
++0
+\ No newline at end of file
+diff -ruN /original-sources/buildSrc/build/pluginUnderTestMetadata/plugin-under-test-metadata.properties ./buildSrc/build/pluginUnderTestMetadata/plugin-under-test-metadata.properties
+--- /original-sources/buildSrc/build/pluginUnderTestMetadata/plugin-under-test-metadata.properties	1970-01-01 00:00:00.000000000 +0000
++++ ./buildSrc/build/pluginUnderTestMetadata/plugin-under-test-metadata.properties	2023-07-28 11:01:57.424447515 +0000
+@@ -0,0 +1 @@
++implementation-classpath=/project/sources/buildSrc/build/classes/java/main\:/project/sources/buildSrc/build/classes/groovy/main\:/project/sources/buildSrc/build/classes/kotlin/main\:/project/sources/buildSrc/build/resources/main\:/root/.gradle/caches/modules-2/files-2.1/com.igormaznitsa/jcp/7.0.2/ba17268f37d8b1d13222000686a42527423cc078/jcp-7.0.2.jar
+diff -ruN /original-sources/buildSrc/build/tmp/jar/MANIFEST.MF ./buildSrc/build/tmp/jar/MANIFEST.MF
+--- /original-sources/buildSrc/build/tmp/jar/MANIFEST.MF	1970-01-01 00:00:00.000000000 +0000
++++ ./buildSrc/build/tmp/jar/MANIFEST.MF	2023-07-28 11:01:57.424447515 +0000
+@@ -0,0 +1,2 @@
++Manifest-Version: 1.0
++
+diff -ruN /original-sources/pgjdbc/src/test/java/org/postgresql/test/TestUtil.java ./pgjdbc/src/test/java/org/postgresql/test/TestUtil.java
+--- /original-sources/pgjdbc/src/test/java/org/postgresql/test/TestUtil.java	2023-02-16 14:21:18.000000000 +0000
++++ ./pgjdbc/src/test/java/org/postgresql/test/TestUtil.java	2023-08-21 10:17:27.846708671 +0000
+@@ -455,7 +455,7 @@
+       dropTable(con, table);
+ 
+       // Now create the table
+-      st.executeUpdate("create temp table " + table + " (" + columns + ")");
++      st.executeUpdate("create table " + table + " (" + columns + ")");
+     } finally {
+       closeQuietly(st);
+     }
+@@ -640,10 +640,10 @@
+     try {
+       if (con.getAutoCommit()) {
+         // Not in a transaction so ignore error for missing object
+-        stmt.executeUpdate("DROP " + type + " IF EXISTS " + name + " CASCADE");
++        stmt.executeUpdate("DROP " + type + " IF EXISTS " + name);
+       } else {
+         // In a transaction so do not ignore errors for missing object
+-        stmt.executeUpdate("DROP " + type + " " + name + " CASCADE");
++        stmt.executeUpdate("DROP " + type + " " + name);
+       }
+     } finally {
+       closeQuietly(stmt);
+diff -ruN /original-sources/pgjdbc/src/test/java/org/postgresql/test/jdbc2/StatementTest.java ./pgjdbc/src/test/java/org/postgresql/test/jdbc2/StatementTest.java
+--- /original-sources/pgjdbc/src/test/java/org/postgresql/test/jdbc2/StatementTest.java	2023-02-16 14:21:18.000000000 +0000
++++ ./pgjdbc/src/test/java/org/postgresql/test/jdbc2/StatementTest.java	2023-08-09 16:39:57.634349494 +0000
+@@ -57,7 +57,7 @@
+   @Before
+   public void setUp() throws Exception {
+     con = TestUtil.openDB();
+-    TestUtil.createTempTable(con, "test_statement", "i int");
++    TestUtil.createTempTable(con, "test_statement", "i int, PRIMARY KEY(i)");
+     TestUtil.createTempTable(con, "escapetest",
+         "ts timestamp, d date, t time, \")\" varchar(5), \"\"\"){a}'\" text ");
+     TestUtil.createTempTable(con, "comparisontest", "str1 varchar(5), str2 varchar(15)");

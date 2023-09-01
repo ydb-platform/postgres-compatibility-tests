@@ -137,17 +137,6 @@ tickets:
       golang-lib-pq:
         - TestErrorDuringStartup
 
-  - name: KIKIMR-18050 # Pg exnexisted table error
-    tests:
-      golang-lib-pq:
-        - TestIssue617
-
-  - name: KIKIMR-18184  # Prepared queries
-    tests:
-      golang-lib-pq:
-        - TestStatment
-        - TestDecodeUUIDBackend
-
   - name: KIKIMR-18119 # LISTEN Queries, alternative is not implemented yet : 267
     tests:
       golang-lib-pq:
@@ -186,7 +175,7 @@ tickets:
         - TestStmtQueryContext/context.WithTimeout_exceeded
         - TestStmtQueryContext/context.WithTimeout
 
-  - name: KIKIMR-18178 # SELECT USER. alternative is not implemented yet : 142
+  - name: YQL-16300 # SELECT USER. alternative is not implemented yet : 142
     tests:
       golang-lib-pq:
         - TestPgpass
@@ -201,11 +190,6 @@ tickets:
       golang-lib-pq:
         - TestMultipleSimpleQuery
         - TestTimestampWithTimeZone
-
-  - name: KIKIMR-18059 # Multiply results
-    tests:
-      golang-lib-pq:
-        - TestMultipleEmptyResult
 
   - name: KIKIMR-18147 # Information schema
     tests:
@@ -246,7 +230,7 @@ tickets:
       golang-lib-pq:
         - TestPing
 
-  - name: KIKIMR-18190  # DateRange type
+  - name: YQL-16313  # DateRange type
     tests:
       python-psycopg2:
         - tests.test_types_extras.RangeCasterTestCase.test_adapt_date_range
@@ -271,6 +255,8 @@ tickets:
 
   - name: KIKIMR-18073  # Tables without primary key
     tests:
+      golang-lib-pq:
+        - TestIssue186
       python-psycopg2:
         - tests.test_psycopg2_dbapi20.Psycopg2Tests.test_None
         - tests.test_connection.SignalTestCase.test_bug_551_no_returning
@@ -278,6 +264,27 @@ tickets:
         - tests.test_cursor.NamedCursorTests.test_invalid_name
         - tests.test_cursor.NamedCursorTests.test_not_scrollable
         - tests.test_cursor.NamedCursorTests.test_scrollable
+        - tests.test_connection.ConnectionTwoPhaseTests.test_cancel_fails_prepared
+        - tests.test_connection.ConnectionTwoPhaseTests.test_recovered_xids
+        - tests.test_connection.ConnectionTwoPhaseTests.test_status_after_recover
+        - tests.test_connection.ConnectionTwoPhaseTests.test_tpc_commit
+        - tests.test_connection.ConnectionTwoPhaseTests.test_tpc_commit_one_phase
+        - tests.test_connection.ConnectionTwoPhaseTests.test_tpc_commit_recovered
+        - tests.test_connection.ConnectionTwoPhaseTests.test_tpc_recover_non_dbapi_connection
+        - tests.test_connection.ConnectionTwoPhaseTests.test_tpc_rollback
+        - tests.test_connection.ConnectionTwoPhaseTests.test_tpc_rollback_one_phase
+        - tests.test_connection.ConnectionTwoPhaseTests.test_tpc_rollback_recovered
+        - tests.test_connection.ConnectionTwoPhaseTests.test_unparsed_roundtrip
+        - tests.test_connection.ConnectionTwoPhaseTests.test_xid_construction
+        - tests.test_connection.ConnectionTwoPhaseTests.test_xid_encoding
+        - tests.test_connection.ConnectionTwoPhaseTests.test_xid_from_string
+        - tests.test_connection.ConnectionTwoPhaseTests.test_xid_roundtrip
+        - tests.test_connection.ConnectionTwoPhaseTests.test_xid_to_string
+        - tests.test_connection.ConnectionTwoPhaseTests.test_xid_unicode
+        - tests.test_connection.ConnectionTwoPhaseTests.test_xid_unicode_unparsed
+        - tests.test_cursor.NamedCursorTests.test_withhold
+        - tests.test_cursor.NamedCursorTests.test_withhold_autocommit
+        - tests.test_cursor.NamedCursorTests.test_withhold_no_begin
 
 
   - name: KIKIMR-18275  # VariableSetStmt, not supported name
@@ -314,16 +321,20 @@ tickets:
         - tests.test_connection.TestEncryptPassword.test_encrypt_server
         - tests.test_quote.QuotingTestCase.test_unicode
 
-  - name: KIKIMR-18279 # DELETE without filter
+  - name: KIKIMR-18998 # Status idle after commit
+    tests:
+      golang-lib-pq:
+        - TestQuickClose
+      python-psycopg2:
+        - tests.test_with.WithConnectionTestCase.test_with_autocommit
+
+  - name: KIKIMR-19006 # INSERT without column names (Missing key column in input)
     tests:
       python-psycopg2:
-        - tests.test_with.WithConnectionTestCase.test_cant_reenter
         - tests.test_with.WithConnectionTestCase.test_subclass_commit
         - tests.test_with.WithConnectionTestCase.test_subclass_rollback
-        - tests.test_with.WithConnectionTestCase.test_with_autocommit
         - tests.test_with.WithConnectionTestCase.test_with_autocommit_pgerror
         - tests.test_with.WithConnectionTestCase.test_with_autocommit_pyerror
-        - tests.test_with.WithConnectionTestCase.test_with_closed
         - tests.test_with.WithConnectionTestCase.test_with_connect_idiom
         - tests.test_with.WithConnectionTestCase.test_with_error_db
         - tests.test_with.WithConnectionTestCase.test_with_error_python
@@ -356,31 +367,6 @@ tickets:
         - tests.test_types_extras.JsonTestCase.test_register_on_connection
         - tests.test_types_extras.JsonTestCase.test_register_on_cursor
         - tests.test_types_extras.JsonTestCase.test_type_not_available
-
-  - name: KIKIMR-18330  # drop table
-    tests:
-      python-psycopg:
-        - tests.test_connection.ConnectionTwoPhaseTests.test_cancel_fails_prepared
-        - tests.test_connection.ConnectionTwoPhaseTests.test_recovered_xids
-        - tests.test_connection.ConnectionTwoPhaseTests.test_status_after_recover
-        - tests.test_connection.ConnectionTwoPhaseTests.test_tpc_commit
-        - tests.test_connection.ConnectionTwoPhaseTests.test_tpc_commit_one_phase
-        - tests.test_connection.ConnectionTwoPhaseTests.test_tpc_commit_recovered
-        - tests.test_connection.ConnectionTwoPhaseTests.test_tpc_recover_non_dbapi_connection
-        - tests.test_connection.ConnectionTwoPhaseTests.test_tpc_rollback
-        - tests.test_connection.ConnectionTwoPhaseTests.test_tpc_rollback_one_phase
-        - tests.test_connection.ConnectionTwoPhaseTests.test_tpc_rollback_recovered
-        - tests.test_connection.ConnectionTwoPhaseTests.test_unparsed_roundtrip
-        - tests.test_connection.ConnectionTwoPhaseTests.test_xid_construction
-        - tests.test_connection.ConnectionTwoPhaseTests.test_xid_encoding
-        - tests.test_connection.ConnectionTwoPhaseTests.test_xid_from_string
-        - tests.test_connection.ConnectionTwoPhaseTests.test_xid_roundtrip
-        - tests.test_connection.ConnectionTwoPhaseTests.test_xid_to_string
-        - tests.test_connection.ConnectionTwoPhaseTests.test_xid_unicode
-        - tests.test_connection.ConnectionTwoPhaseTests.test_xid_unicode_unparsed
-        - tests.test_cursor.NamedCursorTests.test_withhold
-        - tests.test_cursor.NamedCursorTests.test_withhold_autocommit
-        - tests.test_cursor.NamedCursorTests.test_withhold_no_begin
 
   - name: KIKIMR-18332 # pg_catalog
     tests:
@@ -422,22 +408,7 @@ tickets:
       python-psycopg2:
         - tests.test_types_extras.AdaptTypeTestCase.test_none_in_record
 
-  - name: KIKIMR-18376  # parse startup connection options
-    tests:
-      python-psycopg2:
-        - tests.test_types_extras.JsonTestCase.test_scs
-
-  - name: KIKIMR-18375  # receive connection parameters on startup
-    tests:
-      python-psycopg2:
-        - tests.test_types_extras.JsonTestCase.test_scs
-
-  - name: KIKIMR-18378  # use startup connection options
-    tests:
-      python-psycopg2:
-        - tests.test_types_extras.JsonTestCase.test_scs
-
-  - name: KIKIMR-18409  # -1 for columns with variable len types
+  - name: KIKIMR-19007  # No need "Empty query"
     tests:
       python-psycopg2:
         - tests.test_cursor.CursorTests.test_description_attribs
@@ -459,8 +430,3 @@ tickets:
       golang-lib-pq:
         - TestEncodeDecode
         - TestIssue196
-
-  - name: KIKIMR-18594  # table without primary key
-    tests:
-      golang-lib-pq:
-        - TestIssue186

@@ -4,6 +4,7 @@
 exchange
 project-sources
 test-result
+__pycache__
 
 /languages/go/libpq/pq-*/
 /tmp
