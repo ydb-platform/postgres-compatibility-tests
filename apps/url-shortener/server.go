@@ -27,6 +27,7 @@ var (
 type pageTemplateData struct {
 	SourceURL string
 	TargetURL string
+	Error     string
 }
 
 type Handler struct {
@@ -79,22 +80,22 @@ func (s *Handler) logger(ctx *gin.Context) *zap.Logger {
 func (s *Handler) redirect(ctx *gin.Context) {
 	logger := s.logger(ctx)
 	id := ctx.Param("id")
-	url, err := s.storage.GetURL(ctx, id)
+	targetURL, err := s.storage.GetURL(ctx, id)
 	switch {
 	case errors.Is(err, ErrNotFound):
 		logger.Debug("url id not found", zap.Error(err), zap.String("id", id))
-		_ = ctx.AbortWithError(http.StatusNotFound, fmt.Errorf("id %v: %v", id, ErrNotFound))
+		s.errorPage(ctx, http.StatusNotFound, fmt.Sprintf("not found short id: %q", id))
 		return
 	case err != nil:
 		logger.Debug("internal error during request", zap.Error(err), zap.String("id", id))
-		ctx.AbortWithStatus(http.StatusInternalServerError)
+		s.errorPage(ctx, http.StatusInternalServerError, "Internal database error")
 		return
 	default:
 		// pass
 	}
 
-	logger.Debug("Redirect", zap.String("id", id), zap.String("location", url))
-	ctx.Redirect(http.StatusPermanentRedirect, url)
+	logger.Debug("Redirect", zap.String("id", id), zap.String("location", targetURL))
+	ctx.Redirect(http.StatusPermanentRedirect, targetURL)
 }
 
 func (s *Handler) addURL(ctx *gin.Context) {
@@ -111,14 +112,14 @@ func (s *Handler) addURL(ctx *gin.Context) {
 	}
 	if err != nil {
 		logger.Debug("failed to parse url", zap.String("url", urlInput), zap.Error(err))
-		_ = ctx.AbortWithError(http.StatusBadRequest, fmt.Errorf("failed to parse url: %w", err))
+		s.errorPage(ctx, http.StatusBadRequest, fmt.Sprintf("failed to parse url: %v", err))
 		return
 	}
 
 	id, err := s.storage.PutURL(ctx, urlInput)
 	if err != nil {
 		logger.Warn("failed to store url", zap.String("url", urlInput), zap.Error(err))
-		_ = ctx.AbortWithError(http.StatusInternalServerError, errors.New("failed to store url"))
+		s.errorPage(ctx, http.StatusInternalServerError, "Internal database error")
 		return
 	}
 
@@ -143,6 +144,19 @@ func (s *Handler) addURL(ctx *gin.Context) {
 		return
 	}
 	logger.Debug("OK")
+}
+
+func (s *Handler) errorPage(ctx *gin.Context, code int, errorText string) {
+	data := pageTemplateData{
+		Error: errorText,
+	}
+	err := pageTemplate.Execute(ctx.Writer, data)
+	if err != nil {
+		s.logger(ctx).Warn("failed to execute template", zap.Error(err))
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+	ctx.AbortWithStatus(code)
 }
 
 func RequestIDMiddleware(logger *zap.Logger) gin.HandlerFunc {

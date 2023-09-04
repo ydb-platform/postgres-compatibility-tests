@@ -30,6 +30,10 @@
             <td><a href="{{ .SourceURL }}">link</a>.</td>
         </tr>
     </table>
-{{end }}
+{{end}}
+
+{{if .Error}}
+    <span style="color: red; ">Error: {{ .Error }}</span>
+{{end}}
 </body>
 </html>
