@@ -5,6 +5,8 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+
+	_ "github.com/lib/pq"
 )
 
 type storageLigPQ struct {
@@ -15,6 +17,18 @@ func NewStorageLibPQ(ctx context.Context, conn *sql.DB) (*storageLigPQ, error) {
 	return &storageLigPQ{
 		conn: conn,
 	}, nil
+}
+
+func NewStorageLibPQFromConnectionString(ctx context.Context, c string) (*storageLigPQ, error) {
+	conn, err := sql.Open("postgres", c)
+	if err == nil {
+		err = conn.PingContext(ctx)
+	}
+	if err != nil {
+		return nil, fmt.Errorf("failed to connect: %w", err)
+	}
+
+	return NewStorageLibPQ(ctx, conn)
 }
 
 func (s *storageLigPQ) Init(ctx context.Context) error {

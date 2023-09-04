@@ -1,5 +1,6 @@
 package main
 
 type Config struct {
-	ListenAddress string
+	ListenAddress      string
+	DBConnectionString string
 }

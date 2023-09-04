@@ -5,7 +5,7 @@ import (
 	"errors"
 )
 
-var ErrNotFound = errors.New("url not found")
+var ErrNotFound = errors.New("short url id not found")
 
 type Storage interface {
 	Init(ctx context.Context) error
