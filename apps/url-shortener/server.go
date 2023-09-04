@@ -17,14 +17,12 @@ var pageTemplateText string
 var pageTemplate = template.Must(template.New("page").Parse(pageTemplateText))
 
 type Handler struct {
-	baseURL string
 	storage Storage
 	gin     *gin.Engine
 }
 
-func NewHandler(baseUrl string, logger *zap.Logger, storage Storage) *Handler {
+func NewHandler(logger *zap.Logger, storage Storage) *Handler {
 	handler := &Handler{
-		baseURL: baseUrl,
 		storage: storage,
 		gin:     gin.New(),
 	}

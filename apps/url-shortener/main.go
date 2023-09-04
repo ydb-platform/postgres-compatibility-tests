@@ -10,8 +10,7 @@ import (
 func main() {
 	cfg := readConfig()
 	logger := createLogger()
-	handler := NewHandler(cfg.BaseURLAddress, logger, nil)
-	logger.Info("Start server", zap.String("url", cfg.BaseURLAddress))
+	handler := NewHandler(logger, nil)
 
 	startServer(logger, cfg.ListenAddress, handler)
 }
@@ -19,7 +18,6 @@ func main() {
 func readConfig() Config {
 	var cfg Config
 	flag.StringVar(&cfg.ListenAddress, "listen", "localhost:8080", "Listen address")
-	flag.StringVar(&cfg.BaseURLAddress, "baseURL", "http://localhost:8080/", "Base addr. Short urls will start with the baseURL")
 	flag.Parse()
 
 	return cfg
