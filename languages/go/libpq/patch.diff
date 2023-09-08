@@ -1,6 +1,6 @@
 diff -ruN /original-sources/conn_test.go ./conn_test.go
 --- /original-sources/conn_test.go	2023-04-26 04:34:24.000000000 +0000
-+++ ./conn_test.go	2023-08-22 09:35:12.398477019 +0000
++++ ./conn_test.go	2023-08-23 15:33:47.774167025 +0000
 @@ -318,7 +318,7 @@
  
  	if !r1.Next() {
@@ -28,6 +28,20 @@ diff -ruN /original-sources/conn_test.go ./conn_test.go
  		}
  		t.Fatal("expected row")
  	}
+@@ -1351,11 +1351,11 @@
+ 	db := openTestConn(t)
+ 	defer db.Close()
+ 
+-	_, err := db.Exec("CREATE TEMP TABLE temp (a int)")
++	_, err := db.Exec("CREATE TEMP TABLE temp (a int primary key)")
+ 	if err != nil {
+ 		t.Fatal(err)
+ 	}
+-	sqlInsert := "INSERT INTO temp VALUES (1)"
++	sqlInsert := "INSERT INTO temp (a) VALUES (1)"
+ 	sqlSelect := "SELECT * FROM temp"
+ 	tx, err := db.Begin()
+ 	if err != nil {
 @@ -1501,7 +1501,7 @@
  		}
  

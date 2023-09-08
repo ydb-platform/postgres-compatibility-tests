@@ -19,7 +19,12 @@ cp -R /original-sources/. /project/sources/
 cd /project/sources/
 [ -e /patch.diff ] && patch -s -p0 < /patch.diff
 
+mkdir -p /project/sources-before-build/
+cp -Rp /project/sources/. /project/sources-before-build/
+
 go mod vendor
+
+go build ./...
 
 for DIR in "controller" "middleware" "model" "orm" "request" "response" "service/url" "util"; do
   (

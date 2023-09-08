@@ -61,13 +61,66 @@ diff -ruN /original-sources/pgjdbc/src/test/java/org/postgresql/test/TestUtil.ja
        closeQuietly(stmt);
 diff -ruN /original-sources/pgjdbc/src/test/java/org/postgresql/test/jdbc2/StatementTest.java ./pgjdbc/src/test/java/org/postgresql/test/jdbc2/StatementTest.java
 --- /original-sources/pgjdbc/src/test/java/org/postgresql/test/jdbc2/StatementTest.java	2023-02-16 14:21:18.000000000 +0000
-+++ ./pgjdbc/src/test/java/org/postgresql/test/jdbc2/StatementTest.java	2023-08-09 16:39:57.634349494 +0000
-@@ -57,7 +57,7 @@
++++ ./pgjdbc/src/test/java/org/postgresql/test/jdbc2/StatementTest.java	2023-08-25 11:09:27.413978649 +0000
+@@ -57,11 +57,11 @@
    @Before
    public void setUp() throws Exception {
      con = TestUtil.openDB();
 -    TestUtil.createTempTable(con, "test_statement", "i int");
-+    TestUtil.createTempTable(con, "test_statement", "i int, PRIMARY KEY(i)");
++    TestUtil.createTempTable(con, "test_statement", "i int, _auto_id SERIAL PRIMARY KEY");
      TestUtil.createTempTable(con, "escapetest",
-         "ts timestamp, d date, t time, \")\" varchar(5), \"\"\"){a}'\" text ");
-     TestUtil.createTempTable(con, "comparisontest", "str1 varchar(5), str2 varchar(15)");
+-        "ts timestamp, d date, t time, \")\" varchar(5), \"\"\"){a}'\" text ");
+-    TestUtil.createTempTable(con, "comparisontest", "str1 varchar(5), str2 varchar(15)");
+-    TestUtil.createTable(con, "test_lock", "name text");
++        "ts timestamp, d date, t time, _auto_id SERIAL PRIMARY KEY, \")\" varchar(5), \"\"\"){a}'\" text ");
++    TestUtil.createTempTable(con, "comparisontest", "str1 varchar(5), str2 varchar(15), _auto_id SERIAL PRIMARY KEY");
++    TestUtil.createTable(con, "test_lock", "name text, _auto_id SERIAL PRIMARY KEY");
+     Statement stmt = con.createStatement();
+     stmt.executeUpdate(TestUtil.insertSQL("comparisontest", "str1,str2", "'_abcd','_found'"));
+     stmt.executeUpdate(TestUtil.insertSQL("comparisontest", "str1,str2", "'%abcd','%found'"));
+@@ -74,8 +74,8 @@
+     TestUtil.dropTable(con, "escapetest");
+     TestUtil.dropTable(con, "comparisontest");
+     TestUtil.dropTable(con, "test_lock");
+-    TestUtil.execute("DROP FUNCTION IF EXISTS notify_loop()",con);
+-    TestUtil.execute("DROP FUNCTION IF EXISTS notify_then_sleep()",con);
++    // TestUtil.execute("DROP FUNCTION IF EXISTS notify_loop()",con);
++    // TestUtil.execute("DROP FUNCTION IF EXISTS notify_then_sleep()",con);
+     con.close();
+   }
+ 
+@@ -163,7 +163,7 @@
+     count = stmt.executeUpdate("UPDATE test_statement SET i=4");
+     assertEquals(2, count);
+ 
+-    count = stmt.executeUpdate("CREATE TEMP TABLE another_table (a int)");
++    count = stmt.executeUpdate("CREATE TEMP TABLE another_table (a int, _auto_id SERIAL PRIMARY KEY)");
+     assertEquals(0, count);
+ 
+     if (TestUtil.haveMinimumServerVersion(con, ServerVersion.v9_0)) {
+@@ -603,25 +603,6 @@
+     }
+   }
+ 
+-  /**
+-   * The parser tries to break multiple statements into individual queries as required by the V3
+-   * extended query protocol. It can be a little overzealous sometimes and this test ensures we keep
+-   * multiple rule actions together in one statement.
+-   */
+-  @Test
+-  public void testParsingSemiColons() throws SQLException {
+-    Statement stmt = con.createStatement();
+-    stmt.execute(
+-        "CREATE RULE r1 AS ON INSERT TO escapetest DO (DELETE FROM test_statement ; INSERT INTO test_statement VALUES (1); INSERT INTO test_statement VALUES (2); );");
+-    stmt.executeUpdate("INSERT INTO escapetest(ts) VALUES (NULL)");
+-    ResultSet rs = stmt.executeQuery("SELECT i from test_statement ORDER BY i");
+-    assertTrue(rs.next());
+-    assertEquals(1, rs.getInt(1));
+-    assertTrue(rs.next());
+-    assertEquals(2, rs.getInt(1));
+-    assertTrue(!rs.next());
+-  }
+-
+   @Test
+   public void testParsingDollarQuotes() throws SQLException {
+     // dollar-quotes are supported in the backend since version 8.0

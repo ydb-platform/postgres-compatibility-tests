@@ -68,7 +68,7 @@ diff -ruN /original-sources/cache/redis_test.go ./cache/redis_test.go
 -}
 diff -ruN /original-sources/common/random.go ./common/random.go
 --- /original-sources/common/random.go	1970-01-01 00:00:00.000000000 +0000
-+++ ./common/random.go	2023-06-29 13:19:54.000000000 +0000
++++ ./common/random.go	2023-08-28 11:32:08.109880233 +0000
 @@ -0,0 +1,15 @@
 +package common
 +
@@ -85,10 +85,9 @@ diff -ruN /original-sources/common/random.go ./common/random.go
 +	}
 +	return uint(res)
 +}
-Binary files /original-sources/controller-test.binary and ./controller-test.binary differ
 diff -ruN /original-sources/model/keyword.go ./model/keyword.go
 --- /original-sources/model/keyword.go	2022-10-24 12:15:25.000000000 +0000
-+++ ./model/keyword.go	2023-06-29 13:26:01.000000000 +0000
++++ ./model/keyword.go	2023-08-28 11:32:08.110880259 +0000
 @@ -1,7 +1,17 @@
  package model
  
@@ -110,7 +109,7 @@ diff -ruN /original-sources/model/keyword.go ./model/keyword.go
  }
 diff -ruN /original-sources/model/url.go ./model/url.go
 --- /original-sources/model/url.go	2022-10-24 12:15:25.000000000 +0000
-+++ ./model/url.go	2023-06-29 13:33:01.000000000 +0000
++++ ./model/url.go	2023-08-28 11:32:08.110880259 +0000
 @@ -1,16 +1,20 @@
  package model
  
@@ -131,7 +130,7 @@ diff -ruN /original-sources/model/url.go ./model/url.go
 -	CreatedAt time.Time `json:"-" gorm:"not null"`
 -	UpdatedAt time.Time `json:"-" gorm:"not null"`
 +	ShortCode string    `json:"short_code" gorm:"size:12"`
-+	OriginURL string    `json:"origin_url" gorm:"size:2048;index"`
++	OriginURL string    `json:"origin_url" gorm:"size:2048"`
 +	Hits      uint      `json:"hits" gorm:""`
 +	Deleted   bool      `json:"is_deleted" gorm:""`
 +	CreatedAt time.Time `json:"-" gorm:""`
