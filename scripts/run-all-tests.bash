@@ -10,6 +10,7 @@ fi
 YDB_PG_ALLTEST_RESULT_PATH="${YDB_PG_ALLTEST_RESULT_PATH:-$PWD/tmp/last-run-result.xml}"
 
 TESTS=(
+  apps/go/url-shortener
   languages/go/libpq
   languages/python/psycopg2
 )
