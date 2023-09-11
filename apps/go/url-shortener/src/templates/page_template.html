@@ -1,0 +1,39 @@
+<html>
+<head>
+    <title>Url shortener</title>
+</head>
+<body>
+    The page is demonstration or url shortener.
+
+    <form enctype="application/x-www-form-urlencoded" method="post">
+        Target url: <input type="text" name="url"> <br />
+        <br />
+        <input type="submit" value="Send">
+    </form>
+
+{{if .SourceURL }}
+    <table>
+        <tr>
+            <th style="text-align: left">Shorten url</th>
+            <td></td>
+        </tr>
+        <tr>
+            <th style="text-align: left">SourceURL</th>
+            <td>{{ .SourceURL }}</td>
+        </tr>
+        <tr>
+            <th style="text-align: left">TargetURL</th>
+            <td>{{ .TargetURL }}</td>
+        </tr>
+        <tr>
+            <th style="text-align: left">Example</th>
+            <td><a href="{{ .SourceURL }}">link</a>.</td>
+        </tr>
+    </table>
+{{end}}
+
+{{if .Error}}
+    <span style="color: red; ">Error: {{ .Error }}</span>
+{{end}}
+</body>
+</html>
