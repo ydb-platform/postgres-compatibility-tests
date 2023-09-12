@@ -1,0 +1,2 @@
+apps-go-url-shortener/TestGetURL
+apps-go-url-shortener/TestPutURL

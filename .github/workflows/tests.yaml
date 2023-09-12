@@ -43,6 +43,7 @@ jobs:
       matrix:
         tests:
 #          - ./apps/urlsh
+          - ./apps/go/url-shortener
           - ./languages/go/libpq
           - ./languages/python/psycopg2
           # - ./languages/java/jdbc
