@@ -4,29 +4,6 @@ convert:
 tickets:
   - name:  KIKIMR-17960 # CREATE TEMP TABLE
     tests:
-      golang-lib-pq:
-        - TestBindError
-        - TestCommit
-        - TestCopyFromError
-        - TestCopyInBinaryError
-        - TestErrorDuringStartupClosesConn
-        - TestCommit
-        - TestCopyFromError
-        - TestCopyInBinaryError
-        - TestCopyInMultipleValues
-        - TestCopyInStmtAffectedRows
-        - TestCopyInTypes
-        - TestCopyInWrongType
-        - TestCopyRespLoopConnectionError
-        - TestErrorOnExec
-        - TestErrorOnQuery
-        - TestErrorOnQueryRowSimpleQuery
-        - TestExec
-        - TestIssue494
-        - TestQueryRowBugWorkaround
-        - TestReturning
-        - TestRowsResultTag
-        - TestCopyInRaiseStmtTrigger
       python-psycopg2:
         - tests.test_transaction.TransactionTests.test_commit
         - tests.test_transaction.TransactionTests.test_failed_commit
@@ -330,6 +307,8 @@ tickets:
 
   - name: KIKIMR-19006 # INSERT without column names (Missing key column in input)
     tests:
+      golang-lib-pq:
+        - TestErrorOnExec
       python-psycopg2:
         - tests.test_with.WithConnectionTestCase.test_subclass_commit
         - tests.test_with.WithConnectionTestCase.test_subclass_rollback
@@ -415,6 +394,8 @@ tickets:
 
   - name: KIKIMR-18408  # CREATE FUNCTION, alternative is not implemented yet : 261
     tests:
+      golang-lib-pq:
+        - TestCopyInRaiseStmtTrigger
       python-psycopg2:
         - tests.test_cursor.CursorTests.test_callproc_dict
 
@@ -430,3 +411,43 @@ tickets:
       golang-lib-pq:
         - TestEncodeDecode
         - TestIssue196
+
+  - name: KIKIMR-17960 # Error in param syntax
+    tests:
+      golang-lib-pq:
+        - TestBindError
+        - TestErrorOnQuery
+        - TestErrorOnQueryRowSimpleQuery
+        - TestExec
+
+  - name: KIKIMR-18384 # COPY wire protocol
+    tests:
+      golang-lib-pq:
+        - TestCopyFromError
+        - TestCopyInBinaryError
+        - TestCopyInMultipleValues
+        - TestCopyInTypes
+        - TestCopyInWrongType
+        - TestCopyRespLoopConnectionError
+
+  - name: YQL-16430 # COPY parser, RawStmt: alternative is not implemented yet : 253
+    tests:
+      golang-lib-pq:
+        - TestCopyInStmtAffectedRows
+        - TestIssue494
+
+  - name: YQL-16174 # Implicit cast insert/update
+    tests:
+      golang-lib-pq:
+        - TestQueryRowBugWorkaround
+
+  - name: YQL-16630 # Default as column constraint
+    tests:
+      golang-lib-pq:
+        - TestReturning
+
+  - name: KIKIMR-19372 # CREATE TEMP tag
+    tests:
+      golang-lib-pq:
+        - TestRowsResultTag
+
