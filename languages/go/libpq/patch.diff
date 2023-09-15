@@ -1,6 +1,6 @@
 diff -ruN /original-sources/conn_test.go ./conn_test.go
 --- /original-sources/conn_test.go	2023-04-26 04:34:24.000000000 +0000
-+++ ./conn_test.go	2023-08-23 15:33:47.774167025 +0000
++++ ./conn_test.go	2023-09-15 07:57:44.972012573 +0000
 @@ -318,7 +318,7 @@
  
  	if !r1.Next() {
@@ -9,6 +9,15 @@ diff -ruN /original-sources/conn_test.go ./conn_test.go
 +			t.Fatal(r.Err())
  		}
  		t.Fatal("expected row")
+ 	}
+@@ -973,7 +973,7 @@
+ 	db := openTestConn(t)
+ 	defer db.Close()
+ 
+-	_, err := db.Exec("create temp table test (i integer)")
++	_, err := db.Exec("create temp table test (i integer, _stub_id Serial PRIMARY KEY)")
+ 	if err != nil {
+ 		t.Fatal(err)
  	}
 @@ -1290,7 +1290,7 @@
  
