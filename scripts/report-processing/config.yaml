@@ -2,104 +2,6 @@ convert:
   change_error_to_failure: True
 
 tickets:
-  - name:  KIKIMR-17960 # CREATE TEMP TABLE
-    tests:
-      python-psycopg2:
-        - tests.test_transaction.TransactionTests.test_commit
-        - tests.test_transaction.TransactionTests.test_failed_commit
-        - tests.test_transaction.TransactionTests.test_rollback
-        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictConnCursorArgs
-        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithNamedCursorFetchAll
-        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithNamedCursorFetchMany
-        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithNamedCursorFetchManyNoarg
-        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithNamedCursorFetchOne
-        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithNamedCursorIter
-        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithNamedCursorIterRowNumber
-        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithNamedCursorNotGreedy
-        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithPlainCursorFetchAll
-        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithPlainCursorFetchMany
-        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithPlainCursorFetchManyNoarg
-        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithPlainCursorFetchOne
-        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithPlainCursorIter
-        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithPlainCursorIterRowNumber
-        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testPickleDictRow
-        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testUpdateRow
-        - tests.test_extras_dictcursor.ExtrasDictCursorTests.test_copy
-        - tests.test_extras_dictcursor.ExtrasDictCursorTests.test_iter_methods
-        - tests.test_extras_dictcursor.ExtrasDictCursorTests.test_order
-        - tests.test_async.AsyncTests.test_async_after_async
-        - tests.test_async.AsyncTests.test_async_callproc
-        - tests.test_async.AsyncTests.test_async_connection_error_message
-        - tests.test_async.AsyncTests.test_async_cursor_gone
-        - tests.test_async.AsyncTests.test_async_dont_read_all
-        - tests.test_async.AsyncTests.test_async_executemany
-        - tests.test_async.AsyncTests.test_async_fetch_wrong_cursor
-        - tests.test_async.AsyncTests.test_async_iter
-        - tests.test_async.AsyncTests.test_async_named_cursor
-        - tests.test_async.AsyncTests.test_async_scroll
-        - tests.test_async.AsyncTests.test_async_select
-        - tests.test_async.AsyncTests.test_async_subclass
-        - tests.test_async.AsyncTests.test_close
-        - tests.test_async.AsyncTests.test_close
-        - tests.test_async.AsyncTests.test_connection_setup
-        - tests.test_async.AsyncTests.test_copy_no_hang
-        - tests.test_async.AsyncTests.test_copy_while_async
-        - tests.test_async.AsyncTests.test_error
-        - tests.test_async.AsyncTests.test_error_two_cursors
-        - tests.test_async.AsyncTests.test_fetch_after_async
-        - tests.test_async.AsyncTests.test_flush_on_write
-        - tests.test_async.AsyncTests.test_lobject_while_async
-        - tests.test_async.AsyncTests.test_non_block_after_notification
-        - tests.test_async.AsyncTests.test_notices
-        - tests.test_async.AsyncTests.test_notify
-        - tests.test_async.AsyncTests.test_poll_conn_for_notification
-        - tests.test_async.AsyncTests.test_poll_noop
-        - tests.test_async.AsyncTests.test_reset_while_async
-        - tests.test_async.AsyncTests.test_rollback_while_async
-        - tests.test_async.AsyncTests.test_scroll
-        - tests.test_async.AsyncTests.test_set_parameters_while_async
-        - tests.test_async.AsyncTests.test_stop_on_first_error
-        - tests.test_async.AsyncTests.test_sync_poll
-        - tests.test_copy.CopyTests.test_copy_bytes
-        - tests.test_copy.CopyTests.test_copy_expert_file_refcount
-        - tests.test_copy.CopyTests.test_copy_expert_textiobase
-        - tests.test_copy.CopyTests.test_copy_from
-        - tests.test_copy.CopyTests.test_copy_from_cols
-        - tests.test_copy.CopyTests.test_copy_from_cols_err
-        - tests.test_copy.CopyTests.test_copy_from_insane_size
-        - tests.test_copy.CopyTests.test_copy_from_propagate_error
-        - tests.test_copy.CopyTests.test_copy_from_segfault
-        - tests.test_copy.CopyTests.test_copy_funny_names
-        - tests.test_copy.CopyTests.test_copy_no_column_limit
-        - tests.test_copy.CopyTests.test_copy_query
-        - tests.test_copy.CopyTests.test_copy_rowcount
-        - tests.test_copy.CopyTests.test_copy_rowcount_error
-        - tests.test_copy.CopyTests.test_copy_text
-        - tests.test_copy.CopyTests.test_copy_to
-        - tests.test_copy.CopyTests.test_copy_to_propagate_error
-        - tests.test_copy.CopyTests.test_copy_to_segfault
-        - tests.test_types_extras.AdaptTypeTestCase.test_from_tables
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_bad_col_names
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_cache
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_cursor_args
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_executemany
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_fetchall
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_fetchmany
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_fetchmany_noarg
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_fetchone
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_iter
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_max_cache
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_minimal_generation
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_named
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_named_fetchall
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_named_fetchmany
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_named_fetchone
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_named_rownumber
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_no_result_no_surprise
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_nonascii_name
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_not_greedy
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_record_updated
-
   - name: KIKIMR-18122 # PG error codes and text
     tests:
       golang-lib-pq:
@@ -304,6 +206,24 @@ tickets:
         - TestQuickClose
       python-psycopg2:
         - tests.test_with.WithConnectionTestCase.test_with_autocommit
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithNamedCursorFetchAll
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithNamedCursorFetchMany
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithNamedCursorFetchManyNoarg
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithNamedCursorFetchOne
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithNamedCursorIter
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithNamedCursorIterRowNumber
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithNamedCursorNotGreedy
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithPlainCursorFetchAll
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithPlainCursorFetchMany
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithPlainCursorFetchManyNoarg
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithPlainCursorFetchOne
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithPlainCursorIter
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictCursorWithPlainCursorIterRowNumber
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testPickleDictRow
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testUpdateRow
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.test_copy
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.test_iter_methods
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.test_order
 
   - name: KIKIMR-19006 # INSERT without column names (Missing key column in input)
     tests:
@@ -318,6 +238,27 @@ tickets:
         - tests.test_with.WithConnectionTestCase.test_with_error_db
         - tests.test_with.WithConnectionTestCase.test_with_error_python
         - tests.test_with.WithConnectionTestCase.test_with_ok
+        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictConnCursorArgs
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_bad_col_names
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_cache
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_cursor_args
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_executemany
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_fetchall
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_fetchmany
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_fetchmany_noarg
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_fetchone
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_iter
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_max_cache
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_minimal_generation
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_named
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_named_fetchall
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_named_fetchmany
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_named_fetchone
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_named_rownumber
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_no_result_no_surprise
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_nonascii_name
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_not_greedy
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_record_updated
 
   - name: KIKIMR-18327 # Large objects
     tests:
@@ -451,3 +392,65 @@ tickets:
       golang-lib-pq:
         - TestRowsResultTag
 
+  - name: KIKIMR-19373 # Scheme operations inside transaction
+    tests:
+      python-psycopg2:
+        - tests.test_transaction.TransactionTests.test_commit
+        - tests.test_transaction.TransactionTests.test_failed_commit
+        - tests.test_transaction.TransactionTests.test_rollback
+        - tests.test_async.AsyncTests.test_async_after_async
+        - tests.test_async.AsyncTests.test_async_callproc
+        - tests.test_async.AsyncTests.test_async_connection_error_message
+        - tests.test_async.AsyncTests.test_async_cursor_gone
+        - tests.test_async.AsyncTests.test_async_dont_read_all
+        - tests.test_async.AsyncTests.test_async_executemany
+        - tests.test_async.AsyncTests.test_async_fetch_wrong_cursor
+        - tests.test_async.AsyncTests.test_async_iter
+        - tests.test_async.AsyncTests.test_async_named_cursor
+        - tests.test_async.AsyncTests.test_async_scroll
+        - tests.test_async.AsyncTests.test_async_select
+        - tests.test_async.AsyncTests.test_async_subclass
+        - tests.test_async.AsyncTests.test_close
+        - tests.test_async.AsyncTests.test_close
+        - tests.test_async.AsyncTests.test_connection_setup
+        - tests.test_async.AsyncTests.test_copy_no_hang
+        - tests.test_async.AsyncTests.test_copy_while_async
+        - tests.test_async.AsyncTests.test_error
+        - tests.test_async.AsyncTests.test_error_two_cursors
+        - tests.test_async.AsyncTests.test_fetch_after_async
+        - tests.test_async.AsyncTests.test_flush_on_write
+        - tests.test_async.AsyncTests.test_lobject_while_async
+        - tests.test_async.AsyncTests.test_non_block_after_notification
+        - tests.test_async.AsyncTests.test_notices
+        - tests.test_async.AsyncTests.test_notify
+        - tests.test_async.AsyncTests.test_poll_conn_for_notification
+        - tests.test_async.AsyncTests.test_poll_noop
+        - tests.test_async.AsyncTests.test_reset_while_async
+        - tests.test_async.AsyncTests.test_rollback_while_async
+        - tests.test_async.AsyncTests.test_scroll
+        - tests.test_async.AsyncTests.test_set_parameters_while_async
+        - tests.test_async.AsyncTests.test_stop_on_first_error
+        - tests.test_async.AsyncTests.test_sync_poll
+        - tests.test_copy.CopyTests.test_copy_bytes
+        - tests.test_copy.CopyTests.test_copy_expert_file_refcount
+        - tests.test_copy.CopyTests.test_copy_expert_textiobase
+        - tests.test_copy.CopyTests.test_copy_from
+        - tests.test_copy.CopyTests.test_copy_from_cols
+        - tests.test_copy.CopyTests.test_copy_from_cols_err
+        - tests.test_copy.CopyTests.test_copy_from_insane_size
+        - tests.test_copy.CopyTests.test_copy_from_propagate_error
+        - tests.test_copy.CopyTests.test_copy_from_segfault
+        - tests.test_copy.CopyTests.test_copy_funny_names
+        - tests.test_copy.CopyTests.test_copy_no_column_limit
+        - tests.test_copy.CopyTests.test_copy_query
+        - tests.test_copy.CopyTests.test_copy_rowcount
+        - tests.test_copy.CopyTests.test_copy_rowcount_error
+        - tests.test_copy.CopyTests.test_copy_text
+        - tests.test_copy.CopyTests.test_copy_to
+        - tests.test_copy.CopyTests.test_copy_to_propagate_error
+        - tests.test_copy.CopyTests.test_copy_to_segfault
+
+  - name: YQL-16632 # ALTER table, RawStmt: alternative is not implemented yet : 244
+    tests:
+      python-psycopg2:
+        - tests.test_types_extras.AdaptTypeTestCase.test_from_tables

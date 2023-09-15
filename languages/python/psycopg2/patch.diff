@@ -1,0 +1,4247 @@
+diff -ruN /original-sources/build/lib.linux-x86_64-3.8/psycopg2/__init__.py ./build/lib.linux-x86_64-3.8/psycopg2/__init__.py
+--- /original-sources/build/lib.linux-x86_64-3.8/psycopg2/__init__.py	1970-01-01 00:00:00.000000000 +0000
++++ ./build/lib.linux-x86_64-3.8/psycopg2/__init__.py	2023-09-15 10:39:23.787174983 +0000
+@@ -0,0 +1,126 @@
++"""A Python driver for PostgreSQL
++
++psycopg is a PostgreSQL_ database adapter for the Python_ programming
++language. This is version 2, a complete rewrite of the original code to
++provide new-style classes for connection and cursor objects and other sweet
++candies. Like the original, psycopg 2 was written with the aim of being very
++small and fast, and stable as a rock.
++
++Homepage: https://psycopg.org/
++
++.. _PostgreSQL: https://www.postgresql.org/
++.. _Python: https://www.python.org/
++
++:Groups:
++  * `Connections creation`: connect
++  * `Value objects constructors`: Binary, Date, DateFromTicks, Time,
++    TimeFromTicks, Timestamp, TimestampFromTicks
++"""
++# psycopg/__init__.py - initialization of the psycopg module
++#
++# Copyright (C) 2003-2019 Federico Di Gregorio  <fog@debian.org>
++# Copyright (C) 2020-2021 The Psycopg Team
++#
++# psycopg2 is free software: you can redistribute it and/or modify it
++# under the terms of the GNU Lesser General Public License as published
++# by the Free Software Foundation, either version 3 of the License, or
++# (at your option) any later version.
++#
++# In addition, as a special exception, the copyright holders give
++# permission to link this program with the OpenSSL library (or with
++# modified versions of OpenSSL that use the same license as OpenSSL),
++# and distribute linked combinations including the two.
++#
++# You must obey the GNU Lesser General Public License in all respects for
++# all of the code used other than OpenSSL.
++#
++# psycopg2 is distributed in the hope that it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
++# License for more details.
++
++# Import modules needed by _psycopg to allow tools like py2exe to do
++# their work without bothering about the module dependencies.
++
++# Note: the first internal import should be _psycopg, otherwise the real cause
++# of a failed loading of the C module may get hidden, see
++# https://archives.postgresql.org/psycopg/2011-02/msg00044.php
++
++# Import the DBAPI-2.0 stuff into top-level module.
++
++from psycopg2._psycopg import (                     # noqa
++    BINARY, NUMBER, STRING, DATETIME, ROWID,
++
++    Binary, Date, Time, Timestamp,
++    DateFromTicks, TimeFromTicks, TimestampFromTicks,
++
++    Error, Warning, DataError, DatabaseError, ProgrammingError, IntegrityError,
++    InterfaceError, InternalError, NotSupportedError, OperationalError,
++
++    _connect, apilevel, threadsafety, paramstyle,
++    __version__, __libpq_version__,
++)
++
++
++# Register default adapters.
++
++from psycopg2 import extensions as _ext
++_ext.register_adapter(tuple, _ext.SQL_IN)
++_ext.register_adapter(type(None), _ext.NoneAdapter)
++
++# Register the Decimal adapter here instead of in the C layer.
++# This way a new class is registered for each sub-interpreter.
++# See ticket #52
++from decimal import Decimal                         # noqa
++from psycopg2._psycopg import Decimal as Adapter    # noqa
++_ext.register_adapter(Decimal, Adapter)
++del Decimal, Adapter
++
++
++def connect(dsn=None, connection_factory=None, cursor_factory=None, **kwargs):
++    """
++    Create a new database connection.
++
++    The connection parameters can be specified as a string:
++
++        conn = psycopg2.connect("dbname=test user=postgres password=secret")
++
++    or using a set of keyword arguments:
++
++        conn = psycopg2.connect(database="test", user="postgres", password="secret")
++
++    Or as a mix of both. The basic connection parameters are:
++
++    - *dbname*: the database name
++    - *database*: the database name (only as keyword argument)
++    - *user*: user name used to authenticate
++    - *password*: password used to authenticate
++    - *host*: database host address (defaults to UNIX socket if not provided)
++    - *port*: connection port number (defaults to 5432 if not provided)
++
++    Using the *connection_factory* parameter a different class or connections
++    factory can be specified. It should be a callable object taking a dsn
++    argument.
++
++    Using the *cursor_factory* parameter, a new default cursor factory will be
++    used by cursor().
++
++    Using *async*=True an asynchronous connection will be created. *async_* is
++    a valid alias (for Python versions where ``async`` is a keyword).
++
++    Any other keyword parameter will be passed to the underlying client
++    library: the list of supported parameters depends on the library version.
++
++    """
++    kwasync = {}
++    if 'async' in kwargs:
++        kwasync['async'] = kwargs.pop('async')
++    if 'async_' in kwargs:
++        kwasync['async_'] = kwargs.pop('async_')
++
++    dsn = _ext.make_dsn(dsn, **kwargs)
++    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
++    if cursor_factory is not None:
++        conn.cursor_factory = cursor_factory
++
++    return conn
+diff -ruN /original-sources/build/lib.linux-x86_64-3.8/psycopg2/_ipaddress.py ./build/lib.linux-x86_64-3.8/psycopg2/_ipaddress.py
+--- /original-sources/build/lib.linux-x86_64-3.8/psycopg2/_ipaddress.py	1970-01-01 00:00:00.000000000 +0000
++++ ./build/lib.linux-x86_64-3.8/psycopg2/_ipaddress.py	2023-09-15 10:39:23.783174888 +0000
+@@ -0,0 +1,90 @@
++"""Implementation of the ipaddres-based network types adaptation
++"""
++
++# psycopg/_ipaddress.py - Ipaddres-based network types adaptation
++#
++# Copyright (C) 2016-2019 Daniele Varrazzo  <daniele.varrazzo@gmail.com>
++# Copyright (C) 2020-2021 The Psycopg Team
++#
++# psycopg2 is free software: you can redistribute it and/or modify it
++# under the terms of the GNU Lesser General Public License as published
++# by the Free Software Foundation, either version 3 of the License, or
++# (at your option) any later version.
++#
++# In addition, as a special exception, the copyright holders give
++# permission to link this program with the OpenSSL library (or with
++# modified versions of OpenSSL that use the same license as OpenSSL),
++# and distribute linked combinations including the two.
++#
++# You must obey the GNU Lesser General Public License in all respects for
++# all of the code used other than OpenSSL.
++#
++# psycopg2 is distributed in the hope that it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
++# License for more details.
++
++from psycopg2.extensions import (
++    new_type, new_array_type, register_type, register_adapter, QuotedString)
++
++# The module is imported on register_ipaddress
++ipaddress = None
++
++# The typecasters are created only once
++_casters = None
++
++
++def register_ipaddress(conn_or_curs=None):
++    """
++    Register conversion support between `ipaddress` objects and `network types`__.
++
++    :param conn_or_curs: the scope where to register the type casters.
++        If `!None` register them globally.
++
++    After the function is called, PostgreSQL :sql:`inet` values will be
++    converted into `~ipaddress.IPv4Interface` or `~ipaddress.IPv6Interface`
++    objects, :sql:`cidr` values into into `~ipaddress.IPv4Network` or
++    `~ipaddress.IPv6Network`.
++
++    .. __: https://www.postgresql.org/docs/current/static/datatype-net-types.html
++    """
++    global ipaddress
++    import ipaddress
++
++    global _casters
++    if _casters is None:
++        _casters = _make_casters()
++
++    for c in _casters:
++        register_type(c, conn_or_curs)
++
++    for t in [ipaddress.IPv4Interface, ipaddress.IPv6Interface,
++              ipaddress.IPv4Network, ipaddress.IPv6Network]:
++        register_adapter(t, adapt_ipaddress)
++
++
++def _make_casters():
++    inet = new_type((869,), 'INET', cast_interface)
++    ainet = new_array_type((1041,), 'INET[]', inet)
++
++    cidr = new_type((650,), 'CIDR', cast_network)
++    acidr = new_array_type((651,), 'CIDR[]', cidr)
++
++    return [inet, ainet, cidr, acidr]
++
++
++def cast_interface(s, cur=None):
++    if s is None:
++        return None
++    # Py2 version force the use of unicode. meh.
++    return ipaddress.ip_interface(str(s))
++
++
++def cast_network(s, cur=None):
++    if s is None:
++        return None
++    return ipaddress.ip_network(str(s))
++
++
++def adapt_ipaddress(obj):
++    return QuotedString(str(obj))
+diff -ruN /original-sources/build/lib.linux-x86_64-3.8/psycopg2/_json.py ./build/lib.linux-x86_64-3.8/psycopg2/_json.py
+--- /original-sources/build/lib.linux-x86_64-3.8/psycopg2/_json.py	1970-01-01 00:00:00.000000000 +0000
++++ ./build/lib.linux-x86_64-3.8/psycopg2/_json.py	2023-09-15 10:39:23.784174912 +0000
+@@ -0,0 +1,199 @@
++"""Implementation of the JSON adaptation objects
++
++This module exists to avoid a circular import problem: pyscopg2.extras depends
++on psycopg2.extension, so I can't create the default JSON typecasters in
++extensions importing register_json from extras.
++"""
++
++# psycopg/_json.py - Implementation of the JSON adaptation objects
++#
++# Copyright (C) 2012-2019 Daniele Varrazzo  <daniele.varrazzo@gmail.com>
++# Copyright (C) 2020-2021 The Psycopg Team
++#
++# psycopg2 is free software: you can redistribute it and/or modify it
++# under the terms of the GNU Lesser General Public License as published
++# by the Free Software Foundation, either version 3 of the License, or
++# (at your option) any later version.
++#
++# In addition, as a special exception, the copyright holders give
++# permission to link this program with the OpenSSL library (or with
++# modified versions of OpenSSL that use the same license as OpenSSL),
++# and distribute linked combinations including the two.
++#
++# You must obey the GNU Lesser General Public License in all respects for
++# all of the code used other than OpenSSL.
++#
++# psycopg2 is distributed in the hope that it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
++# License for more details.
++
++import json
++
++from psycopg2._psycopg import ISQLQuote, QuotedString
++from psycopg2._psycopg import new_type, new_array_type, register_type
++
++
++# oids from PostgreSQL 9.2
++JSON_OID = 114
++JSONARRAY_OID = 199
++
++# oids from PostgreSQL 9.4
++JSONB_OID = 3802
++JSONBARRAY_OID = 3807
++
++
++class Json:
++    """
++    An `~psycopg2.extensions.ISQLQuote` wrapper to adapt a Python object to
++    :sql:`json` data type.
++
++    `!Json` can be used to wrap any object supported by the provided *dumps*
++    function. If none is provided, the standard :py:func:`json.dumps()` is
++    used.
++
++    """
++    def __init__(self, adapted, dumps=None):
++        self.adapted = adapted
++        self._conn = None
++        self._dumps = dumps or json.dumps
++
++    def __conform__(self, proto):
++        if proto is ISQLQuote:
++            return self
++
++    def dumps(self, obj):
++        """Serialize *obj* in JSON format.
++
++        The default is to call `!json.dumps()` or the *dumps* function
++        provided in the constructor. You can override this method to create a
++        customized JSON wrapper.
++        """
++        return self._dumps(obj)
++
++    def prepare(self, conn):
++        self._conn = conn
++
++    def getquoted(self):
++        s = self.dumps(self.adapted)
++        qs = QuotedString(s)
++        if self._conn is not None:
++            qs.prepare(self._conn)
++        return qs.getquoted()
++
++    def __str__(self):
++        # getquoted is binary
++        return self.getquoted().decode('ascii', 'replace')
++
++
++def register_json(conn_or_curs=None, globally=False, loads=None,
++                  oid=None, array_oid=None, name='json'):
++    """Create and register typecasters converting :sql:`json` type to Python objects.
++
++    :param conn_or_curs: a connection or cursor used to find the :sql:`json`
++        and :sql:`json[]` oids; the typecasters are registered in a scope
++        limited to this object, unless *globally* is set to `!True`. It can be
++        `!None` if the oids are provided
++    :param globally: if `!False` register the typecasters only on
++        *conn_or_curs*, otherwise register them globally
++    :param loads: the function used to parse the data into a Python object. If
++        `!None` use `!json.loads()`, where `!json` is the module chosen
++        according to the Python version (see above)
++    :param oid: the OID of the :sql:`json` type if known; If not, it will be
++        queried on *conn_or_curs*
++    :param array_oid: the OID of the :sql:`json[]` array type if known;
++        if not, it will be queried on *conn_or_curs*
++    :param name: the name of the data type to look for in *conn_or_curs*
++
++    The connection or cursor passed to the function will be used to query the
++    database and look for the OID of the :sql:`json` type (or an alternative
++    type if *name* if provided). No query is performed if *oid* and *array_oid*
++    are provided.  Raise `~psycopg2.ProgrammingError` if the type is not found.
++
++    """
++    if oid is None:
++        oid, array_oid = _get_json_oids(conn_or_curs, name)
++
++    JSON, JSONARRAY = _create_json_typecasters(
++        oid, array_oid, loads=loads, name=name.upper())
++
++    register_type(JSON, not globally and conn_or_curs or None)
++
++    if JSONARRAY is not None:
++        register_type(JSONARRAY, not globally and conn_or_curs or None)
++
++    return JSON, JSONARRAY
++
++
++def register_default_json(conn_or_curs=None, globally=False, loads=None):
++    """
++    Create and register :sql:`json` typecasters for PostgreSQL 9.2 and following.
++
++    Since PostgreSQL 9.2 :sql:`json` is a builtin type, hence its oid is known
++    and fixed. This function allows specifying a customized *loads* function
++    for the default :sql:`json` type without querying the database.
++    All the parameters have the same meaning of `register_json()`.
++    """
++    return register_json(conn_or_curs=conn_or_curs, globally=globally,
++        loads=loads, oid=JSON_OID, array_oid=JSONARRAY_OID)
++
++
++def register_default_jsonb(conn_or_curs=None, globally=False, loads=None):
++    """
++    Create and register :sql:`jsonb` typecasters for PostgreSQL 9.4 and following.
++
++    As in `register_default_json()`, the function allows to register a
++    customized *loads* function for the :sql:`jsonb` type at its known oid for
++    PostgreSQL 9.4 and following versions.  All the parameters have the same
++    meaning of `register_json()`.
++    """
++    return register_json(conn_or_curs=conn_or_curs, globally=globally,
++        loads=loads, oid=JSONB_OID, array_oid=JSONBARRAY_OID, name='jsonb')
++
++
++def _create_json_typecasters(oid, array_oid, loads=None, name='JSON'):
++    """Create typecasters for json data type."""
++    if loads is None:
++        loads = json.loads
++
++    def typecast_json(s, cur):
++        if s is None:
++            return None
++        return loads(s)
++
++    JSON = new_type((oid, ), name, typecast_json)
++    if array_oid is not None:
++        JSONARRAY = new_array_type((array_oid, ), f"{name}ARRAY", JSON)
++    else:
++        JSONARRAY = None
++
++    return JSON, JSONARRAY
++
++
++def _get_json_oids(conn_or_curs, name='json'):
++    # lazy imports
++    from psycopg2.extensions import STATUS_IN_TRANSACTION
++    from psycopg2.extras import _solve_conn_curs
++
++    conn, curs = _solve_conn_curs(conn_or_curs)
++
++    # Store the transaction status of the connection to revert it after use
++    conn_status = conn.status
++
++    # column typarray not available before PG 8.3
++    typarray = conn.info.server_version >= 80300 and "typarray" or "NULL"
++
++    # get the oid for the hstore
++    curs.execute(
++        "SELECT t.oid, %s FROM pg_type t WHERE t.typname = %%s;"
++        % typarray, (name,))
++    r = curs.fetchone()
++
++    # revert the status of the connection as before the command
++    if conn_status != STATUS_IN_TRANSACTION and not conn.autocommit:
++        conn.rollback()
++
++    if not r:
++        raise conn.ProgrammingError(f"{name} data type not found")
++
++    return r
+diff -ruN /original-sources/build/lib.linux-x86_64-3.8/psycopg2/_range.py ./build/lib.linux-x86_64-3.8/psycopg2/_range.py
+--- /original-sources/build/lib.linux-x86_64-3.8/psycopg2/_range.py	1970-01-01 00:00:00.000000000 +0000
++++ ./build/lib.linux-x86_64-3.8/psycopg2/_range.py	2023-09-15 10:39:23.784174912 +0000
+@@ -0,0 +1,554 @@
++"""Implementation of the Range type and adaptation
++
++"""
++
++# psycopg/_range.py - Implementation of the Range type and adaptation
++#
++# Copyright (C) 2012-2019 Daniele Varrazzo  <daniele.varrazzo@gmail.com>
++# Copyright (C) 2020-2021 The Psycopg Team
++#
++# psycopg2 is free software: you can redistribute it and/or modify it
++# under the terms of the GNU Lesser General Public License as published
++# by the Free Software Foundation, either version 3 of the License, or
++# (at your option) any later version.
++#
++# In addition, as a special exception, the copyright holders give
++# permission to link this program with the OpenSSL library (or with
++# modified versions of OpenSSL that use the same license as OpenSSL),
++# and distribute linked combinations including the two.
++#
++# You must obey the GNU Lesser General Public License in all respects for
++# all of the code used other than OpenSSL.
++#
++# psycopg2 is distributed in the hope that it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
++# License for more details.
++
++import re
++
++from psycopg2._psycopg import ProgrammingError, InterfaceError
++from psycopg2.extensions import ISQLQuote, adapt, register_adapter
++from psycopg2.extensions import new_type, new_array_type, register_type
++
++
++class Range:
++    """Python representation for a PostgreSQL |range|_ type.
++
++    :param lower: lower bound for the range. `!None` means unbound
++    :param upper: upper bound for the range. `!None` means unbound
++    :param bounds: one of the literal strings ``()``, ``[)``, ``(]``, ``[]``,
++        representing whether the lower or upper bounds are included
++    :param empty: if `!True`, the range is empty
++
++    """
++    __slots__ = ('_lower', '_upper', '_bounds')
++
++    def __init__(self, lower=None, upper=None, bounds='[)', empty=False):
++        if not empty:
++            if bounds not in ('[)', '(]', '()', '[]'):
++                raise ValueError(f"bound flags not valid: {bounds!r}")
++
++            self._lower = lower
++            self._upper = upper
++            self._bounds = bounds
++        else:
++            self._lower = self._upper = self._bounds = None
++
++    def __repr__(self):
++        if self._bounds is None:
++            return f"{self.__class__.__name__}(empty=True)"
++        else:
++            return "{}({!r}, {!r}, {!r})".format(self.__class__.__name__,
++                self._lower, self._upper, self._bounds)
++
++    def __str__(self):
++        if self._bounds is None:
++            return 'empty'
++
++        items = [
++            self._bounds[0],
++            str(self._lower),
++            ', ',
++            str(self._upper),
++            self._bounds[1]
++        ]
++        return ''.join(items)
++
++    @property
++    def lower(self):
++        """The lower bound of the range. `!None` if empty or unbound."""
++        return self._lower
++
++    @property
++    def upper(self):
++        """The upper bound of the range. `!None` if empty or unbound."""
++        return self._upper
++
++    @property
++    def isempty(self):
++        """`!True` if the range is empty."""
++        return self._bounds is None
++
++    @property
++    def lower_inf(self):
++        """`!True` if the range doesn't have a lower bound."""
++        if self._bounds is None:
++            return False
++        return self._lower is None
++
++    @property
++    def upper_inf(self):
++        """`!True` if the range doesn't have an upper bound."""
++        if self._bounds is None:
++            return False
++        return self._upper is None
++
++    @property
++    def lower_inc(self):
++        """`!True` if the lower bound is included in the range."""
++        if self._bounds is None or self._lower is None:
++            return False
++        return self._bounds[0] == '['
++
++    @property
++    def upper_inc(self):
++        """`!True` if the upper bound is included in the range."""
++        if self._bounds is None or self._upper is None:
++            return False
++        return self._bounds[1] == ']'
++
++    def __contains__(self, x):
++        if self._bounds is None:
++            return False
++
++        if self._lower is not None:
++            if self._bounds[0] == '[':
++                if x < self._lower:
++                    return False
++            else:
++                if x <= self._lower:
++                    return False
++
++        if self._upper is not None:
++            if self._bounds[1] == ']':
++                if x > self._upper:
++                    return False
++            else:
++                if x >= self._upper:
++                    return False
++
++        return True
++
++    def __bool__(self):
++        return self._bounds is not None
++
++    def __eq__(self, other):
++        if not isinstance(other, Range):
++            return False
++        return (self._lower == other._lower
++            and self._upper == other._upper
++            and self._bounds == other._bounds)
++
++    def __ne__(self, other):
++        return not self.__eq__(other)
++
++    def __hash__(self):
++        return hash((self._lower, self._upper, self._bounds))
++
++    # as the postgres docs describe for the server-side stuff,
++    # ordering is rather arbitrary, but will remain stable
++    # and consistent.
++
++    def __lt__(self, other):
++        if not isinstance(other, Range):
++            return NotImplemented
++        for attr in ('_lower', '_upper', '_bounds'):
++            self_value = getattr(self, attr)
++            other_value = getattr(other, attr)
++            if self_value == other_value:
++                pass
++            elif self_value is None:
++                return True
++            elif other_value is None:
++                return False
++            else:
++                return self_value < other_value
++        return False
++
++    def __le__(self, other):
++        if self == other:
++            return True
++        else:
++            return self.__lt__(other)
++
++    def __gt__(self, other):
++        if isinstance(other, Range):
++            return other.__lt__(self)
++        else:
++            return NotImplemented
++
++    def __ge__(self, other):
++        if self == other:
++            return True
++        else:
++            return self.__gt__(other)
++
++    def __getstate__(self):
++        return {slot: getattr(self, slot)
++            for slot in self.__slots__ if hasattr(self, slot)}
++
++    def __setstate__(self, state):
++        for slot, value in state.items():
++            setattr(self, slot, value)
++
++
++def register_range(pgrange, pyrange, conn_or_curs, globally=False):
++    """Create and register an adapter and the typecasters to convert between
++    a PostgreSQL |range|_ type and a PostgreSQL `Range` subclass.
++
++    :param pgrange: the name of the PostgreSQL |range| type. Can be
++        schema-qualified
++    :param pyrange: a `Range` strict subclass, or just a name to give to a new
++        class
++    :param conn_or_curs: a connection or cursor used to find the oid of the
++        range and its subtype; the typecaster is registered in a scope limited
++        to this object, unless *globally* is set to `!True`
++    :param globally: if `!False` (default) register the typecaster only on
++        *conn_or_curs*, otherwise register it globally
++    :return: `RangeCaster` instance responsible for the conversion
++
++    If a string is passed to *pyrange*, a new `Range` subclass is created
++    with such name and will be available as the `~RangeCaster.range` attribute
++    of the returned `RangeCaster` object.
++
++    The function queries the database on *conn_or_curs* to inspect the
++    *pgrange* type and raises `~psycopg2.ProgrammingError` if the type is not
++    found.  If querying the database is not advisable, use directly the
++    `RangeCaster` class and register the adapter and typecasters using the
++    provided functions.
++
++    """
++    caster = RangeCaster._from_db(pgrange, pyrange, conn_or_curs)
++    caster._register(not globally and conn_or_curs or None)
++    return caster
++
++
++class RangeAdapter:
++    """`ISQLQuote` adapter for `Range` subclasses.
++
++    This is an abstract class: concrete classes must set a `name` class
++    attribute or override `getquoted()`.
++    """
++    name = None
++
++    def __init__(self, adapted):
++        self.adapted = adapted
++
++    def __conform__(self, proto):
++        if self._proto is ISQLQuote:
++            return self
++
++    def prepare(self, conn):
++        self._conn = conn
++
++    def getquoted(self):
++        if self.name is None:
++            raise NotImplementedError(
++                'RangeAdapter must be subclassed overriding its name '
++                'or the getquoted() method')
++
++        r = self.adapted
++        if r.isempty:
++            return b"'empty'::" + self.name.encode('utf8')
++
++        if r.lower is not None:
++            a = adapt(r.lower)
++            if hasattr(a, 'prepare'):
++                a.prepare(self._conn)
++            lower = a.getquoted()
++        else:
++            lower = b'NULL'
++
++        if r.upper is not None:
++            a = adapt(r.upper)
++            if hasattr(a, 'prepare'):
++                a.prepare(self._conn)
++            upper = a.getquoted()
++        else:
++            upper = b'NULL'
++
++        return self.name.encode('utf8') + b'(' + lower + b', ' + upper \
++            + b", '" + r._bounds.encode('utf8') + b"')"
++
++
++class RangeCaster:
++    """Helper class to convert between `Range` and PostgreSQL range types.
++
++    Objects of this class are usually created by `register_range()`. Manual
++    creation could be useful if querying the database is not advisable: in
++    this case the oids must be provided.
++    """
++    def __init__(self, pgrange, pyrange, oid, subtype_oid, array_oid=None):
++        self.subtype_oid = subtype_oid
++        self._create_ranges(pgrange, pyrange)
++
++        name = self.adapter.name or self.adapter.__class__.__name__
++
++        self.typecaster = new_type((oid,), name, self.parse)
++
++        if array_oid is not None:
++            self.array_typecaster = new_array_type(
++                (array_oid,), name + "ARRAY", self.typecaster)
++        else:
++            self.array_typecaster = None
++
++    def _create_ranges(self, pgrange, pyrange):
++        """Create Range and RangeAdapter classes if needed."""
++        # if got a string create a new RangeAdapter concrete type (with a name)
++        # else take it as an adapter. Passing an adapter should be considered
++        # an implementation detail and is not documented. It is currently used
++        # for the numeric ranges.
++        self.adapter = None
++        if isinstance(pgrange, str):
++            self.adapter = type(pgrange, (RangeAdapter,), {})
++            self.adapter.name = pgrange
++        else:
++            try:
++                if issubclass(pgrange, RangeAdapter) \
++                        and pgrange is not RangeAdapter:
++                    self.adapter = pgrange
++            except TypeError:
++                pass
++
++        if self.adapter is None:
++            raise TypeError(
++                'pgrange must be a string or a RangeAdapter strict subclass')
++
++        self.range = None
++        try:
++            if isinstance(pyrange, str):
++                self.range = type(pyrange, (Range,), {})
++            if issubclass(pyrange, Range) and pyrange is not Range:
++                self.range = pyrange
++        except TypeError:
++            pass
++
++        if self.range is None:
++            raise TypeError(
++                'pyrange must be a type or a Range strict subclass')
++
++    @classmethod
++    def _from_db(self, name, pyrange, conn_or_curs):
++        """Return a `RangeCaster` instance for the type *pgrange*.
++
++        Raise `ProgrammingError` if the type is not found.
++        """
++        from psycopg2.extensions import STATUS_IN_TRANSACTION
++        from psycopg2.extras import _solve_conn_curs
++        conn, curs = _solve_conn_curs(conn_or_curs)
++
++        if conn.info.server_version < 90200:
++            raise ProgrammingError("range types not available in version %s"
++                % conn.info.server_version)
++
++        # Store the transaction status of the connection to revert it after use
++        conn_status = conn.status
++
++        # Use the correct schema
++        if '.' in name:
++            schema, tname = name.split('.', 1)
++        else:
++            tname = name
++            schema = 'public'
++
++        # get the type oid and attributes
++        curs.execute("""\
++select rngtypid, rngsubtype, typarray
++from pg_range r
++join pg_type t on t.oid = rngtypid
++join pg_namespace ns on ns.oid = typnamespace
++where typname = %s and ns.nspname = %s;
++""", (tname, schema))
++        rec = curs.fetchone()
++
++        if not rec:
++            # The above algorithm doesn't work for customized seach_path
++            # (#1487) The implementation below works better, but, to guarantee
++            # backwards compatibility, use it only if the original one failed.
++            try:
++                savepoint = False
++                # Because we executed statements earlier, we are either INTRANS
++                # or we are IDLE only if the transaction is autocommit, in
++                # which case we don't need the savepoint anyway.
++                if conn.status == STATUS_IN_TRANSACTION:
++                    curs.execute("SAVEPOINT register_type")
++                    savepoint = True
++
++                curs.execute("""\
++SELECT rngtypid, rngsubtype, typarray, typname, nspname
++from pg_range r
++join pg_type t on t.oid = rngtypid
++join pg_namespace ns on ns.oid = typnamespace
++WHERE t.oid = %s::regtype
++""", (name, ))
++            except ProgrammingError:
++                pass
++            else:
++                rec = curs.fetchone()
++                if rec:
++                    tname, schema = rec[3:]
++            finally:
++                if savepoint:
++                    curs.execute("ROLLBACK TO SAVEPOINT register_type")
++
++        # revert the status of the connection as before the command
++        if conn_status != STATUS_IN_TRANSACTION and not conn.autocommit:
++            conn.rollback()
++
++        if not rec:
++            raise ProgrammingError(
++                f"PostgreSQL range '{name}' not found")
++
++        type, subtype, array = rec[:3]
++
++        return RangeCaster(name, pyrange,
++            oid=type, subtype_oid=subtype, array_oid=array)
++
++    _re_range = re.compile(r"""
++        ( \(|\[ )                   # lower bound flag
++        (?:                         # lower bound:
++          " ( (?: [^"] | "")* ) "   #   - a quoted string
++          | ( [^",]+ )              #   - or an unquoted string
++        )?                          #   - or empty (not catched)
++        ,
++        (?:                         # upper bound:
++          " ( (?: [^"] | "")* ) "   #   - a quoted string
++          | ( [^"\)\]]+ )           #   - or an unquoted string
++        )?                          #   - or empty (not catched)
++        ( \)|\] )                   # upper bound flag
++        """, re.VERBOSE)
++
++    _re_undouble = re.compile(r'(["\\])\1')
++
++    def parse(self, s, cur=None):
++        if s is None:
++            return None
++
++        if s == 'empty':
++            return self.range(empty=True)
++
++        m = self._re_range.match(s)
++        if m is None:
++            raise InterfaceError(f"failed to parse range: '{s}'")
++
++        lower = m.group(3)
++        if lower is None:
++            lower = m.group(2)
++            if lower is not None:
++                lower = self._re_undouble.sub(r"\1", lower)
++
++        upper = m.group(5)
++        if upper is None:
++            upper = m.group(4)
++            if upper is not None:
++                upper = self._re_undouble.sub(r"\1", upper)
++
++        if cur is not None:
++            lower = cur.cast(self.subtype_oid, lower)
++            upper = cur.cast(self.subtype_oid, upper)
++
++        bounds = m.group(1) + m.group(6)
++
++        return self.range(lower, upper, bounds)
++
++    def _register(self, scope=None):
++        register_type(self.typecaster, scope)
++        if self.array_typecaster is not None:
++            register_type(self.array_typecaster, scope)
++
++        register_adapter(self.range, self.adapter)
++
++
++class NumericRange(Range):
++    """A `Range` suitable to pass Python numeric types to a PostgreSQL range.
++
++    PostgreSQL types :sql:`int4range`, :sql:`int8range`, :sql:`numrange` are
++    casted into `!NumericRange` instances.
++    """
++    pass
++
++
++class DateRange(Range):
++    """Represents :sql:`daterange` values."""
++    pass
++
++
++class DateTimeRange(Range):
++    """Represents :sql:`tsrange` values."""
++    pass
++
++
++class DateTimeTZRange(Range):
++    """Represents :sql:`tstzrange` values."""
++    pass
++
++
++# Special adaptation for NumericRange. Allows to pass number range regardless
++# of whether they are ints, floats and what size of ints are, which are
++# pointless in Python world. On the way back, no numeric range is casted to
++# NumericRange, but only to their subclasses
++
++class NumberRangeAdapter(RangeAdapter):
++    """Adapt a range if the subtype doesn't need quotes."""
++    def getquoted(self):
++        r = self.adapted
++        if r.isempty:
++            return b"'empty'"
++
++        if not r.lower_inf:
++            # not exactly: we are relying that none of these object is really
++            # quoted (they are numbers). Also, I'm lazy and not preparing the
++            # adapter because I assume encoding doesn't matter for these
++            # objects.
++            lower = adapt(r.lower).getquoted().decode('ascii')
++        else:
++            lower = ''
++
++        if not r.upper_inf:
++            upper = adapt(r.upper).getquoted().decode('ascii')
++        else:
++            upper = ''
++
++        return (f"'{r._bounds[0]}{lower},{upper}{r._bounds[1]}'").encode('ascii')
++
++
++# TODO: probably won't work with infs, nans and other tricky cases.
++register_adapter(NumericRange, NumberRangeAdapter)
++
++# Register globally typecasters and adapters for builtin range types.
++
++# note: the adapter is registered more than once, but this is harmless.
++int4range_caster = RangeCaster(NumberRangeAdapter, NumericRange,
++    oid=3904, subtype_oid=23, array_oid=3905)
++int4range_caster._register()
++
++int8range_caster = RangeCaster(NumberRangeAdapter, NumericRange,
++    oid=3926, subtype_oid=20, array_oid=3927)
++int8range_caster._register()
++
++numrange_caster = RangeCaster(NumberRangeAdapter, NumericRange,
++    oid=3906, subtype_oid=1700, array_oid=3907)
++numrange_caster._register()
++
++daterange_caster = RangeCaster('daterange', DateRange,
++    oid=3912, subtype_oid=1082, array_oid=3913)
++daterange_caster._register()
++
++tsrange_caster = RangeCaster('tsrange', DateTimeRange,
++    oid=3908, subtype_oid=1114, array_oid=3909)
++tsrange_caster._register()
++
++tstzrange_caster = RangeCaster('tstzrange', DateTimeTZRange,
++    oid=3910, subtype_oid=1184, array_oid=3911)
++tstzrange_caster._register()
+diff -ruN /original-sources/build/lib.linux-x86_64-3.8/psycopg2/errorcodes.py ./build/lib.linux-x86_64-3.8/psycopg2/errorcodes.py
+--- /original-sources/build/lib.linux-x86_64-3.8/psycopg2/errorcodes.py	1970-01-01 00:00:00.000000000 +0000
++++ ./build/lib.linux-x86_64-3.8/psycopg2/errorcodes.py	2023-09-15 10:39:23.786174959 +0000
+@@ -0,0 +1,449 @@
++"""Error codes for PostgreSQL
++
++This module contains symbolic names for all PostgreSQL error codes.
++"""
++# psycopg2/errorcodes.py - PostgreSQL error codes
++#
++# Copyright (C) 2006-2019 Johan Dahlin  <jdahlin@async.com.br>
++# Copyright (C) 2020-2021 The Psycopg Team
++#
++# psycopg2 is free software: you can redistribute it and/or modify it
++# under the terms of the GNU Lesser General Public License as published
++# by the Free Software Foundation, either version 3 of the License, or
++# (at your option) any later version.
++#
++# In addition, as a special exception, the copyright holders give
++# permission to link this program with the OpenSSL library (or with
++# modified versions of OpenSSL that use the same license as OpenSSL),
++# and distribute linked combinations including the two.
++#
++# You must obey the GNU Lesser General Public License in all respects for
++# all of the code used other than OpenSSL.
++#
++# psycopg2 is distributed in the hope that it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
++# License for more details.
++#
++# Based on:
++#
++#   https://www.postgresql.org/docs/current/static/errcodes-appendix.html
++#
++
++
++def lookup(code, _cache={}):
++    """Lookup an error code or class code and return its symbolic name.
++
++    Raise `KeyError` if the code is not found.
++    """
++    if _cache:
++        return _cache[code]
++
++    # Generate the lookup map at first usage.
++    tmp = {}
++    for k, v in globals().items():
++        if isinstance(v, str) and len(v) in (2, 5):
++            # Strip trailing underscore used to disambiguate duplicate values
++            tmp[v] = k.rstrip("_")
++
++    assert tmp
++
++    # Atomic update, to avoid race condition on import (bug #382)
++    _cache.update(tmp)
++
++    return _cache[code]
++
++
++# autogenerated data: do not edit below this point.
++
++# Error classes
++CLASS_SUCCESSFUL_COMPLETION = '00'
++CLASS_WARNING = '01'
++CLASS_NO_DATA = '02'
++CLASS_SQL_STATEMENT_NOT_YET_COMPLETE = '03'
++CLASS_CONNECTION_EXCEPTION = '08'
++CLASS_TRIGGERED_ACTION_EXCEPTION = '09'
++CLASS_FEATURE_NOT_SUPPORTED = '0A'
++CLASS_INVALID_TRANSACTION_INITIATION = '0B'
++CLASS_LOCATOR_EXCEPTION = '0F'
++CLASS_INVALID_GRANTOR = '0L'
++CLASS_INVALID_ROLE_SPECIFICATION = '0P'
++CLASS_DIAGNOSTICS_EXCEPTION = '0Z'
++CLASS_CASE_NOT_FOUND = '20'
++CLASS_CARDINALITY_VIOLATION = '21'
++CLASS_DATA_EXCEPTION = '22'
++CLASS_INTEGRITY_CONSTRAINT_VIOLATION = '23'
++CLASS_INVALID_CURSOR_STATE = '24'
++CLASS_INVALID_TRANSACTION_STATE = '25'
++CLASS_INVALID_SQL_STATEMENT_NAME = '26'
++CLASS_TRIGGERED_DATA_CHANGE_VIOLATION = '27'
++CLASS_INVALID_AUTHORIZATION_SPECIFICATION = '28'
++CLASS_DEPENDENT_PRIVILEGE_DESCRIPTORS_STILL_EXIST = '2B'
++CLASS_INVALID_TRANSACTION_TERMINATION = '2D'
++CLASS_SQL_ROUTINE_EXCEPTION = '2F'
++CLASS_INVALID_CURSOR_NAME = '34'
++CLASS_EXTERNAL_ROUTINE_EXCEPTION = '38'
++CLASS_EXTERNAL_ROUTINE_INVOCATION_EXCEPTION = '39'
++CLASS_SAVEPOINT_EXCEPTION = '3B'
++CLASS_INVALID_CATALOG_NAME = '3D'
++CLASS_INVALID_SCHEMA_NAME = '3F'
++CLASS_TRANSACTION_ROLLBACK = '40'
++CLASS_SYNTAX_ERROR_OR_ACCESS_RULE_VIOLATION = '42'
++CLASS_WITH_CHECK_OPTION_VIOLATION = '44'
++CLASS_INSUFFICIENT_RESOURCES = '53'
++CLASS_PROGRAM_LIMIT_EXCEEDED = '54'
++CLASS_OBJECT_NOT_IN_PREREQUISITE_STATE = '55'
++CLASS_OPERATOR_INTERVENTION = '57'
++CLASS_SYSTEM_ERROR = '58'
++CLASS_SNAPSHOT_FAILURE = '72'
++CLASS_CONFIGURATION_FILE_ERROR = 'F0'
++CLASS_FOREIGN_DATA_WRAPPER_ERROR = 'HV'
++CLASS_PL_PGSQL_ERROR = 'P0'
++CLASS_INTERNAL_ERROR = 'XX'
++
++# Class 00 - Successful Completion
++SUCCESSFUL_COMPLETION = '00000'
++
++# Class 01 - Warning
++WARNING = '01000'
++NULL_VALUE_ELIMINATED_IN_SET_FUNCTION = '01003'
++STRING_DATA_RIGHT_TRUNCATION_ = '01004'
++PRIVILEGE_NOT_REVOKED = '01006'
++PRIVILEGE_NOT_GRANTED = '01007'
++IMPLICIT_ZERO_BIT_PADDING = '01008'
++DYNAMIC_RESULT_SETS_RETURNED = '0100C'
++DEPRECATED_FEATURE = '01P01'
++
++# Class 02 - No Data (this is also a warning class per the SQL standard)
++NO_DATA = '02000'
++NO_ADDITIONAL_DYNAMIC_RESULT_SETS_RETURNED = '02001'
++
++# Class 03 - SQL Statement Not Yet Complete
++SQL_STATEMENT_NOT_YET_COMPLETE = '03000'
++
++# Class 08 - Connection Exception
++CONNECTION_EXCEPTION = '08000'
++SQLCLIENT_UNABLE_TO_ESTABLISH_SQLCONNECTION = '08001'
++CONNECTION_DOES_NOT_EXIST = '08003'
++SQLSERVER_REJECTED_ESTABLISHMENT_OF_SQLCONNECTION = '08004'
++CONNECTION_FAILURE = '08006'
++TRANSACTION_RESOLUTION_UNKNOWN = '08007'
++PROTOCOL_VIOLATION = '08P01'
++
++# Class 09 - Triggered Action Exception
++TRIGGERED_ACTION_EXCEPTION = '09000'
++
++# Class 0A - Feature Not Supported
++FEATURE_NOT_SUPPORTED = '0A000'
++
++# Class 0B - Invalid Transaction Initiation
++INVALID_TRANSACTION_INITIATION = '0B000'
++
++# Class 0F - Locator Exception
++LOCATOR_EXCEPTION = '0F000'
++INVALID_LOCATOR_SPECIFICATION = '0F001'
++
++# Class 0L - Invalid Grantor
++INVALID_GRANTOR = '0L000'
++INVALID_GRANT_OPERATION = '0LP01'
++
++# Class 0P - Invalid Role Specification
++INVALID_ROLE_SPECIFICATION = '0P000'
++
++# Class 0Z - Diagnostics Exception
++DIAGNOSTICS_EXCEPTION = '0Z000'
++STACKED_DIAGNOSTICS_ACCESSED_WITHOUT_ACTIVE_HANDLER = '0Z002'
++
++# Class 20 - Case Not Found
++CASE_NOT_FOUND = '20000'
++
++# Class 21 - Cardinality Violation
++CARDINALITY_VIOLATION = '21000'
++
++# Class 22 - Data Exception
++DATA_EXCEPTION = '22000'
++STRING_DATA_RIGHT_TRUNCATION = '22001'
++NULL_VALUE_NO_INDICATOR_PARAMETER = '22002'
++NUMERIC_VALUE_OUT_OF_RANGE = '22003'
++NULL_VALUE_NOT_ALLOWED_ = '22004'
++ERROR_IN_ASSIGNMENT = '22005'
++INVALID_DATETIME_FORMAT = '22007'
++DATETIME_FIELD_OVERFLOW = '22008'
++INVALID_TIME_ZONE_DISPLACEMENT_VALUE = '22009'
++ESCAPE_CHARACTER_CONFLICT = '2200B'
++INVALID_USE_OF_ESCAPE_CHARACTER = '2200C'
++INVALID_ESCAPE_OCTET = '2200D'
++ZERO_LENGTH_CHARACTER_STRING = '2200F'
++MOST_SPECIFIC_TYPE_MISMATCH = '2200G'
++SEQUENCE_GENERATOR_LIMIT_EXCEEDED = '2200H'
++NOT_AN_XML_DOCUMENT = '2200L'
++INVALID_XML_DOCUMENT = '2200M'
++INVALID_XML_CONTENT = '2200N'
++INVALID_XML_COMMENT = '2200S'
++INVALID_XML_PROCESSING_INSTRUCTION = '2200T'
++INVALID_INDICATOR_PARAMETER_VALUE = '22010'
++SUBSTRING_ERROR = '22011'
++DIVISION_BY_ZERO = '22012'
++INVALID_PRECEDING_OR_FOLLOWING_SIZE = '22013'
++INVALID_ARGUMENT_FOR_NTILE_FUNCTION = '22014'
++INTERVAL_FIELD_OVERFLOW = '22015'
++INVALID_ARGUMENT_FOR_NTH_VALUE_FUNCTION = '22016'
++INVALID_CHARACTER_VALUE_FOR_CAST = '22018'
++INVALID_ESCAPE_CHARACTER = '22019'
++INVALID_REGULAR_EXPRESSION = '2201B'
++INVALID_ARGUMENT_FOR_LOGARITHM = '2201E'
++INVALID_ARGUMENT_FOR_POWER_FUNCTION = '2201F'
++INVALID_ARGUMENT_FOR_WIDTH_BUCKET_FUNCTION = '2201G'
++INVALID_ROW_COUNT_IN_LIMIT_CLAUSE = '2201W'
++INVALID_ROW_COUNT_IN_RESULT_OFFSET_CLAUSE = '2201X'
++INVALID_LIMIT_VALUE = '22020'
++CHARACTER_NOT_IN_REPERTOIRE = '22021'
++INDICATOR_OVERFLOW = '22022'
++INVALID_PARAMETER_VALUE = '22023'
++UNTERMINATED_C_STRING = '22024'
++INVALID_ESCAPE_SEQUENCE = '22025'
++STRING_DATA_LENGTH_MISMATCH = '22026'
++TRIM_ERROR = '22027'
++ARRAY_SUBSCRIPT_ERROR = '2202E'
++INVALID_TABLESAMPLE_REPEAT = '2202G'
++INVALID_TABLESAMPLE_ARGUMENT = '2202H'
++DUPLICATE_JSON_OBJECT_KEY_VALUE = '22030'
++INVALID_ARGUMENT_FOR_SQL_JSON_DATETIME_FUNCTION = '22031'
++INVALID_JSON_TEXT = '22032'
++INVALID_SQL_JSON_SUBSCRIPT = '22033'
++MORE_THAN_ONE_SQL_JSON_ITEM = '22034'
++NO_SQL_JSON_ITEM = '22035'
++NON_NUMERIC_SQL_JSON_ITEM = '22036'
++NON_UNIQUE_KEYS_IN_A_JSON_OBJECT = '22037'
++SINGLETON_SQL_JSON_ITEM_REQUIRED = '22038'
++SQL_JSON_ARRAY_NOT_FOUND = '22039'
++SQL_JSON_MEMBER_NOT_FOUND = '2203A'
++SQL_JSON_NUMBER_NOT_FOUND = '2203B'
++SQL_JSON_OBJECT_NOT_FOUND = '2203C'
++TOO_MANY_JSON_ARRAY_ELEMENTS = '2203D'
++TOO_MANY_JSON_OBJECT_MEMBERS = '2203E'
++SQL_JSON_SCALAR_REQUIRED = '2203F'
++SQL_JSON_ITEM_CANNOT_BE_CAST_TO_TARGET_TYPE = '2203G'
++FLOATING_POINT_EXCEPTION = '22P01'
++INVALID_TEXT_REPRESENTATION = '22P02'
++INVALID_BINARY_REPRESENTATION = '22P03'
++BAD_COPY_FILE_FORMAT = '22P04'
++UNTRANSLATABLE_CHARACTER = '22P05'
++NONSTANDARD_USE_OF_ESCAPE_CHARACTER = '22P06'
++
++# Class 23 - Integrity Constraint Violation
++INTEGRITY_CONSTRAINT_VIOLATION = '23000'
++RESTRICT_VIOLATION = '23001'
++NOT_NULL_VIOLATION = '23502'
++FOREIGN_KEY_VIOLATION = '23503'
++UNIQUE_VIOLATION = '23505'
++CHECK_VIOLATION = '23514'
++EXCLUSION_VIOLATION = '23P01'
++
++# Class 24 - Invalid Cursor State
++INVALID_CURSOR_STATE = '24000'
++
++# Class 25 - Invalid Transaction State
++INVALID_TRANSACTION_STATE = '25000'
++ACTIVE_SQL_TRANSACTION = '25001'
++BRANCH_TRANSACTION_ALREADY_ACTIVE = '25002'
++INAPPROPRIATE_ACCESS_MODE_FOR_BRANCH_TRANSACTION = '25003'
++INAPPROPRIATE_ISOLATION_LEVEL_FOR_BRANCH_TRANSACTION = '25004'
++NO_ACTIVE_SQL_TRANSACTION_FOR_BRANCH_TRANSACTION = '25005'
++READ_ONLY_SQL_TRANSACTION = '25006'
++SCHEMA_AND_DATA_STATEMENT_MIXING_NOT_SUPPORTED = '25007'
++HELD_CURSOR_REQUIRES_SAME_ISOLATION_LEVEL = '25008'
++NO_ACTIVE_SQL_TRANSACTION = '25P01'
++IN_FAILED_SQL_TRANSACTION = '25P02'
++IDLE_IN_TRANSACTION_SESSION_TIMEOUT = '25P03'
++
++# Class 26 - Invalid SQL Statement Name
++INVALID_SQL_STATEMENT_NAME = '26000'
++
++# Class 27 - Triggered Data Change Violation
++TRIGGERED_DATA_CHANGE_VIOLATION = '27000'
++
++# Class 28 - Invalid Authorization Specification
++INVALID_AUTHORIZATION_SPECIFICATION = '28000'
++INVALID_PASSWORD = '28P01'
++
++# Class 2B - Dependent Privilege Descriptors Still Exist
++DEPENDENT_PRIVILEGE_DESCRIPTORS_STILL_EXIST = '2B000'
++DEPENDENT_OBJECTS_STILL_EXIST = '2BP01'
++
++# Class 2D - Invalid Transaction Termination
++INVALID_TRANSACTION_TERMINATION = '2D000'
++
++# Class 2F - SQL Routine Exception
++SQL_ROUTINE_EXCEPTION = '2F000'
++MODIFYING_SQL_DATA_NOT_PERMITTED_ = '2F002'
++PROHIBITED_SQL_STATEMENT_ATTEMPTED_ = '2F003'
++READING_SQL_DATA_NOT_PERMITTED_ = '2F004'
++FUNCTION_EXECUTED_NO_RETURN_STATEMENT = '2F005'
++
++# Class 34 - Invalid Cursor Name
++INVALID_CURSOR_NAME = '34000'
++
++# Class 38 - External Routine Exception
++EXTERNAL_ROUTINE_EXCEPTION = '38000'
++CONTAINING_SQL_NOT_PERMITTED = '38001'
++MODIFYING_SQL_DATA_NOT_PERMITTED = '38002'
++PROHIBITED_SQL_STATEMENT_ATTEMPTED = '38003'
++READING_SQL_DATA_NOT_PERMITTED = '38004'
++
++# Class 39 - External Routine Invocation Exception
++EXTERNAL_ROUTINE_INVOCATION_EXCEPTION = '39000'
++INVALID_SQLSTATE_RETURNED = '39001'
++NULL_VALUE_NOT_ALLOWED = '39004'
++TRIGGER_PROTOCOL_VIOLATED = '39P01'
++SRF_PROTOCOL_VIOLATED = '39P02'
++EVENT_TRIGGER_PROTOCOL_VIOLATED = '39P03'
++
++# Class 3B - Savepoint Exception
++SAVEPOINT_EXCEPTION = '3B000'
++INVALID_SAVEPOINT_SPECIFICATION = '3B001'
++
++# Class 3D - Invalid Catalog Name
++INVALID_CATALOG_NAME = '3D000'
++
++# Class 3F - Invalid Schema Name
++INVALID_SCHEMA_NAME = '3F000'
++
++# Class 40 - Transaction Rollback
++TRANSACTION_ROLLBACK = '40000'
++SERIALIZATION_FAILURE = '40001'
++TRANSACTION_INTEGRITY_CONSTRAINT_VIOLATION = '40002'
++STATEMENT_COMPLETION_UNKNOWN = '40003'
++DEADLOCK_DETECTED = '40P01'
++
++# Class 42 - Syntax Error or Access Rule Violation
++SYNTAX_ERROR_OR_ACCESS_RULE_VIOLATION = '42000'
++INSUFFICIENT_PRIVILEGE = '42501'
++SYNTAX_ERROR = '42601'
++INVALID_NAME = '42602'
++INVALID_COLUMN_DEFINITION = '42611'
++NAME_TOO_LONG = '42622'
++DUPLICATE_COLUMN = '42701'
++AMBIGUOUS_COLUMN = '42702'
++UNDEFINED_COLUMN = '42703'
++UNDEFINED_OBJECT = '42704'
++DUPLICATE_OBJECT = '42710'
++DUPLICATE_ALIAS = '42712'
++DUPLICATE_FUNCTION = '42723'
++AMBIGUOUS_FUNCTION = '42725'
++GROUPING_ERROR = '42803'
++DATATYPE_MISMATCH = '42804'
++WRONG_OBJECT_TYPE = '42809'
++INVALID_FOREIGN_KEY = '42830'
++CANNOT_COERCE = '42846'
++UNDEFINED_FUNCTION = '42883'
++GENERATED_ALWAYS = '428C9'
++RESERVED_NAME = '42939'
++UNDEFINED_TABLE = '42P01'
++UNDEFINED_PARAMETER = '42P02'
++DUPLICATE_CURSOR = '42P03'
++DUPLICATE_DATABASE = '42P04'
++DUPLICATE_PREPARED_STATEMENT = '42P05'
++DUPLICATE_SCHEMA = '42P06'
++DUPLICATE_TABLE = '42P07'
++AMBIGUOUS_PARAMETER = '42P08'
++AMBIGUOUS_ALIAS = '42P09'
++INVALID_COLUMN_REFERENCE = '42P10'
++INVALID_CURSOR_DEFINITION = '42P11'
++INVALID_DATABASE_DEFINITION = '42P12'
++INVALID_FUNCTION_DEFINITION = '42P13'
++INVALID_PREPARED_STATEMENT_DEFINITION = '42P14'
++INVALID_SCHEMA_DEFINITION = '42P15'
++INVALID_TABLE_DEFINITION = '42P16'
++INVALID_OBJECT_DEFINITION = '42P17'
++INDETERMINATE_DATATYPE = '42P18'
++INVALID_RECURSION = '42P19'
++WINDOWING_ERROR = '42P20'
++COLLATION_MISMATCH = '42P21'
++INDETERMINATE_COLLATION = '42P22'
++
++# Class 44 - WITH CHECK OPTION Violation
++WITH_CHECK_OPTION_VIOLATION = '44000'
++
++# Class 53 - Insufficient Resources
++INSUFFICIENT_RESOURCES = '53000'
++DISK_FULL = '53100'
++OUT_OF_MEMORY = '53200'
++TOO_MANY_CONNECTIONS = '53300'
++CONFIGURATION_LIMIT_EXCEEDED = '53400'
++
++# Class 54 - Program Limit Exceeded
++PROGRAM_LIMIT_EXCEEDED = '54000'
++STATEMENT_TOO_COMPLEX = '54001'
++TOO_MANY_COLUMNS = '54011'
++TOO_MANY_ARGUMENTS = '54023'
++
++# Class 55 - Object Not In Prerequisite State
++OBJECT_NOT_IN_PREREQUISITE_STATE = '55000'
++OBJECT_IN_USE = '55006'
++CANT_CHANGE_RUNTIME_PARAM = '55P02'
++LOCK_NOT_AVAILABLE = '55P03'
++UNSAFE_NEW_ENUM_VALUE_USAGE = '55P04'
++
++# Class 57 - Operator Intervention
++OPERATOR_INTERVENTION = '57000'
++QUERY_CANCELED = '57014'
++ADMIN_SHUTDOWN = '57P01'
++CRASH_SHUTDOWN = '57P02'
++CANNOT_CONNECT_NOW = '57P03'
++DATABASE_DROPPED = '57P04'
++IDLE_SESSION_TIMEOUT = '57P05'
++
++# Class 58 - System Error (errors external to PostgreSQL itself)
++SYSTEM_ERROR = '58000'
++IO_ERROR = '58030'
++UNDEFINED_FILE = '58P01'
++DUPLICATE_FILE = '58P02'
++
++# Class 72 - Snapshot Failure
++SNAPSHOT_TOO_OLD = '72000'
++
++# Class F0 - Configuration File Error
++CONFIG_FILE_ERROR = 'F0000'
++LOCK_FILE_EXISTS = 'F0001'
++
++# Class HV - Foreign Data Wrapper Error (SQL/MED)
++FDW_ERROR = 'HV000'
++FDW_OUT_OF_MEMORY = 'HV001'
++FDW_DYNAMIC_PARAMETER_VALUE_NEEDED = 'HV002'
++FDW_INVALID_DATA_TYPE = 'HV004'
++FDW_COLUMN_NAME_NOT_FOUND = 'HV005'
++FDW_INVALID_DATA_TYPE_DESCRIPTORS = 'HV006'
++FDW_INVALID_COLUMN_NAME = 'HV007'
++FDW_INVALID_COLUMN_NUMBER = 'HV008'
++FDW_INVALID_USE_OF_NULL_POINTER = 'HV009'
++FDW_INVALID_STRING_FORMAT = 'HV00A'
++FDW_INVALID_HANDLE = 'HV00B'
++FDW_INVALID_OPTION_INDEX = 'HV00C'
++FDW_INVALID_OPTION_NAME = 'HV00D'
++FDW_OPTION_NAME_NOT_FOUND = 'HV00J'
++FDW_REPLY_HANDLE = 'HV00K'
++FDW_UNABLE_TO_CREATE_EXECUTION = 'HV00L'
++FDW_UNABLE_TO_CREATE_REPLY = 'HV00M'
++FDW_UNABLE_TO_ESTABLISH_CONNECTION = 'HV00N'
++FDW_NO_SCHEMAS = 'HV00P'
++FDW_SCHEMA_NOT_FOUND = 'HV00Q'
++FDW_TABLE_NOT_FOUND = 'HV00R'
++FDW_FUNCTION_SEQUENCE_ERROR = 'HV010'
++FDW_TOO_MANY_HANDLES = 'HV014'
++FDW_INCONSISTENT_DESCRIPTOR_INFORMATION = 'HV021'
++FDW_INVALID_ATTRIBUTE_VALUE = 'HV024'
++FDW_INVALID_STRING_LENGTH_OR_BUFFER_LENGTH = 'HV090'
++FDW_INVALID_DESCRIPTOR_FIELD_IDENTIFIER = 'HV091'
++
++# Class P0 - PL/pgSQL Error
++PLPGSQL_ERROR = 'P0000'
++RAISE_EXCEPTION = 'P0001'
++NO_DATA_FOUND = 'P0002'
++TOO_MANY_ROWS = 'P0003'
++ASSERT_FAILURE = 'P0004'
++
++# Class XX - Internal Error
++INTERNAL_ERROR = 'XX000'
++DATA_CORRUPTED = 'XX001'
++INDEX_CORRUPTED = 'XX002'
+diff -ruN /original-sources/build/lib.linux-x86_64-3.8/psycopg2/errors.py ./build/lib.linux-x86_64-3.8/psycopg2/errors.py
+--- /original-sources/build/lib.linux-x86_64-3.8/psycopg2/errors.py	1970-01-01 00:00:00.000000000 +0000
++++ ./build/lib.linux-x86_64-3.8/psycopg2/errors.py	2023-09-15 10:39:23.783174888 +0000
+@@ -0,0 +1,38 @@
++"""Error classes for PostgreSQL error codes
++"""
++
++# psycopg/errors.py - SQLSTATE and DB-API exceptions
++#
++# Copyright (C) 2018-2019 Daniele Varrazzo  <daniele.varrazzo@gmail.com>
++# Copyright (C) 2020-2021 The Psycopg Team
++#
++# psycopg2 is free software: you can redistribute it and/or modify it
++# under the terms of the GNU Lesser General Public License as published
++# by the Free Software Foundation, either version 3 of the License, or
++# (at your option) any later version.
++#
++# In addition, as a special exception, the copyright holders give
++# permission to link this program with the OpenSSL library (or with
++# modified versions of OpenSSL that use the same license as OpenSSL),
++# and distribute linked combinations including the two.
++#
++# You must obey the GNU Lesser General Public License in all respects for
++# all of the code used other than OpenSSL.
++#
++# psycopg2 is distributed in the hope that it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
++# License for more details.
++
++#
++# NOTE: the exceptions are injected into this module by the C extention.
++#
++
++
++def lookup(code):
++    """Lookup an error code and return its exception class.
++
++    Raise `!KeyError` if the code is not found.
++    """
++    from psycopg2._psycopg import sqlstate_errors   # avoid circular import
++    return sqlstate_errors[code]
+diff -ruN /original-sources/build/lib.linux-x86_64-3.8/psycopg2/extensions.py ./build/lib.linux-x86_64-3.8/psycopg2/extensions.py
+--- /original-sources/build/lib.linux-x86_64-3.8/psycopg2/extensions.py	1970-01-01 00:00:00.000000000 +0000
++++ ./build/lib.linux-x86_64-3.8/psycopg2/extensions.py	2023-09-15 10:39:23.785174936 +0000
+@@ -0,0 +1,213 @@
++"""psycopg extensions to the DBAPI-2.0
++
++This module holds all the extensions to the DBAPI-2.0 provided by psycopg.
++
++- `connection` -- the new-type inheritable connection class
++- `cursor` -- the new-type inheritable cursor class
++- `lobject` -- the new-type inheritable large object class
++- `adapt()` -- exposes the PEP-246_ compatible adapting mechanism used
++  by psycopg to adapt Python types to PostgreSQL ones
++
++.. _PEP-246: https://www.python.org/dev/peps/pep-0246/
++"""
++# psycopg/extensions.py - DBAPI-2.0 extensions specific to psycopg
++#
++# Copyright (C) 2003-2019 Federico Di Gregorio  <fog@debian.org>
++# Copyright (C) 2020-2021 The Psycopg Team
++#
++# psycopg2 is free software: you can redistribute it and/or modify it
++# under the terms of the GNU Lesser General Public License as published
++# by the Free Software Foundation, either version 3 of the License, or
++# (at your option) any later version.
++#
++# In addition, as a special exception, the copyright holders give
++# permission to link this program with the OpenSSL library (or with
++# modified versions of OpenSSL that use the same license as OpenSSL),
++# and distribute linked combinations including the two.
++#
++# You must obey the GNU Lesser General Public License in all respects for
++# all of the code used other than OpenSSL.
++#
++# psycopg2 is distributed in the hope that it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
++# License for more details.
++
++import re as _re
++
++from psycopg2._psycopg import (                             # noqa
++    BINARYARRAY, BOOLEAN, BOOLEANARRAY, BYTES, BYTESARRAY, DATE, DATEARRAY,
++    DATETIMEARRAY, DECIMAL, DECIMALARRAY, FLOAT, FLOATARRAY, INTEGER,
++    INTEGERARRAY, INTERVAL, INTERVALARRAY, LONGINTEGER, LONGINTEGERARRAY,
++    ROWIDARRAY, STRINGARRAY, TIME, TIMEARRAY, UNICODE, UNICODEARRAY,
++    AsIs, Binary, Boolean, Float, Int, QuotedString, )
++
++from psycopg2._psycopg import (                         # noqa
++    PYDATE, PYDATETIME, PYDATETIMETZ, PYINTERVAL, PYTIME, PYDATEARRAY,
++    PYDATETIMEARRAY, PYDATETIMETZARRAY, PYINTERVALARRAY, PYTIMEARRAY,
++    DateFromPy, TimeFromPy, TimestampFromPy, IntervalFromPy, )
++
++from psycopg2._psycopg import (                             # noqa
++    adapt, adapters, encodings, connection, cursor,
++    lobject, Xid, libpq_version, parse_dsn, quote_ident,
++    string_types, binary_types, new_type, new_array_type, register_type,
++    ISQLQuote, Notify, Diagnostics, Column, ConnectionInfo,
++    QueryCanceledError, TransactionRollbackError,
++    set_wait_callback, get_wait_callback, encrypt_password, )
++
++
++"""Isolation level values."""
++ISOLATION_LEVEL_AUTOCOMMIT = 0
++ISOLATION_LEVEL_READ_UNCOMMITTED = 4
++ISOLATION_LEVEL_READ_COMMITTED = 1
++ISOLATION_LEVEL_REPEATABLE_READ = 2
++ISOLATION_LEVEL_SERIALIZABLE = 3
++ISOLATION_LEVEL_DEFAULT = None
++
++
++"""psycopg connection status values."""
++STATUS_SETUP = 0
++STATUS_READY = 1
++STATUS_BEGIN = 2
++STATUS_SYNC = 3  # currently unused
++STATUS_ASYNC = 4  # currently unused
++STATUS_PREPARED = 5
++
++# This is a useful mnemonic to check if the connection is in a transaction
++STATUS_IN_TRANSACTION = STATUS_BEGIN
++
++
++"""psycopg asynchronous connection polling values"""
++POLL_OK = 0
++POLL_READ = 1
++POLL_WRITE = 2
++POLL_ERROR = 3
++
++
++"""Backend transaction status values."""
++TRANSACTION_STATUS_IDLE = 0
++TRANSACTION_STATUS_ACTIVE = 1
++TRANSACTION_STATUS_INTRANS = 2
++TRANSACTION_STATUS_INERROR = 3
++TRANSACTION_STATUS_UNKNOWN = 4
++
++
++def register_adapter(typ, callable):
++    """Register 'callable' as an ISQLQuote adapter for type 'typ'."""
++    adapters[(typ, ISQLQuote)] = callable
++
++
++# The SQL_IN class is the official adapter for tuples starting from 2.0.6.
++class SQL_IN:
++    """Adapt any iterable to an SQL quotable object."""
++    def __init__(self, seq):
++        self._seq = seq
++        self._conn = None
++
++    def prepare(self, conn):
++        self._conn = conn
++
++    def getquoted(self):
++        # this is the important line: note how every object in the
++        # list is adapted and then how getquoted() is called on it
++        pobjs = [adapt(o) for o in self._seq]
++        if self._conn is not None:
++            for obj in pobjs:
++                if hasattr(obj, 'prepare'):
++                    obj.prepare(self._conn)
++        qobjs = [o.getquoted() for o in pobjs]
++        return b'(' + b', '.join(qobjs) + b')'
++
++    def __str__(self):
++        return str(self.getquoted())
++
++
++class NoneAdapter:
++    """Adapt None to NULL.
++
++    This adapter is not used normally as a fast path in mogrify uses NULL,
++    but it makes easier to adapt composite types.
++    """
++    def __init__(self, obj):
++        pass
++
++    def getquoted(self, _null=b"NULL"):
++        return _null
++
++
++def make_dsn(dsn=None, **kwargs):
++    """Convert a set of keywords into a connection strings."""
++    if dsn is None and not kwargs:
++        return ''
++
++    # If no kwarg is specified don't mung the dsn, but verify it
++    if not kwargs:
++        parse_dsn(dsn)
++        return dsn
++
++    # Override the dsn with the parameters
++    if 'database' in kwargs:
++        if 'dbname' in kwargs:
++            raise TypeError(
++                "you can't specify both 'database' and 'dbname' arguments")
++        kwargs['dbname'] = kwargs.pop('database')
++
++    # Drop the None arguments
++    kwargs = {k: v for (k, v) in kwargs.items() if v is not None}
++
++    if dsn is not None:
++        tmp = parse_dsn(dsn)
++        tmp.update(kwargs)
++        kwargs = tmp
++
++    dsn = " ".join(["{}={}".format(k, _param_escape(str(v)))
++        for (k, v) in kwargs.items()])
++
++    # verify that the returned dsn is valid
++    parse_dsn(dsn)
++
++    return dsn
++
++
++def _param_escape(s,
++        re_escape=_re.compile(r"([\\'])"),
++        re_space=_re.compile(r'\s')):
++    """
++    Apply the escaping rule required by PQconnectdb
++    """
++    if not s:
++        return "''"
++
++    s = re_escape.sub(r'\\\1', s)
++    if re_space.search(s):
++        s = "'" + s + "'"
++
++    return s
++
++
++# Create default json typecasters for PostgreSQL 9.2 oids
++from psycopg2._json import register_default_json, register_default_jsonb    # noqa
++
++try:
++    JSON, JSONARRAY = register_default_json()
++    JSONB, JSONBARRAY = register_default_jsonb()
++except ImportError:
++    pass
++
++del register_default_json, register_default_jsonb
++
++
++# Create default Range typecasters
++from psycopg2. _range import Range                              # noqa
++del Range
++
++
++# Add the "cleaned" version of the encodings to the key.
++# When the encoding is set its name is cleaned up from - and _ and turned
++# uppercase, so an encoding not respecting these rules wouldn't be found in the
++# encodings keys and would raise an exception with the unicode typecaster
++for k, v in list(encodings.items()):
++    k = k.replace('_', '').replace('-', '').upper()
++    encodings[k] = v
++
++del k, v
+diff -ruN /original-sources/build/lib.linux-x86_64-3.8/psycopg2/extras.py ./build/lib.linux-x86_64-3.8/psycopg2/extras.py
+--- /original-sources/build/lib.linux-x86_64-3.8/psycopg2/extras.py	1970-01-01 00:00:00.000000000 +0000
++++ ./build/lib.linux-x86_64-3.8/psycopg2/extras.py	2023-09-15 10:39:23.785174936 +0000
+@@ -0,0 +1,1340 @@
++"""Miscellaneous goodies for psycopg2
++
++This module is a generic place used to hold little helper functions
++and classes until a better place in the distribution is found.
++"""
++# psycopg/extras.py - miscellaneous extra goodies for psycopg
++#
++# Copyright (C) 2003-2019 Federico Di Gregorio  <fog@debian.org>
++# Copyright (C) 2020-2021 The Psycopg Team
++#
++# psycopg2 is free software: you can redistribute it and/or modify it
++# under the terms of the GNU Lesser General Public License as published
++# by the Free Software Foundation, either version 3 of the License, or
++# (at your option) any later version.
++#
++# In addition, as a special exception, the copyright holders give
++# permission to link this program with the OpenSSL library (or with
++# modified versions of OpenSSL that use the same license as OpenSSL),
++# and distribute linked combinations including the two.
++#
++# You must obey the GNU Lesser General Public License in all respects for
++# all of the code used other than OpenSSL.
++#
++# psycopg2 is distributed in the hope that it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
++# License for more details.
++
++import os as _os
++import time as _time
++import re as _re
++from collections import namedtuple, OrderedDict
++
++import logging as _logging
++
++import psycopg2
++from psycopg2 import extensions as _ext
++from .extensions import cursor as _cursor
++from .extensions import connection as _connection
++from .extensions import adapt as _A, quote_ident
++from functools import lru_cache
++
++from psycopg2._psycopg import (                             # noqa
++    REPLICATION_PHYSICAL, REPLICATION_LOGICAL,
++    ReplicationConnection as _replicationConnection,
++    ReplicationCursor as _replicationCursor,
++    ReplicationMessage)
++
++
++# expose the json adaptation stuff into the module
++from psycopg2._json import (                                # noqa
++    json, Json, register_json, register_default_json, register_default_jsonb)
++
++
++# Expose range-related objects
++from psycopg2._range import (                               # noqa
++    Range, NumericRange, DateRange, DateTimeRange, DateTimeTZRange,
++    register_range, RangeAdapter, RangeCaster)
++
++
++# Expose ipaddress-related objects
++from psycopg2._ipaddress import register_ipaddress          # noqa
++
++
++class DictCursorBase(_cursor):
++    """Base class for all dict-like cursors."""
++
++    def __init__(self, *args, **kwargs):
++        if 'row_factory' in kwargs:
++            row_factory = kwargs['row_factory']
++            del kwargs['row_factory']
++        else:
++            raise NotImplementedError(
++                "DictCursorBase can't be instantiated without a row factory.")
++        super().__init__(*args, **kwargs)
++        self._query_executed = False
++        self._prefetch = False
++        self.row_factory = row_factory
++
++    def fetchone(self):
++        if self._prefetch:
++            res = super().fetchone()
++        if self._query_executed:
++            self._build_index()
++        if not self._prefetch:
++            res = super().fetchone()
++        return res
++
++    def fetchmany(self, size=None):
++        if self._prefetch:
++            res = super().fetchmany(size)
++        if self._query_executed:
++            self._build_index()
++        if not self._prefetch:
++            res = super().fetchmany(size)
++        return res
++
++    def fetchall(self):
++        if self._prefetch:
++            res = super().fetchall()
++        if self._query_executed:
++            self._build_index()
++        if not self._prefetch:
++            res = super().fetchall()
++        return res
++
++    def __iter__(self):
++        try:
++            if self._prefetch:
++                res = super().__iter__()
++                first = next(res)
++            if self._query_executed:
++                self._build_index()
++            if not self._prefetch:
++                res = super().__iter__()
++                first = next(res)
++
++            yield first
++            while True:
++                yield next(res)
++        except StopIteration:
++            return
++
++
++class DictConnection(_connection):
++    """A connection that uses `DictCursor` automatically."""
++    def cursor(self, *args, **kwargs):
++        kwargs.setdefault('cursor_factory', self.cursor_factory or DictCursor)
++        return super().cursor(*args, **kwargs)
++
++
++class DictCursor(DictCursorBase):
++    """A cursor that keeps a list of column name -> index mappings__.
++
++    .. __: https://docs.python.org/glossary.html#term-mapping
++    """
++
++    def __init__(self, *args, **kwargs):
++        kwargs['row_factory'] = DictRow
++        super().__init__(*args, **kwargs)
++        self._prefetch = True
++
++    def execute(self, query, vars=None):
++        self.index = OrderedDict()
++        self._query_executed = True
++        return super().execute(query, vars)
++
++    def callproc(self, procname, vars=None):
++        self.index = OrderedDict()
++        self._query_executed = True
++        return super().callproc(procname, vars)
++
++    def _build_index(self):
++        if self._query_executed and self.description:
++            for i in range(len(self.description)):
++                self.index[self.description[i][0]] = i
++            self._query_executed = False
++
++
++class DictRow(list):
++    """A row object that allow by-column-name access to data."""
++
++    __slots__ = ('_index',)
++
++    def __init__(self, cursor):
++        self._index = cursor.index
++        self[:] = [None] * len(cursor.description)
++
++    def __getitem__(self, x):
++        if not isinstance(x, (int, slice)):
++            x = self._index[x]
++        return super().__getitem__(x)
++
++    def __setitem__(self, x, v):
++        if not isinstance(x, (int, slice)):
++            x = self._index[x]
++        super().__setitem__(x, v)
++
++    def items(self):
++        g = super().__getitem__
++        return ((n, g(self._index[n])) for n in self._index)
++
++    def keys(self):
++        return iter(self._index)
++
++    def values(self):
++        g = super().__getitem__
++        return (g(self._index[n]) for n in self._index)
++
++    def get(self, x, default=None):
++        try:
++            return self[x]
++        except Exception:
++            return default
++
++    def copy(self):
++        return OrderedDict(self.items())
++
++    def __contains__(self, x):
++        return x in self._index
++
++    def __reduce__(self):
++        # this is apparently useless, but it fixes #1073
++        return super().__reduce__()
++
++    def __getstate__(self):
++        return self[:], self._index.copy()
++
++    def __setstate__(self, data):
++        self[:] = data[0]
++        self._index = data[1]
++
++
++class RealDictConnection(_connection):
++    """A connection that uses `RealDictCursor` automatically."""
++    def cursor(self, *args, **kwargs):
++        kwargs.setdefault('cursor_factory', self.cursor_factory or RealDictCursor)
++        return super().cursor(*args, **kwargs)
++
++
++class RealDictCursor(DictCursorBase):
++    """A cursor that uses a real dict as the base type for rows.
++
++    Note that this cursor is extremely specialized and does not allow
++    the normal access (using integer indices) to fetched data. If you need
++    to access database rows both as a dictionary and a list, then use
++    the generic `DictCursor` instead of `!RealDictCursor`.
++    """
++    def __init__(self, *args, **kwargs):
++        kwargs['row_factory'] = RealDictRow
++        super().__init__(*args, **kwargs)
++
++    def execute(self, query, vars=None):
++        self.column_mapping = []
++        self._query_executed = True
++        return super().execute(query, vars)
++
++    def callproc(self, procname, vars=None):
++        self.column_mapping = []
++        self._query_executed = True
++        return super().callproc(procname, vars)
++
++    def _build_index(self):
++        if self._query_executed and self.description:
++            self.column_mapping = [d[0] for d in self.description]
++            self._query_executed = False
++
++
++class RealDictRow(OrderedDict):
++    """A `!dict` subclass representing a data record."""
++
++    def __init__(self, *args, **kwargs):
++        if args and isinstance(args[0], _cursor):
++            cursor = args[0]
++            args = args[1:]
++        else:
++            cursor = None
++
++        super().__init__(*args, **kwargs)
++
++        if cursor is not None:
++            # Required for named cursors
++            if cursor.description and not cursor.column_mapping:
++                cursor._build_index()
++
++            # Store the cols mapping in the dict itself until the row is fully
++            # populated, so we don't need to add attributes to the class
++            # (hence keeping its maintenance, special pickle support, etc.)
++            self[RealDictRow] = cursor.column_mapping
++
++    def __setitem__(self, key, value):
++        if RealDictRow in self:
++            # We are in the row building phase
++            mapping = self[RealDictRow]
++            super().__setitem__(mapping[key], value)
++            if key == len(mapping) - 1:
++                # Row building finished
++                del self[RealDictRow]
++            return
++
++        super().__setitem__(key, value)
++
++
++class NamedTupleConnection(_connection):
++    """A connection that uses `NamedTupleCursor` automatically."""
++    def cursor(self, *args, **kwargs):
++        kwargs.setdefault('cursor_factory', self.cursor_factory or NamedTupleCursor)
++        return super().cursor(*args, **kwargs)
++
++
++class NamedTupleCursor(_cursor):
++    """A cursor that generates results as `~collections.namedtuple`.
++
++    `!fetch*()` methods will return named tuples instead of regular tuples, so
++    their elements can be accessed both as regular numeric items as well as
++    attributes.
++
++        >>> nt_cur = conn.cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
++        >>> rec = nt_cur.fetchone()
++        >>> rec
++        Record(id=1, num=100, data="abc'def")
++        >>> rec[1]
++        100
++        >>> rec.data
++        "abc'def"
++    """
++    Record = None
++    MAX_CACHE = 1024
++
++    def execute(self, query, vars=None):
++        self.Record = None
++        return super().execute(query, vars)
++
++    def executemany(self, query, vars):
++        self.Record = None
++        return super().executemany(query, vars)
++
++    def callproc(self, procname, vars=None):
++        self.Record = None
++        return super().callproc(procname, vars)
++
++    def fetchone(self):
++        t = super().fetchone()
++        if t is not None:
++            nt = self.Record
++            if nt is None:
++                nt = self.Record = self._make_nt()
++            return nt._make(t)
++
++    def fetchmany(self, size=None):
++        ts = super().fetchmany(size)
++        nt = self.Record
++        if nt is None:
++            nt = self.Record = self._make_nt()
++        return list(map(nt._make, ts))
++
++    def fetchall(self):
++        ts = super().fetchall()
++        nt = self.Record
++        if nt is None:
++            nt = self.Record = self._make_nt()
++        return list(map(nt._make, ts))
++
++    def __iter__(self):
++        try:
++            it = super().__iter__()
++            t = next(it)
++
++            nt = self.Record
++            if nt is None:
++                nt = self.Record = self._make_nt()
++
++            yield nt._make(t)
++
++            while True:
++                yield nt._make(next(it))
++        except StopIteration:
++            return
++
++    def _make_nt(self):
++        key = tuple(d[0] for d in self.description) if self.description else ()
++        return self._cached_make_nt(key)
++
++    @classmethod
++    def _do_make_nt(cls, key):
++        fields = []
++        for s in key:
++            s = _re_clean.sub('_', s)
++            # Python identifier cannot start with numbers, namedtuple fields
++            # cannot start with underscore. So...
++            if s[0] == '_' or '0' <= s[0] <= '9':
++                s = 'f' + s
++            fields.append(s)
++
++        nt = namedtuple("Record", fields)
++        return nt
++
++
++@lru_cache(512)
++def _cached_make_nt(cls, key):
++    return cls._do_make_nt(key)
++
++
++# Exposed for testability, and if someone wants to monkeypatch to tweak
++# the cache size.
++NamedTupleCursor._cached_make_nt = classmethod(_cached_make_nt)
++
++
++class LoggingConnection(_connection):
++    """A connection that logs all queries to a file or logger__ object.
++
++    .. __: https://docs.python.org/library/logging.html
++    """
++
++    def initialize(self, logobj):
++        """Initialize the connection to log to `!logobj`.
++
++        The `!logobj` parameter can be an open file object or a Logger/LoggerAdapter
++        instance from the standard logging module.
++        """
++        self._logobj = logobj
++        if _logging and isinstance(
++                logobj, (_logging.Logger, _logging.LoggerAdapter)):
++            self.log = self._logtologger
++        else:
++            self.log = self._logtofile
++
++    def filter(self, msg, curs):
++        """Filter the query before logging it.
++
++        This is the method to overwrite to filter unwanted queries out of the
++        log or to add some extra data to the output. The default implementation
++        just does nothing.
++        """
++        return msg
++
++    def _logtofile(self, msg, curs):
++        msg = self.filter(msg, curs)
++        if msg:
++            if isinstance(msg, bytes):
++                msg = msg.decode(_ext.encodings[self.encoding], 'replace')
++            self._logobj.write(msg + _os.linesep)
++
++    def _logtologger(self, msg, curs):
++        msg = self.filter(msg, curs)
++        if msg:
++            self._logobj.debug(msg)
++
++    def _check(self):
++        if not hasattr(self, '_logobj'):
++            raise self.ProgrammingError(
++                "LoggingConnection object has not been initialize()d")
++
++    def cursor(self, *args, **kwargs):
++        self._check()
++        kwargs.setdefault('cursor_factory', self.cursor_factory or LoggingCursor)
++        return super().cursor(*args, **kwargs)
++
++
++class LoggingCursor(_cursor):
++    """A cursor that logs queries using its connection logging facilities."""
++
++    def execute(self, query, vars=None):
++        try:
++            return super().execute(query, vars)
++        finally:
++            self.connection.log(self.query, self)
++
++    def callproc(self, procname, vars=None):
++        try:
++            return super().callproc(procname, vars)
++        finally:
++            self.connection.log(self.query, self)
++
++
++class MinTimeLoggingConnection(LoggingConnection):
++    """A connection that logs queries based on execution time.
++
++    This is just an example of how to sub-class `LoggingConnection` to
++    provide some extra filtering for the logged queries. Both the
++    `initialize()` and `filter()` methods are overwritten to make sure
++    that only queries executing for more than ``mintime`` ms are logged.
++
++    Note that this connection uses the specialized cursor
++    `MinTimeLoggingCursor`.
++    """
++    def initialize(self, logobj, mintime=0):
++        LoggingConnection.initialize(self, logobj)
++        self._mintime = mintime
++
++    def filter(self, msg, curs):
++        t = (_time.time() - curs.timestamp) * 1000
++        if t > self._mintime:
++            if isinstance(msg, bytes):
++                msg = msg.decode(_ext.encodings[self.encoding], 'replace')
++            return f"{msg}{_os.linesep}  (execution time: {t} ms)"
++
++    def cursor(self, *args, **kwargs):
++        kwargs.setdefault('cursor_factory',
++            self.cursor_factory or MinTimeLoggingCursor)
++        return LoggingConnection.cursor(self, *args, **kwargs)
++
++
++class MinTimeLoggingCursor(LoggingCursor):
++    """The cursor sub-class companion to `MinTimeLoggingConnection`."""
++
++    def execute(self, query, vars=None):
++        self.timestamp = _time.time()
++        return LoggingCursor.execute(self, query, vars)
++
++    def callproc(self, procname, vars=None):
++        self.timestamp = _time.time()
++        return LoggingCursor.callproc(self, procname, vars)
++
++
++class LogicalReplicationConnection(_replicationConnection):
++
++    def __init__(self, *args, **kwargs):
++        kwargs['replication_type'] = REPLICATION_LOGICAL
++        super().__init__(*args, **kwargs)
++
++
++class PhysicalReplicationConnection(_replicationConnection):
++
++    def __init__(self, *args, **kwargs):
++        kwargs['replication_type'] = REPLICATION_PHYSICAL
++        super().__init__(*args, **kwargs)
++
++
++class StopReplication(Exception):
++    """
++    Exception used to break out of the endless loop in
++    `~ReplicationCursor.consume_stream()`.
++
++    Subclass of `~exceptions.Exception`.  Intentionally *not* inherited from
++    `~psycopg2.Error` as occurrence of this exception does not indicate an
++    error.
++    """
++    pass
++
++
++class ReplicationCursor(_replicationCursor):
++    """A cursor used for communication on replication connections."""
++
++    def create_replication_slot(self, slot_name, slot_type=None, output_plugin=None):
++        """Create streaming replication slot."""
++
++        command = f"CREATE_REPLICATION_SLOT {quote_ident(slot_name, self)} "
++
++        if slot_type is None:
++            slot_type = self.connection.replication_type
++
++        if slot_type == REPLICATION_LOGICAL:
++            if output_plugin is None:
++                raise psycopg2.ProgrammingError(
++                    "output plugin name is required to create "
++                    "logical replication slot")
++
++            command += f"LOGICAL {quote_ident(output_plugin, self)}"
++
++        elif slot_type == REPLICATION_PHYSICAL:
++            if output_plugin is not None:
++                raise psycopg2.ProgrammingError(
++                    "cannot specify output plugin name when creating "
++                    "physical replication slot")
++
++            command += "PHYSICAL"
++
++        else:
++            raise psycopg2.ProgrammingError(
++                f"unrecognized replication type: {repr(slot_type)}")
++
++        self.execute(command)
++
++    def drop_replication_slot(self, slot_name):
++        """Drop streaming replication slot."""
++
++        command = f"DROP_REPLICATION_SLOT {quote_ident(slot_name, self)}"
++        self.execute(command)
++
++    def start_replication(
++            self, slot_name=None, slot_type=None, start_lsn=0,
++            timeline=0, options=None, decode=False, status_interval=10):
++        """Start replication stream."""
++
++        command = "START_REPLICATION "
++
++        if slot_type is None:
++            slot_type = self.connection.replication_type
++
++        if slot_type == REPLICATION_LOGICAL:
++            if slot_name:
++                command += f"SLOT {quote_ident(slot_name, self)} "
++            else:
++                raise psycopg2.ProgrammingError(
++                    "slot name is required for logical replication")
++
++            command += "LOGICAL "
++
++        elif slot_type == REPLICATION_PHYSICAL:
++            if slot_name:
++                command += f"SLOT {quote_ident(slot_name, self)} "
++            # don't add "PHYSICAL", before 9.4 it was just START_REPLICATION XXX/XXX
++
++        else:
++            raise psycopg2.ProgrammingError(
++                f"unrecognized replication type: {repr(slot_type)}")
++
++        if type(start_lsn) is str:
++            lsn = start_lsn.split('/')
++            lsn = f"{int(lsn[0], 16):X}/{int(lsn[1], 16):08X}"
++        else:
++            lsn = f"{start_lsn >> 32 & 4294967295:X}/{start_lsn & 4294967295:08X}"
++
++        command += lsn
++
++        if timeline != 0:
++            if slot_type == REPLICATION_LOGICAL:
++                raise psycopg2.ProgrammingError(
++                    "cannot specify timeline for logical replication")
++
++            command += f" TIMELINE {timeline}"
++
++        if options:
++            if slot_type == REPLICATION_PHYSICAL:
++                raise psycopg2.ProgrammingError(
++                    "cannot specify output plugin options for physical replication")
++
++            command += " ("
++            for k, v in options.items():
++                if not command.endswith('('):
++                    command += ", "
++                command += f"{quote_ident(k, self)} {_A(str(v))}"
++            command += ")"
++
++        self.start_replication_expert(
++            command, decode=decode, status_interval=status_interval)
++
++    # allows replication cursors to be used in select.select() directly
++    def fileno(self):
++        return self.connection.fileno()
++
++
++# a dbtype and adapter for Python UUID type
++
++class UUID_adapter:
++    """Adapt Python's uuid.UUID__ type to PostgreSQL's uuid__.
++
++    .. __: https://docs.python.org/library/uuid.html
++    .. __: https://www.postgresql.org/docs/current/static/datatype-uuid.html
++    """
++
++    def __init__(self, uuid):
++        self._uuid = uuid
++
++    def __conform__(self, proto):
++        if proto is _ext.ISQLQuote:
++            return self
++
++    def getquoted(self):
++        return (f"'{self._uuid}'::uuid").encode('utf8')
++
++    def __str__(self):
++        return f"'{self._uuid}'::uuid"
++
++
++def register_uuid(oids=None, conn_or_curs=None):
++    """Create the UUID type and an uuid.UUID adapter.
++
++    :param oids: oid for the PostgreSQL :sql:`uuid` type, or 2-items sequence
++        with oids of the type and the array. If not specified, use PostgreSQL
++        standard oids.
++    :param conn_or_curs: where to register the typecaster. If not specified,
++        register it globally.
++    """
++
++    import uuid
++
++    if not oids:
++        oid1 = 2950
++        oid2 = 2951
++    elif isinstance(oids, (list, tuple)):
++        oid1, oid2 = oids
++    else:
++        oid1 = oids
++        oid2 = 2951
++
++    _ext.UUID = _ext.new_type((oid1, ), "UUID",
++            lambda data, cursor: data and uuid.UUID(data) or None)
++    _ext.UUIDARRAY = _ext.new_array_type((oid2,), "UUID[]", _ext.UUID)
++
++    _ext.register_type(_ext.UUID, conn_or_curs)
++    _ext.register_type(_ext.UUIDARRAY, conn_or_curs)
++    _ext.register_adapter(uuid.UUID, UUID_adapter)
++
++    return _ext.UUID
++
++
++# a type, dbtype and adapter for PostgreSQL inet type
++
++class Inet:
++    """Wrap a string to allow for correct SQL-quoting of inet values.
++
++    Note that this adapter does NOT check the passed value to make
++    sure it really is an inet-compatible address but DOES call adapt()
++    on it to make sure it is impossible to execute an SQL-injection
++    by passing an evil value to the initializer.
++    """
++    def __init__(self, addr):
++        self.addr = addr
++
++    def __repr__(self):
++        return f"{self.__class__.__name__}({self.addr!r})"
++
++    def prepare(self, conn):
++        self._conn = conn
++
++    def getquoted(self):
++        obj = _A(self.addr)
++        if hasattr(obj, 'prepare'):
++            obj.prepare(self._conn)
++        return obj.getquoted() + b"::inet"
++
++    def __conform__(self, proto):
++        if proto is _ext.ISQLQuote:
++            return self
++
++    def __str__(self):
++        return str(self.addr)
++
++
++def register_inet(oid=None, conn_or_curs=None):
++    """Create the INET type and an Inet adapter.
++
++    :param oid: oid for the PostgreSQL :sql:`inet` type, or 2-items sequence
++        with oids of the type and the array. If not specified, use PostgreSQL
++        standard oids.
++    :param conn_or_curs: where to register the typecaster. If not specified,
++        register it globally.
++    """
++    import warnings
++    warnings.warn(
++        "the inet adapter is deprecated, it's not very useful",
++        DeprecationWarning)
++
++    if not oid:
++        oid1 = 869
++        oid2 = 1041
++    elif isinstance(oid, (list, tuple)):
++        oid1, oid2 = oid
++    else:
++        oid1 = oid
++        oid2 = 1041
++
++    _ext.INET = _ext.new_type((oid1, ), "INET",
++            lambda data, cursor: data and Inet(data) or None)
++    _ext.INETARRAY = _ext.new_array_type((oid2, ), "INETARRAY", _ext.INET)
++
++    _ext.register_type(_ext.INET, conn_or_curs)
++    _ext.register_type(_ext.INETARRAY, conn_or_curs)
++
++    return _ext.INET
++
++
++def wait_select(conn):
++    """Wait until a connection or cursor has data available.
++
++    The function is an example of a wait callback to be registered with
++    `~psycopg2.extensions.set_wait_callback()`. This function uses
++    :py:func:`~select.select()` to wait for data to become available, and
++    therefore is able to handle/receive SIGINT/KeyboardInterrupt.
++    """
++    import select
++    from psycopg2.extensions import POLL_OK, POLL_READ, POLL_WRITE
++
++    while True:
++        try:
++            state = conn.poll()
++            if state == POLL_OK:
++                break
++            elif state == POLL_READ:
++                select.select([conn.fileno()], [], [])
++            elif state == POLL_WRITE:
++                select.select([], [conn.fileno()], [])
++            else:
++                raise conn.OperationalError(f"bad state from poll: {state}")
++        except KeyboardInterrupt:
++            conn.cancel()
++            # the loop will be broken by a server error
++            continue
++
++
++def _solve_conn_curs(conn_or_curs):
++    """Return the connection and a DBAPI cursor from a connection or cursor."""
++    if conn_or_curs is None:
++        raise psycopg2.ProgrammingError("no connection or cursor provided")
++
++    if hasattr(conn_or_curs, 'execute'):
++        conn = conn_or_curs.connection
++        curs = conn.cursor(cursor_factory=_cursor)
++    else:
++        conn = conn_or_curs
++        curs = conn.cursor(cursor_factory=_cursor)
++
++    return conn, curs
++
++
++class HstoreAdapter:
++    """Adapt a Python dict to the hstore syntax."""
++    def __init__(self, wrapped):
++        self.wrapped = wrapped
++
++    def prepare(self, conn):
++        self.conn = conn
++
++        # use an old-style getquoted implementation if required
++        if conn.info.server_version < 90000:
++            self.getquoted = self._getquoted_8
++
++    def _getquoted_8(self):
++        """Use the operators available in PG pre-9.0."""
++        if not self.wrapped:
++            return b"''::hstore"
++
++        adapt = _ext.adapt
++        rv = []
++        for k, v in self.wrapped.items():
++            k = adapt(k)
++            k.prepare(self.conn)
++            k = k.getquoted()
++
++            if v is not None:
++                v = adapt(v)
++                v.prepare(self.conn)
++                v = v.getquoted()
++            else:
++                v = b'NULL'
++
++            # XXX this b'ing is painfully inefficient!
++            rv.append(b"(" + k + b" => " + v + b")")
++
++        return b"(" + b'||'.join(rv) + b")"
++
++    def _getquoted_9(self):
++        """Use the hstore(text[], text[]) function."""
++        if not self.wrapped:
++            return b"''::hstore"
++
++        k = _ext.adapt(list(self.wrapped.keys()))
++        k.prepare(self.conn)
++        v = _ext.adapt(list(self.wrapped.values()))
++        v.prepare(self.conn)
++        return b"hstore(" + k.getquoted() + b", " + v.getquoted() + b")"
++
++    getquoted = _getquoted_9
++
++    _re_hstore = _re.compile(r"""
++        # hstore key:
++        # a string of normal or escaped chars
++        "((?: [^"\\] | \\. )*)"
++        \s*=>\s* # hstore value
++        (?:
++            NULL # the value can be null - not catched
++            # or a quoted string like the key
++            | "((?: [^"\\] | \\. )*)"
++        )
++        (?:\s*,\s*|$) # pairs separated by comma or end of string.
++    """, _re.VERBOSE)
++
++    @classmethod
++    def parse(self, s, cur, _bsdec=_re.compile(r"\\(.)")):
++        """Parse an hstore representation in a Python string.
++
++        The hstore is represented as something like::
++
++            "a"=>"1", "b"=>"2"
++
++        with backslash-escaped strings.
++        """
++        if s is None:
++            return None
++
++        rv = {}
++        start = 0
++        for m in self._re_hstore.finditer(s):
++            if m is None or m.start() != start:
++                raise psycopg2.InterfaceError(
++                    f"error parsing hstore pair at char {start}")
++            k = _bsdec.sub(r'\1', m.group(1))
++            v = m.group(2)
++            if v is not None:
++                v = _bsdec.sub(r'\1', v)
++
++            rv[k] = v
++            start = m.end()
++
++        if start < len(s):
++            raise psycopg2.InterfaceError(
++                f"error parsing hstore: unparsed data after char {start}")
++
++        return rv
++
++    @classmethod
++    def parse_unicode(self, s, cur):
++        """Parse an hstore returning unicode keys and values."""
++        if s is None:
++            return None
++
++        s = s.decode(_ext.encodings[cur.connection.encoding])
++        return self.parse(s, cur)
++
++    @classmethod
++    def get_oids(self, conn_or_curs):
++        """Return the lists of OID of the hstore and hstore[] types.
++        """
++        conn, curs = _solve_conn_curs(conn_or_curs)
++
++        # Store the transaction status of the connection to revert it after use
++        conn_status = conn.status
++
++        # column typarray not available before PG 8.3
++        typarray = conn.info.server_version >= 80300 and "typarray" or "NULL"
++
++        rv0, rv1 = [], []
++
++        # get the oid for the hstore
++        curs.execute(f"""SELECT t.oid, {typarray}
++FROM pg_type t JOIN pg_namespace ns
++    ON typnamespace = ns.oid
++WHERE typname = 'hstore';
++""")
++        for oids in curs:
++            rv0.append(oids[0])
++            rv1.append(oids[1])
++
++        # revert the status of the connection as before the command
++        if (conn_status != _ext.STATUS_IN_TRANSACTION
++        and not conn.autocommit):
++            conn.rollback()
++
++        return tuple(rv0), tuple(rv1)
++
++
++def register_hstore(conn_or_curs, globally=False, unicode=False,
++                    oid=None, array_oid=None):
++    r"""Register adapter and typecaster for `!dict`\-\ |hstore| conversions.
++
++    :param conn_or_curs: a connection or cursor: the typecaster will be
++        registered only on this object unless *globally* is set to `!True`
++    :param globally: register the adapter globally, not only on *conn_or_curs*
++    :param unicode: if `!True`, keys and values returned from the database
++        will be `!unicode` instead of `!str`. The option is not available on
++        Python 3
++    :param oid: the OID of the |hstore| type if known. If not, it will be
++        queried on *conn_or_curs*.
++    :param array_oid: the OID of the |hstore| array type if known. If not, it
++        will be queried on *conn_or_curs*.
++
++    The connection or cursor passed to the function will be used to query the
++    database and look for the OID of the |hstore| type (which may be different
++    across databases). If querying is not desirable (e.g. with
++    :ref:`asynchronous connections <async-support>`) you may specify it in the
++    *oid* parameter, which can be found using a query such as :sql:`SELECT
++    'hstore'::regtype::oid`. Analogously you can obtain a value for *array_oid*
++    using a query such as :sql:`SELECT 'hstore[]'::regtype::oid`.
++
++    Note that, when passing a dictionary from Python to the database, both
++    strings and unicode keys and values are supported. Dictionaries returned
++    from the database have keys/values according to the *unicode* parameter.
++
++    The |hstore| contrib module must be already installed in the database
++    (executing the ``hstore.sql`` script in your ``contrib`` directory).
++    Raise `~psycopg2.ProgrammingError` if the type is not found.
++    """
++    if oid is None:
++        oid = HstoreAdapter.get_oids(conn_or_curs)
++        if oid is None or not oid[0]:
++            raise psycopg2.ProgrammingError(
++                "hstore type not found in the database. "
++                "please install it from your 'contrib/hstore.sql' file")
++        else:
++            array_oid = oid[1]
++            oid = oid[0]
++
++    if isinstance(oid, int):
++        oid = (oid,)
++
++    if array_oid is not None:
++        if isinstance(array_oid, int):
++            array_oid = (array_oid,)
++        else:
++            array_oid = tuple([x for x in array_oid if x])
++
++    # create and register the typecaster
++    HSTORE = _ext.new_type(oid, "HSTORE", HstoreAdapter.parse)
++    _ext.register_type(HSTORE, not globally and conn_or_curs or None)
++    _ext.register_adapter(dict, HstoreAdapter)
++
++    if array_oid:
++        HSTOREARRAY = _ext.new_array_type(array_oid, "HSTOREARRAY", HSTORE)
++        _ext.register_type(HSTOREARRAY, not globally and conn_or_curs or None)
++
++
++class CompositeCaster:
++    """Helps conversion of a PostgreSQL composite type into a Python object.
++
++    The class is usually created by the `register_composite()` function.
++    You may want to create and register manually instances of the class if
++    querying the database at registration time is not desirable (such as when
++    using an :ref:`asynchronous connections <async-support>`).
++
++    """
++    def __init__(self, name, oid, attrs, array_oid=None, schema=None):
++        self.name = name
++        self.schema = schema
++        self.oid = oid
++        self.array_oid = array_oid
++
++        self.attnames = [a[0] for a in attrs]
++        self.atttypes = [a[1] for a in attrs]
++        self._create_type(name, self.attnames)
++        self.typecaster = _ext.new_type((oid,), name, self.parse)
++        if array_oid:
++            self.array_typecaster = _ext.new_array_type(
++                (array_oid,), f"{name}ARRAY", self.typecaster)
++        else:
++            self.array_typecaster = None
++
++    def parse(self, s, curs):
++        if s is None:
++            return None
++
++        tokens = self.tokenize(s)
++        if len(tokens) != len(self.atttypes):
++            raise psycopg2.DataError(
++                "expecting %d components for the type %s, %d found instead" %
++                (len(self.atttypes), self.name, len(tokens)))
++
++        values = [curs.cast(oid, token)
++            for oid, token in zip(self.atttypes, tokens)]
++
++        return self.make(values)
++
++    def make(self, values):
++        """Return a new Python object representing the data being casted.
++
++        *values* is the list of attributes, already casted into their Python
++        representation.
++
++        You can subclass this method to :ref:`customize the composite cast
++        <custom-composite>`.
++        """
++
++        return self._ctor(values)
++
++    _re_tokenize = _re.compile(r"""
++  \(? ([,)])                        # an empty token, representing NULL
++| \(? " ((?: [^"] | "")*) " [,)]    # or a quoted string
++| \(? ([^",)]+) [,)]                # or an unquoted string
++    """, _re.VERBOSE)
++
++    _re_undouble = _re.compile(r'(["\\])\1')
++
++    @classmethod
++    def tokenize(self, s):
++        rv = []
++        for m in self._re_tokenize.finditer(s):
++            if m is None:
++                raise psycopg2.InterfaceError(f"can't parse type: {s!r}")
++            if m.group(1) is not None:
++                rv.append(None)
++            elif m.group(2) is not None:
++                rv.append(self._re_undouble.sub(r"\1", m.group(2)))
++            else:
++                rv.append(m.group(3))
++
++        return rv
++
++    def _create_type(self, name, attnames):
++        name = _re_clean.sub('_', name)
++        self.type = namedtuple(name, attnames)
++        self._ctor = self.type._make
++
++    @classmethod
++    def _from_db(self, name, conn_or_curs):
++        """Return a `CompositeCaster` instance for the type *name*.
++
++        Raise `ProgrammingError` if the type is not found.
++        """
++        conn, curs = _solve_conn_curs(conn_or_curs)
++
++        # Store the transaction status of the connection to revert it after use
++        conn_status = conn.status
++
++        # Use the correct schema
++        if '.' in name:
++            schema, tname = name.split('.', 1)
++        else:
++            tname = name
++            schema = 'public'
++
++        # column typarray not available before PG 8.3
++        typarray = conn.info.server_version >= 80300 and "typarray" or "NULL"
++
++        # get the type oid and attributes
++        curs.execute("""\
++SELECT t.oid, %s, attname, atttypid
++FROM pg_type t
++JOIN pg_namespace ns ON typnamespace = ns.oid
++JOIN pg_attribute a ON attrelid = typrelid
++WHERE typname = %%s AND nspname = %%s
++    AND attnum > 0 AND NOT attisdropped
++ORDER BY attnum;
++""" % typarray, (tname, schema))
++
++        recs = curs.fetchall()
++
++        if not recs:
++            # The above algorithm doesn't work for customized seach_path
++            # (#1487) The implementation below works better, but, to guarantee
++            # backwards compatibility, use it only if the original one failed.
++            try:
++                savepoint = False
++                # Because we executed statements earlier, we are either INTRANS
++                # or we are IDLE only if the transaction is autocommit, in
++                # which case we don't need the savepoint anyway.
++                if conn.status == _ext.STATUS_IN_TRANSACTION:
++                    curs.execute("SAVEPOINT register_type")
++                    savepoint = True
++
++                curs.execute("""\
++SELECT t.oid, %s, attname, atttypid, typname, nspname
++FROM pg_type t
++JOIN pg_namespace ns ON typnamespace = ns.oid
++JOIN pg_attribute a ON attrelid = typrelid
++WHERE t.oid = %%s::regtype
++    AND attnum > 0 AND NOT attisdropped
++ORDER BY attnum;
++""" % typarray, (name, ))
++            except psycopg2.ProgrammingError:
++                pass
++            else:
++                recs = curs.fetchall()
++                if recs:
++                    tname = recs[0][4]
++                    schema = recs[0][5]
++            finally:
++                if savepoint:
++                    curs.execute("ROLLBACK TO SAVEPOINT register_type")
++
++        # revert the status of the connection as before the command
++        if conn_status != _ext.STATUS_IN_TRANSACTION and not conn.autocommit:
++            conn.rollback()
++
++        if not recs:
++            raise psycopg2.ProgrammingError(
++                f"PostgreSQL type '{name}' not found")
++
++        type_oid = recs[0][0]
++        array_oid = recs[0][1]
++        type_attrs = [(r[2], r[3]) for r in recs]
++
++        return self(tname, type_oid, type_attrs,
++            array_oid=array_oid, schema=schema)
++
++
++def register_composite(name, conn_or_curs, globally=False, factory=None):
++    """Register a typecaster to convert a composite type into a tuple.
++
++    :param name: the name of a PostgreSQL composite type, e.g. created using
++        the |CREATE TYPE|_ command
++    :param conn_or_curs: a connection or cursor used to find the type oid and
++        components; the typecaster is registered in a scope limited to this
++        object, unless *globally* is set to `!True`
++    :param globally: if `!False` (default) register the typecaster only on
++        *conn_or_curs*, otherwise register it globally
++    :param factory: if specified it should be a `CompositeCaster` subclass: use
++        it to :ref:`customize how to cast composite types <custom-composite>`
++    :return: the registered `CompositeCaster` or *factory* instance
++        responsible for the conversion
++    """
++    if factory is None:
++        factory = CompositeCaster
++
++    caster = factory._from_db(name, conn_or_curs)
++    _ext.register_type(caster.typecaster, not globally and conn_or_curs or None)
++
++    if caster.array_typecaster is not None:
++        _ext.register_type(
++            caster.array_typecaster, not globally and conn_or_curs or None)
++
++    return caster
++
++
++def _paginate(seq, page_size):
++    """Consume an iterable and return it in chunks.
++
++    Every chunk is at most `page_size`. Never return an empty chunk.
++    """
++    page = []
++    it = iter(seq)
++    while True:
++        try:
++            for i in range(page_size):
++                page.append(next(it))
++            yield page
++            page = []
++        except StopIteration:
++            if page:
++                yield page
++            return
++
++
++def execute_batch(cur, sql, argslist, page_size=100):
++    r"""Execute groups of statements in fewer server roundtrips.
++
++    Execute *sql* several times, against all parameters set (sequences or
++    mappings) found in *argslist*.
++
++    The function is semantically similar to
++
++    .. parsed-literal::
++
++        *cur*\.\ `~cursor.executemany`\ (\ *sql*\ , *argslist*\ )
++
++    but has a different implementation: Psycopg will join the statements into
++    fewer multi-statement commands, each one containing at most *page_size*
++    statements, resulting in a reduced number of server roundtrips.
++
++    After the execution of the function the `cursor.rowcount` property will
++    **not** contain a total result.
++
++    """
++    for page in _paginate(argslist, page_size=page_size):
++        sqls = [cur.mogrify(sql, args) for args in page]
++        cur.execute(b";".join(sqls))
++
++
++def execute_values(cur, sql, argslist, template=None, page_size=100, fetch=False):
++    '''Execute a statement using :sql:`VALUES` with a sequence of parameters.
++
++    :param cur: the cursor to use to execute the query.
++
++    :param sql: the query to execute. It must contain a single ``%s``
++        placeholder, which will be replaced by a `VALUES list`__.
++        Example: ``"INSERT INTO mytable (id, f1, f2) VALUES %s"``.
++
++    :param argslist: sequence of sequences or dictionaries with the arguments
++        to send to the query. The type and content must be consistent with
++        *template*.
++
++    :param template: the snippet to merge to every item in *argslist* to
++        compose the query.
++
++        - If the *argslist* items are sequences it should contain positional
++          placeholders (e.g. ``"(%s, %s, %s)"``, or ``"(%s, %s, 42)``" if there
++          are constants value...).
++
++        - If the *argslist* items are mappings it should contain named
++          placeholders (e.g. ``"(%(id)s, %(f1)s, 42)"``).
++
++        If not specified, assume the arguments are sequence and use a simple
++        positional template (i.e.  ``(%s, %s, ...)``), with the number of
++        placeholders sniffed by the first element in *argslist*.
++
++    :param page_size: maximum number of *argslist* items to include in every
++        statement. If there are more items the function will execute more than
++        one statement.
++
++    :param fetch: if `!True` return the query results into a list (like in a
++        `~cursor.fetchall()`).  Useful for queries with :sql:`RETURNING`
++        clause.
++
++    .. __: https://www.postgresql.org/docs/current/static/queries-values.html
++
++    After the execution of the function the `cursor.rowcount` property will
++    **not** contain a total result.
++
++    While :sql:`INSERT` is an obvious candidate for this function it is
++    possible to use it with other statements, for example::
++
++        >>> cur.execute(
++        ... "create table test (id int primary key, v1 int, v2 int)")
++
++        >>> execute_values(cur,
++        ... "INSERT INTO test (id, v1, v2) VALUES %s",
++        ... [(1, 2, 3), (4, 5, 6), (7, 8, 9)])
++
++        >>> execute_values(cur,
++        ... """UPDATE test SET v1 = data.v1 FROM (VALUES %s) AS data (id, v1)
++        ... WHERE test.id = data.id""",
++        ... [(1, 20), (4, 50)])
++
++        >>> cur.execute("select * from test order by id")
++        >>> cur.fetchall()
++        [(1, 20, 3), (4, 50, 6), (7, 8, 9)])
++
++    '''
++    from psycopg2.sql import Composable
++    if isinstance(sql, Composable):
++        sql = sql.as_string(cur)
++
++    # we can't just use sql % vals because vals is bytes: if sql is bytes
++    # there will be some decoding error because of stupid codec used, and Py3
++    # doesn't implement % on bytes.
++    if not isinstance(sql, bytes):
++        sql = sql.encode(_ext.encodings[cur.connection.encoding])
++    pre, post = _split_sql(sql)
++
++    result = [] if fetch else None
++    for page in _paginate(argslist, page_size=page_size):
++        if template is None:
++            template = b'(' + b','.join([b'%s'] * len(page[0])) + b')'
++        parts = pre[:]
++        for args in page:
++            parts.append(cur.mogrify(template, args))
++            parts.append(b',')
++        parts[-1:] = post
++        cur.execute(b''.join(parts))
++        if fetch:
++            result.extend(cur.fetchall())
++
++    return result
++
++
++def _split_sql(sql):
++    """Split *sql* on a single ``%s`` placeholder.
++
++    Split on the %s, perform %% replacement and return pre, post lists of
++    snippets.
++    """
++    curr = pre = []
++    post = []
++    tokens = _re.split(br'(%.)', sql)
++    for token in tokens:
++        if len(token) != 2 or token[:1] != b'%':
++            curr.append(token)
++            continue
++
++        if token[1:] == b's':
++            if curr is pre:
++                curr = post
++            else:
++                raise ValueError(
++                    "the query contains more than one '%s' placeholder")
++        elif token[1:] == b'%':
++            curr.append(b'%')
++        else:
++            raise ValueError("unsupported format character: '%s'"
++                % token[1:].decode('ascii', 'replace'))
++
++    if curr is pre:
++        raise ValueError("the query doesn't contain any '%s' placeholder")
++
++    return pre, post
++
++
++# ascii except alnum and underscore
++_re_clean = _re.compile(
++    '[' + _re.escape(' !"#$%&\'()*+,-./:;<=>?@[\\]^`{|}~') + ']')
+diff -ruN /original-sources/build/lib.linux-x86_64-3.8/psycopg2/pool.py ./build/lib.linux-x86_64-3.8/psycopg2/pool.py
+--- /original-sources/build/lib.linux-x86_64-3.8/psycopg2/pool.py	1970-01-01 00:00:00.000000000 +0000
++++ ./build/lib.linux-x86_64-3.8/psycopg2/pool.py	2023-09-15 10:39:23.785174936 +0000
+@@ -0,0 +1,187 @@
++"""Connection pooling for psycopg2
++
++This module implements thread-safe (and not) connection pools.
++"""
++# psycopg/pool.py - pooling code for psycopg
++#
++# Copyright (C) 2003-2019 Federico Di Gregorio  <fog@debian.org>
++# Copyright (C) 2020-2021 The Psycopg Team
++#
++# psycopg2 is free software: you can redistribute it and/or modify it
++# under the terms of the GNU Lesser General Public License as published
++# by the Free Software Foundation, either version 3 of the License, or
++# (at your option) any later version.
++#
++# In addition, as a special exception, the copyright holders give
++# permission to link this program with the OpenSSL library (or with
++# modified versions of OpenSSL that use the same license as OpenSSL),
++# and distribute linked combinations including the two.
++#
++# You must obey the GNU Lesser General Public License in all respects for
++# all of the code used other than OpenSSL.
++#
++# psycopg2 is distributed in the hope that it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
++# License for more details.
++
++import psycopg2
++from psycopg2 import extensions as _ext
++
++
++class PoolError(psycopg2.Error):
++    pass
++
++
++class AbstractConnectionPool:
++    """Generic key-based pooling code."""
++
++    def __init__(self, minconn, maxconn, *args, **kwargs):
++        """Initialize the connection pool.
++
++        New 'minconn' connections are created immediately calling 'connfunc'
++        with given parameters. The connection pool will support a maximum of
++        about 'maxconn' connections.
++        """
++        self.minconn = int(minconn)
++        self.maxconn = int(maxconn)
++        self.closed = False
++
++        self._args = args
++        self._kwargs = kwargs
++
++        self._pool = []
++        self._used = {}
++        self._rused = {}    # id(conn) -> key map
++        self._keys = 0
++
++        for i in range(self.minconn):
++            self._connect()
++
++    def _connect(self, key=None):
++        """Create a new connection and assign it to 'key' if not None."""
++        conn = psycopg2.connect(*self._args, **self._kwargs)
++        if key is not None:
++            self._used[key] = conn
++            self._rused[id(conn)] = key
++        else:
++            self._pool.append(conn)
++        return conn
++
++    def _getkey(self):
++        """Return a new unique key."""
++        self._keys += 1
++        return self._keys
++
++    def _getconn(self, key=None):
++        """Get a free connection and assign it to 'key' if not None."""
++        if self.closed:
++            raise PoolError("connection pool is closed")
++        if key is None:
++            key = self._getkey()
++
++        if key in self._used:
++            return self._used[key]
++
++        if self._pool:
++            self._used[key] = conn = self._pool.pop()
++            self._rused[id(conn)] = key
++            return conn
++        else:
++            if len(self._used) == self.maxconn:
++                raise PoolError("connection pool exhausted")
++            return self._connect(key)
++
++    def _putconn(self, conn, key=None, close=False):
++        """Put away a connection."""
++        if self.closed:
++            raise PoolError("connection pool is closed")
++
++        if key is None:
++            key = self._rused.get(id(conn))
++            if key is None:
++                raise PoolError("trying to put unkeyed connection")
++
++        if len(self._pool) < self.minconn and not close:
++            # Return the connection into a consistent state before putting
++            # it back into the pool
++            if not conn.closed:
++                status = conn.info.transaction_status
++                if status == _ext.TRANSACTION_STATUS_UNKNOWN:
++                    # server connection lost
++                    conn.close()
++                elif status != _ext.TRANSACTION_STATUS_IDLE:
++                    # connection in error or in transaction
++                    conn.rollback()
++                    self._pool.append(conn)
++                else:
++                    # regular idle connection
++                    self._pool.append(conn)
++            # If the connection is closed, we just discard it.
++        else:
++            conn.close()
++
++        # here we check for the presence of key because it can happen that a
++        # thread tries to put back a connection after a call to close
++        if not self.closed or key in self._used:
++            del self._used[key]
++            del self._rused[id(conn)]
++
++    def _closeall(self):
++        """Close all connections.
++
++        Note that this can lead to some code fail badly when trying to use
++        an already closed connection. If you call .closeall() make sure
++        your code can deal with it.
++        """
++        if self.closed:
++            raise PoolError("connection pool is closed")
++        for conn in self._pool + list(self._used.values()):
++            try:
++                conn.close()
++            except Exception:
++                pass
++        self.closed = True
++
++
++class SimpleConnectionPool(AbstractConnectionPool):
++    """A connection pool that can't be shared across different threads."""
++
++    getconn = AbstractConnectionPool._getconn
++    putconn = AbstractConnectionPool._putconn
++    closeall = AbstractConnectionPool._closeall
++
++
++class ThreadedConnectionPool(AbstractConnectionPool):
++    """A connection pool that works with the threading module."""
++
++    def __init__(self, minconn, maxconn, *args, **kwargs):
++        """Initialize the threading lock."""
++        import threading
++        AbstractConnectionPool.__init__(
++            self, minconn, maxconn, *args, **kwargs)
++        self._lock = threading.Lock()
++
++    def getconn(self, key=None):
++        """Get a free connection and assign it to 'key' if not None."""
++        self._lock.acquire()
++        try:
++            return self._getconn(key)
++        finally:
++            self._lock.release()
++
++    def putconn(self, conn=None, key=None, close=False):
++        """Put away an unused connection."""
++        self._lock.acquire()
++        try:
++            self._putconn(conn, key, close)
++        finally:
++            self._lock.release()
++
++    def closeall(self):
++        """Close all connections (even the one currently in use.)"""
++        self._lock.acquire()
++        try:
++            self._closeall()
++        finally:
++            self._lock.release()
+diff -ruN /original-sources/build/lib.linux-x86_64-3.8/psycopg2/sql.py ./build/lib.linux-x86_64-3.8/psycopg2/sql.py
+--- /original-sources/build/lib.linux-x86_64-3.8/psycopg2/sql.py	1970-01-01 00:00:00.000000000 +0000
++++ ./build/lib.linux-x86_64-3.8/psycopg2/sql.py	2023-09-15 10:39:23.786174959 +0000
+@@ -0,0 +1,455 @@
++"""SQL composition utility module
++"""
++
++# psycopg/sql.py - SQL composition utility module
++#
++# Copyright (C) 2016-2019 Daniele Varrazzo  <daniele.varrazzo@gmail.com>
++# Copyright (C) 2020-2021 The Psycopg Team
++#
++# psycopg2 is free software: you can redistribute it and/or modify it
++# under the terms of the GNU Lesser General Public License as published
++# by the Free Software Foundation, either version 3 of the License, or
++# (at your option) any later version.
++#
++# In addition, as a special exception, the copyright holders give
++# permission to link this program with the OpenSSL library (or with
++# modified versions of OpenSSL that use the same license as OpenSSL),
++# and distribute linked combinations including the two.
++#
++# You must obey the GNU Lesser General Public License in all respects for
++# all of the code used other than OpenSSL.
++#
++# psycopg2 is distributed in the hope that it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
++# License for more details.
++
++import string
++
++from psycopg2 import extensions as ext
++
++
++_formatter = string.Formatter()
++
++
++class Composable:
++    """
++    Abstract base class for objects that can be used to compose an SQL string.
++
++    `!Composable` objects can be passed directly to `~cursor.execute()`,
++    `~cursor.executemany()`, `~cursor.copy_expert()` in place of the query
++    string.
++
++    `!Composable` objects can be joined using the ``+`` operator: the result
++    will be a `Composed` instance containing the objects joined. The operator
++    ``*`` is also supported with an integer argument: the result is a
++    `!Composed` instance containing the left argument repeated as many times as
++    requested.
++    """
++    def __init__(self, wrapped):
++        self._wrapped = wrapped
++
++    def __repr__(self):
++        return f"{self.__class__.__name__}({self._wrapped!r})"
++
++    def as_string(self, context):
++        """
++        Return the string value of the object.
++
++        :param context: the context to evaluate the string into.
++        :type context: `connection` or `cursor`
++
++        The method is automatically invoked by `~cursor.execute()`,
++        `~cursor.executemany()`, `~cursor.copy_expert()` if a `!Composable` is
++        passed instead of the query string.
++        """
++        raise NotImplementedError
++
++    def __add__(self, other):
++        if isinstance(other, Composed):
++            return Composed([self]) + other
++        if isinstance(other, Composable):
++            return Composed([self]) + Composed([other])
++        else:
++            return NotImplemented
++
++    def __mul__(self, n):
++        return Composed([self] * n)
++
++    def __eq__(self, other):
++        return type(self) is type(other) and self._wrapped == other._wrapped
++
++    def __ne__(self, other):
++        return not self.__eq__(other)
++
++
++class Composed(Composable):
++    """
++    A `Composable` object made of a sequence of `!Composable`.
++
++    The object is usually created using `!Composable` operators and methods.
++    However it is possible to create a `!Composed` directly specifying a
++    sequence of `!Composable` as arguments.
++
++    Example::
++
++        >>> comp = sql.Composed(
++        ...     [sql.SQL("insert into "), sql.Identifier("table")])
++        >>> print(comp.as_string(conn))
++        insert into "table"
++
++    `!Composed` objects are iterable (so they can be used in `SQL.join` for
++    instance).
++    """
++    def __init__(self, seq):
++        wrapped = []
++        for i in seq:
++            if not isinstance(i, Composable):
++                raise TypeError(
++                    f"Composed elements must be Composable, got {i!r} instead")
++            wrapped.append(i)
++
++        super().__init__(wrapped)
++
++    @property
++    def seq(self):
++        """The list of the content of the `!Composed`."""
++        return list(self._wrapped)
++
++    def as_string(self, context):
++        rv = []
++        for i in self._wrapped:
++            rv.append(i.as_string(context))
++        return ''.join(rv)
++
++    def __iter__(self):
++        return iter(self._wrapped)
++
++    def __add__(self, other):
++        if isinstance(other, Composed):
++            return Composed(self._wrapped + other._wrapped)
++        if isinstance(other, Composable):
++            return Composed(self._wrapped + [other])
++        else:
++            return NotImplemented
++
++    def join(self, joiner):
++        """
++        Return a new `!Composed` interposing the *joiner* with the `!Composed` items.
++
++        The *joiner* must be a `SQL` or a string which will be interpreted as
++        an `SQL`.
++
++        Example::
++
++            >>> fields = sql.Identifier('foo') + sql.Identifier('bar')  # a Composed
++            >>> print(fields.join(', ').as_string(conn))
++            "foo", "bar"
++
++        """
++        if isinstance(joiner, str):
++            joiner = SQL(joiner)
++        elif not isinstance(joiner, SQL):
++            raise TypeError(
++                "Composed.join() argument must be a string or an SQL")
++
++        return joiner.join(self)
++
++
++class SQL(Composable):
++    """
++    A `Composable` representing a snippet of SQL statement.
++
++    `!SQL` exposes `join()` and `format()` methods useful to create a template
++    where to merge variable parts of a query (for instance field or table
++    names).
++
++    The *string* doesn't undergo any form of escaping, so it is not suitable to
++    represent variable identifiers or values: you should only use it to pass
++    constant strings representing templates or snippets of SQL statements; use
++    other objects such as `Identifier` or `Literal` to represent variable
++    parts.
++
++    Example::
++
++        >>> query = sql.SQL("select {0} from {1}").format(
++        ...    sql.SQL(', ').join([sql.Identifier('foo'), sql.Identifier('bar')]),
++        ...    sql.Identifier('table'))
++        >>> print(query.as_string(conn))
++        select "foo", "bar" from "table"
++    """
++    def __init__(self, string):
++        if not isinstance(string, str):
++            raise TypeError("SQL values must be strings")
++        super().__init__(string)
++
++    @property
++    def string(self):
++        """The string wrapped by the `!SQL` object."""
++        return self._wrapped
++
++    def as_string(self, context):
++        return self._wrapped
++
++    def format(self, *args, **kwargs):
++        """
++        Merge `Composable` objects into a template.
++
++        :param `Composable` args: parameters to replace to numbered
++            (``{0}``, ``{1}``) or auto-numbered (``{}``) placeholders
++        :param `Composable` kwargs: parameters to replace to named (``{name}``)
++            placeholders
++        :return: the union of the `!SQL` string with placeholders replaced
++        :rtype: `Composed`
++
++        The method is similar to the Python `str.format()` method: the string
++        template supports auto-numbered (``{}``), numbered (``{0}``,
++        ``{1}``...), and named placeholders (``{name}``), with positional
++        arguments replacing the numbered placeholders and keywords replacing
++        the named ones. However placeholder modifiers (``{0!r}``, ``{0:<10}``)
++        are not supported. Only `!Composable` objects can be passed to the
++        template.
++
++        Example::
++
++            >>> print(sql.SQL("select * from {} where {} = %s")
++            ...     .format(sql.Identifier('people'), sql.Identifier('id'))
++            ...     .as_string(conn))
++            select * from "people" where "id" = %s
++
++            >>> print(sql.SQL("select * from {tbl} where {pkey} = %s")
++            ...     .format(tbl=sql.Identifier('people'), pkey=sql.Identifier('id'))
++            ...     .as_string(conn))
++            select * from "people" where "id" = %s
++
++        """
++        rv = []
++        autonum = 0
++        for pre, name, spec, conv in _formatter.parse(self._wrapped):
++            if spec:
++                raise ValueError("no format specification supported by SQL")
++            if conv:
++                raise ValueError("no format conversion supported by SQL")
++            if pre:
++                rv.append(SQL(pre))
++
++            if name is None:
++                continue
++
++            if name.isdigit():
++                if autonum:
++                    raise ValueError(
++                        "cannot switch from automatic field numbering to manual")
++                rv.append(args[int(name)])
++                autonum = None
++
++            elif not name:
++                if autonum is None:
++                    raise ValueError(
++                        "cannot switch from manual field numbering to automatic")
++                rv.append(args[autonum])
++                autonum += 1
++
++            else:
++                rv.append(kwargs[name])
++
++        return Composed(rv)
++
++    def join(self, seq):
++        """
++        Join a sequence of `Composable`.
++
++        :param seq: the elements to join.
++        :type seq: iterable of `!Composable`
++
++        Use the `!SQL` object's *string* to separate the elements in *seq*.
++        Note that `Composed` objects are iterable too, so they can be used as
++        argument for this method.
++
++        Example::
++
++            >>> snip = sql.SQL(', ').join(
++            ...     sql.Identifier(n) for n in ['foo', 'bar', 'baz'])
++            >>> print(snip.as_string(conn))
++            "foo", "bar", "baz"
++        """
++        rv = []
++        it = iter(seq)
++        try:
++            rv.append(next(it))
++        except StopIteration:
++            pass
++        else:
++            for i in it:
++                rv.append(self)
++                rv.append(i)
++
++        return Composed(rv)
++
++
++class Identifier(Composable):
++    """
++    A `Composable` representing an SQL identifier or a dot-separated sequence.
++
++    Identifiers usually represent names of database objects, such as tables or
++    fields. PostgreSQL identifiers follow `different rules`__ than SQL string
++    literals for escaping (e.g. they use double quotes instead of single).
++
++    .. __: https://www.postgresql.org/docs/current/static/sql-syntax-lexical.html# \
++        SQL-SYNTAX-IDENTIFIERS
++
++    Example::
++
++        >>> t1 = sql.Identifier("foo")
++        >>> t2 = sql.Identifier("ba'r")
++        >>> t3 = sql.Identifier('ba"z')
++        >>> print(sql.SQL(', ').join([t1, t2, t3]).as_string(conn))
++        "foo", "ba'r", "ba""z"
++
++    Multiple strings can be passed to the object to represent a qualified name,
++    i.e. a dot-separated sequence of identifiers.
++
++    Example::
++
++        >>> query = sql.SQL("select {} from {}").format(
++        ...     sql.Identifier("table", "field"),
++        ...     sql.Identifier("schema", "table"))
++        >>> print(query.as_string(conn))
++        select "table"."field" from "schema"."table"
++
++    """
++    def __init__(self, *strings):
++        if not strings:
++            raise TypeError("Identifier cannot be empty")
++
++        for s in strings:
++            if not isinstance(s, str):
++                raise TypeError("SQL identifier parts must be strings")
++
++        super().__init__(strings)
++
++    @property
++    def strings(self):
++        """A tuple with the strings wrapped by the `Identifier`."""
++        return self._wrapped
++
++    @property
++    def string(self):
++        """The string wrapped by the `Identifier`.
++        """
++        if len(self._wrapped) == 1:
++            return self._wrapped[0]
++        else:
++            raise AttributeError(
++                "the Identifier wraps more than one than one string")
++
++    def __repr__(self):
++        return f"{self.__class__.__name__}({', '.join(map(repr, self._wrapped))})"
++
++    def as_string(self, context):
++        return '.'.join(ext.quote_ident(s, context) for s in self._wrapped)
++
++
++class Literal(Composable):
++    """
++    A `Composable` representing an SQL value to include in a query.
++
++    Usually you will want to include placeholders in the query and pass values
++    as `~cursor.execute()` arguments. If however you really really need to
++    include a literal value in the query you can use this object.
++
++    The string returned by `!as_string()` follows the normal :ref:`adaptation
++    rules <python-types-adaptation>` for Python objects.
++
++    Example::
++
++        >>> s1 = sql.Literal("foo")
++        >>> s2 = sql.Literal("ba'r")
++        >>> s3 = sql.Literal(42)
++        >>> print(sql.SQL(', ').join([s1, s2, s3]).as_string(conn))
++        'foo', 'ba''r', 42
++
++    """
++    @property
++    def wrapped(self):
++        """The object wrapped by the `!Literal`."""
++        return self._wrapped
++
++    def as_string(self, context):
++        # is it a connection or cursor?
++        if isinstance(context, ext.connection):
++            conn = context
++        elif isinstance(context, ext.cursor):
++            conn = context.connection
++        else:
++            raise TypeError("context must be a connection or a cursor")
++
++        a = ext.adapt(self._wrapped)
++        if hasattr(a, 'prepare'):
++            a.prepare(conn)
++
++        rv = a.getquoted()
++        if isinstance(rv, bytes):
++            rv = rv.decode(ext.encodings[conn.encoding])
++
++        return rv
++
++
++class Placeholder(Composable):
++    """A `Composable` representing a placeholder for query parameters.
++
++    If the name is specified, generate a named placeholder (e.g. ``%(name)s``),
++    otherwise generate a positional placeholder (e.g. ``%s``).
++
++    The object is useful to generate SQL queries with a variable number of
++    arguments.
++
++    Examples::
++
++        >>> names = ['foo', 'bar', 'baz']
++
++        >>> q1 = sql.SQL("insert into table ({}) values ({})").format(
++        ...     sql.SQL(', ').join(map(sql.Identifier, names)),
++        ...     sql.SQL(', ').join(sql.Placeholder() * len(names)))
++        >>> print(q1.as_string(conn))
++        insert into table ("foo", "bar", "baz") values (%s, %s, %s)
++
++        >>> q2 = sql.SQL("insert into table ({}) values ({})").format(
++        ...     sql.SQL(', ').join(map(sql.Identifier, names)),
++        ...     sql.SQL(', ').join(map(sql.Placeholder, names)))
++        >>> print(q2.as_string(conn))
++        insert into table ("foo", "bar", "baz") values (%(foo)s, %(bar)s, %(baz)s)
++
++    """
++
++    def __init__(self, name=None):
++        if isinstance(name, str):
++            if ')' in name:
++                raise ValueError(f"invalid name: {name!r}")
++
++        elif name is not None:
++            raise TypeError(f"expected string or None as name, got {name!r}")
++
++        super().__init__(name)
++
++    @property
++    def name(self):
++        """The name of the `!Placeholder`."""
++        return self._wrapped
++
++    def __repr__(self):
++        if self._wrapped is None:
++            return f"{self.__class__.__name__}()"
++        else:
++            return f"{self.__class__.__name__}({self._wrapped!r})"
++
++    def as_string(self, context):
++        if self._wrapped is not None:
++            return f"%({self._wrapped})s"
++        else:
++            return "%s"
++
++
++# Literals
++NULL = SQL("NULL")
++DEFAULT = SQL("DEFAULT")
+diff -ruN /original-sources/build/lib.linux-x86_64-3.8/psycopg2/tz.py ./build/lib.linux-x86_64-3.8/psycopg2/tz.py
+--- /original-sources/build/lib.linux-x86_64-3.8/psycopg2/tz.py	1970-01-01 00:00:00.000000000 +0000
++++ ./build/lib.linux-x86_64-3.8/psycopg2/tz.py	2023-09-15 10:39:23.787174983 +0000
+@@ -0,0 +1,158 @@
++"""tzinfo implementations for psycopg2
++
++This module holds two different tzinfo implementations that can be used as
++the 'tzinfo' argument to datetime constructors, directly passed to psycopg
++functions or used to set the .tzinfo_factory attribute in cursors.
++"""
++# psycopg/tz.py - tzinfo implementation
++#
++# Copyright (C) 2003-2019 Federico Di Gregorio  <fog@debian.org>
++# Copyright (C) 2020-2021 The Psycopg Team
++#
++# psycopg2 is free software: you can redistribute it and/or modify it
++# under the terms of the GNU Lesser General Public License as published
++# by the Free Software Foundation, either version 3 of the License, or
++# (at your option) any later version.
++#
++# In addition, as a special exception, the copyright holders give
++# permission to link this program with the OpenSSL library (or with
++# modified versions of OpenSSL that use the same license as OpenSSL),
++# and distribute linked combinations including the two.
++#
++# You must obey the GNU Lesser General Public License in all respects for
++# all of the code used other than OpenSSL.
++#
++# psycopg2 is distributed in the hope that it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
++# License for more details.
++
++import datetime
++import time
++
++ZERO = datetime.timedelta(0)
++
++
++class FixedOffsetTimezone(datetime.tzinfo):
++    """Fixed offset in minutes east from UTC.
++
++    This is exactly the implementation__ found in Python 2.3.x documentation,
++    with a small change to the `!__init__()` method to allow for pickling
++    and a default name in the form ``sHH:MM`` (``s`` is the sign.).
++
++    The implementation also caches instances. During creation, if a
++    FixedOffsetTimezone instance has previously been created with the same
++    offset and name that instance will be returned. This saves memory and
++    improves comparability.
++
++    .. versionchanged:: 2.9
++
++        The constructor can take either a timedelta or a number of minutes of
++        offset. Previously only minutes were supported.
++
++    .. __: https://docs.python.org/library/datetime.html
++    """
++    _name = None
++    _offset = ZERO
++
++    _cache = {}
++
++    def __init__(self, offset=None, name=None):
++        if offset is not None:
++            if not isinstance(offset, datetime.timedelta):
++                offset = datetime.timedelta(minutes=offset)
++            self._offset = offset
++        if name is not None:
++            self._name = name
++
++    def __new__(cls, offset=None, name=None):
++        """Return a suitable instance created earlier if it exists
++        """
++        key = (offset, name)
++        try:
++            return cls._cache[key]
++        except KeyError:
++            tz = super().__new__(cls, offset, name)
++            cls._cache[key] = tz
++            return tz
++
++    def __repr__(self):
++        return "psycopg2.tz.FixedOffsetTimezone(offset=%r, name=%r)" \
++            % (self._offset, self._name)
++
++    def __eq__(self, other):
++        if isinstance(other, FixedOffsetTimezone):
++            return self._offset == other._offset
++        else:
++            return NotImplemented
++
++    def __ne__(self, other):
++        if isinstance(other, FixedOffsetTimezone):
++            return self._offset != other._offset
++        else:
++            return NotImplemented
++
++    def __getinitargs__(self):
++        return self._offset, self._name
++
++    def utcoffset(self, dt):
++        return self._offset
++
++    def tzname(self, dt):
++        if self._name is not None:
++            return self._name
++
++        minutes, seconds = divmod(self._offset.total_seconds(), 60)
++        hours, minutes = divmod(minutes, 60)
++        rv = "%+03d" % hours
++        if minutes or seconds:
++            rv += ":%02d" % minutes
++            if seconds:
++                rv += ":%02d" % seconds
++
++        return rv
++
++    def dst(self, dt):
++        return ZERO
++
++
++STDOFFSET = datetime.timedelta(seconds=-time.timezone)
++if time.daylight:
++    DSTOFFSET = datetime.timedelta(seconds=-time.altzone)
++else:
++    DSTOFFSET = STDOFFSET
++DSTDIFF = DSTOFFSET - STDOFFSET
++
++
++class LocalTimezone(datetime.tzinfo):
++    """Platform idea of local timezone.
++
++    This is the exact implementation from the Python 2.3 documentation.
++    """
++    def utcoffset(self, dt):
++        if self._isdst(dt):
++            return DSTOFFSET
++        else:
++            return STDOFFSET
++
++    def dst(self, dt):
++        if self._isdst(dt):
++            return DSTDIFF
++        else:
++            return ZERO
++
++    def tzname(self, dt):
++        return time.tzname[self._isdst(dt)]
++
++    def _isdst(self, dt):
++        tt = (dt.year, dt.month, dt.day,
++              dt.hour, dt.minute, dt.second,
++              dt.weekday(), 0, -1)
++        stamp = time.mktime(tt)
++        tt = time.localtime(stamp)
++        return tt.tm_isdst > 0
++
++
++LOCAL = LocalTimezone()
++
++# TODO: pre-generate some interesting time zones?
+diff -ruN /original-sources/psycopg2.egg-info/PKG-INFO ./psycopg2.egg-info/PKG-INFO
+--- /original-sources/psycopg2.egg-info/PKG-INFO	1970-01-01 00:00:00.000000000 +0000
++++ ./psycopg2.egg-info/PKG-INFO	2023-09-15 10:39:23.822175815 +0000
+@@ -0,0 +1,112 @@
++Metadata-Version: 2.1
++Name: psycopg2
++Version: 2.9.6
++Summary: psycopg2 - Python-PostgreSQL Database Adapter
++Home-page: https://psycopg.org/
++Author: Federico Di Gregorio
++Author-email: fog@initd.org
++Maintainer: Daniele Varrazzo
++Maintainer-email: daniele.varrazzo@gmail.com
++License: LGPL with exceptions
++Project-URL: Homepage, https://psycopg.org/
++Project-URL: Documentation, https://www.psycopg.org/docs/
++Project-URL: Code, https://github.com/psycopg/psycopg2
++Project-URL: Issue Tracker, https://github.com/psycopg/psycopg2/issues
++Project-URL: Download, https://pypi.org/project/psycopg2/
++Platform: any
++Classifier: Development Status :: 5 - Production/Stable
++Classifier: Intended Audience :: Developers
++Classifier: License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)
++Classifier: Programming Language :: Python
++Classifier: Programming Language :: Python :: 3
++Classifier: Programming Language :: Python :: 3.6
++Classifier: Programming Language :: Python :: 3.7
++Classifier: Programming Language :: Python :: 3.8
++Classifier: Programming Language :: Python :: 3.9
++Classifier: Programming Language :: Python :: 3.10
++Classifier: Programming Language :: Python :: 3.11
++Classifier: Programming Language :: Python :: 3 :: Only
++Classifier: Programming Language :: Python :: Implementation :: CPython
++Classifier: Programming Language :: C
++Classifier: Programming Language :: SQL
++Classifier: Topic :: Database
++Classifier: Topic :: Database :: Front-Ends
++Classifier: Topic :: Software Development
++Classifier: Topic :: Software Development :: Libraries :: Python Modules
++Classifier: Operating System :: Microsoft :: Windows
++Classifier: Operating System :: Unix
++Requires-Python: >=3.6
++License-File: LICENSE
++
++Psycopg is the most popular PostgreSQL database adapter for the Python
++programming language.  Its main features are the complete implementation of
++the Python DB API 2.0 specification and the thread safety (several threads can
++share the same connection).  It was designed for heavily multi-threaded
++applications that create and destroy lots of cursors and make a large number
++of concurrent "INSERT"s or "UPDATE"s.
++
++Psycopg 2 is mostly implemented in C as a libpq wrapper, resulting in being
++both efficient and secure.  It features client-side and server-side cursors,
++asynchronous communication and notifications, "COPY TO/COPY FROM" support.
++Many Python types are supported out-of-the-box and adapted to matching
++PostgreSQL data types; adaptation can be extended and customized thanks to a
++flexible objects adaptation system.
++
++Psycopg 2 is both Unicode and Python 3 friendly.
++
++
++Documentation
++-------------
++
++Documentation is included in the ``doc`` directory and is `available online`__.
++
++.. __: https://www.psycopg.org/docs/
++
++For any other resource (source code repository, bug tracker, mailing list)
++please check the `project homepage`__.
++
++.. __: https://psycopg.org/
++
++
++Installation
++------------
++
++Building Psycopg requires a few prerequisites (a C compiler, some development
++packages): please check the install_ and the faq_ documents in the ``doc`` dir
++or online for the details.
++
++If prerequisites are met, you can install psycopg like any other Python
++package, using ``pip`` to download it from PyPI_::
++
++    $ pip install psycopg2
++
++or using ``setup.py`` if you have downloaded the source package locally::
++
++    $ python setup.py build
++    $ sudo python setup.py install
++
++You can also obtain a stand-alone package, not requiring a compiler or
++external libraries, by installing the `psycopg2-binary`_ package from PyPI::
++
++    $ pip install psycopg2-binary
++
++The binary package is a practical choice for development and testing but in
++production it is advised to use the package built from sources.
++
++.. _PyPI: https://pypi.org/project/psycopg2/
++.. _psycopg2-binary: https://pypi.org/project/psycopg2-binary/
++.. _install: https://www.psycopg.org/docs/install.html#install-from-source
++.. _faq: https://www.psycopg.org/docs/faq.html#faq-compile
++
++:Linux/OSX: |gh-actions|
++:Windows: |appveyor|
++
++.. |gh-actions| image:: https://github.com/psycopg/psycopg2/actions/workflows/tests.yml/badge.svg
++    :target: https://github.com/psycopg/psycopg2/actions/workflows/tests.yml
++    :alt: Linux and OSX build status
++
++.. |appveyor| image:: https://ci.appveyor.com/api/projects/status/github/psycopg/psycopg2?branch=master&svg=true
++    :target: https://ci.appveyor.com/project/psycopg/psycopg2/branch/master
++    :alt: Windows build status
++
++
+diff -ruN /original-sources/psycopg2.egg-info/SOURCES.txt ./psycopg2.egg-info/SOURCES.txt
+--- /original-sources/psycopg2.egg-info/SOURCES.txt	1970-01-01 00:00:00.000000000 +0000
++++ ./psycopg2.egg-info/SOURCES.txt	2023-09-15 10:39:23.823175838 +0000
+@@ -0,0 +1,178 @@
++AUTHORS
++INSTALL
++LICENSE
++MANIFEST.in
++Makefile
++NEWS
++README.rst
++setup.cfg
++setup.py
++doc/COPYING.LESSER
++doc/Makefile
++doc/README.rst
++doc/SUCCESS
++doc/pep-0249.txt
++doc/requirements.txt
++doc/src/Makefile
++doc/src/advanced.rst
++doc/src/conf.py
++doc/src/connection.rst
++doc/src/cursor.rst
++doc/src/errorcodes.rst
++doc/src/errors.rst
++doc/src/extensions.rst
++doc/src/extras.rst
++doc/src/faq.rst
++doc/src/index.rst
++doc/src/install.rst
++doc/src/license.rst
++doc/src/module.rst
++doc/src/news.rst
++doc/src/pool.rst
++doc/src/sql.rst
++doc/src/tz.rst
++doc/src/usage.rst
++doc/src/_static/psycopg.css
++doc/src/tools/make_sqlstate_docs.py
++doc/src/tools/lib/dbapi_extension.py
++doc/src/tools/lib/sql_role.py
++doc/src/tools/lib/ticket_role.py
++lib/__init__.py
++lib/_ipaddress.py
++lib/_json.py
++lib/_range.py
++lib/errorcodes.py
++lib/errors.py
++lib/extensions.py
++lib/extras.py
++lib/pool.py
++lib/sql.py
++lib/tz.py
++psycopg/_psycopg.vc9.amd64.manifest
++psycopg/_psycopg.vc9.x86.manifest
++psycopg/adapter_asis.c
++psycopg/adapter_asis.h
++psycopg/adapter_binary.c
++psycopg/adapter_binary.h
++psycopg/adapter_datetime.c
++psycopg/adapter_datetime.h
++psycopg/adapter_list.c
++psycopg/adapter_list.h
++psycopg/adapter_pboolean.c
++psycopg/adapter_pboolean.h
++psycopg/adapter_pdecimal.c
++psycopg/adapter_pdecimal.h
++psycopg/adapter_pfloat.c
++psycopg/adapter_pfloat.h
++psycopg/adapter_pint.c
++psycopg/adapter_pint.h
++psycopg/adapter_qstring.c
++psycopg/adapter_qstring.h
++psycopg/aix_support.c
++psycopg/aix_support.h
++psycopg/bytes_format.c
++psycopg/column.h
++psycopg/column_type.c
++psycopg/config.h
++psycopg/connection.h
++psycopg/connection_int.c
++psycopg/connection_type.c
++psycopg/conninfo.h
++psycopg/conninfo_type.c
++psycopg/cursor.h
++psycopg/cursor_int.c
++psycopg/cursor_type.c
++psycopg/diagnostics.h
++psycopg/diagnostics_type.c
++psycopg/error.h
++psycopg/error_type.c
++psycopg/green.c
++psycopg/green.h
++psycopg/libpq_support.c
++psycopg/libpq_support.h
++psycopg/lobject.h
++psycopg/lobject_int.c
++psycopg/lobject_type.c
++psycopg/microprotocols.c
++psycopg/microprotocols.h
++psycopg/microprotocols_proto.c
++psycopg/microprotocols_proto.h
++psycopg/notify.h
++psycopg/notify_type.c
++psycopg/pgtypes.h
++psycopg/pqpath.c
++psycopg/pqpath.h
++psycopg/psycopg.h
++psycopg/psycopgmodule.c
++psycopg/python.h
++psycopg/replication_connection.h
++psycopg/replication_connection_type.c
++psycopg/replication_cursor.h
++psycopg/replication_cursor_type.c
++psycopg/replication_message.h
++psycopg/replication_message_type.c
++psycopg/solaris_support.c
++psycopg/solaris_support.h
++psycopg/sqlstate_errors.h
++psycopg/typecast.c
++psycopg/typecast.h
++psycopg/typecast_array.c
++psycopg/typecast_basic.c
++psycopg/typecast_binary.c
++psycopg/typecast_binary.h
++psycopg/typecast_builtins.c
++psycopg/typecast_datetime.c
++psycopg/utils.c
++psycopg/utils.h
++psycopg/win32_support.c
++psycopg/win32_support.h
++psycopg/xid.h
++psycopg/xid_type.c
++psycopg2.egg-info/PKG-INFO
++psycopg2.egg-info/SOURCES.txt
++psycopg2.egg-info/dependency_links.txt
++psycopg2.egg-info/top_level.txt
++scripts/make_errorcodes.py
++scripts/make_errors.py
++scripts/refcounter.py
++scripts/build/appveyor.py
++scripts/build/build_libpq.sh
++scripts/build/build_macos_arm64.sh
++scripts/build/build_sdist.sh
++scripts/build/download_packages_appveyor.py
++scripts/build/download_packages_github.py
++scripts/build/print_so_versions.sh
++scripts/build/run_build_macos_arm64.sh
++scripts/build/strip_wheel.sh
++scripts/build/wheel_linux_before_all.sh
++scripts/build/wheel_macos_before_all.sh
++tests/__init__.py
++tests/dbapi20.py
++tests/dbapi20_tpc.py
++tests/test_async.py
++tests/test_bugX000.py
++tests/test_bug_gc.py
++tests/test_cancel.py
++tests/test_connection.py
++tests/test_copy.py
++tests/test_cursor.py
++tests/test_dates.py
++tests/test_errcodes.py
++tests/test_errors.py
++tests/test_extras_dictcursor.py
++tests/test_fast_executemany.py
++tests/test_green.py
++tests/test_ipaddress.py
++tests/test_lobject.py
++tests/test_module.py
++tests/test_notify.py
++tests/test_psycopg2_dbapi20.py
++tests/test_quote.py
++tests/test_replication.py
++tests/test_sql.py
++tests/test_transaction.py
++tests/test_types_basic.py
++tests/test_types_extras.py
++tests/test_with.py
++tests/testconfig.py
++tests/testutils.py
+\ No newline at end of file
+diff -ruN /original-sources/psycopg2.egg-info/dependency_links.txt ./psycopg2.egg-info/dependency_links.txt
+--- /original-sources/psycopg2.egg-info/dependency_links.txt	1970-01-01 00:00:00.000000000 +0000
++++ ./psycopg2.egg-info/dependency_links.txt	2023-09-15 10:39:23.822175815 +0000
+@@ -0,0 +1 @@
++
+diff -ruN /original-sources/psycopg2.egg-info/top_level.txt ./psycopg2.egg-info/top_level.txt
+--- /original-sources/psycopg2.egg-info/top_level.txt	1970-01-01 00:00:00.000000000 +0000
++++ ./psycopg2.egg-info/top_level.txt	2023-09-15 10:39:23.822175815 +0000
+@@ -0,0 +1 @@
++psycopg2
+diff -ruN /original-sources/tests/test_connection.py ./tests/test_connection.py
+--- /original-sources/tests/test_connection.py	2023-04-02 15:56:29.000000000 +0000
++++ ./tests/test_connection.py	2023-09-15 10:52:37.123510498 +0000
+@@ -131,12 +131,12 @@
+         if self.conn.info.server_version >= 90300:
+             cur.execute("set client_min_messages=debug1")
+         cur.execute("""
+-            create temp table table1 (id serial);
+-            create temp table table2 (id serial);
++            create temp table table1 (id serial, _stub_id Serial PRIMARY KEY);
++            create temp table table2 (id serial, _stub_id Serial PRIMARY KEY);
+             """)
+         cur.execute("""
+-            create temp table table3 (id serial);
+-            create temp table table4 (id serial);
++            create temp table table3 (id serial, _stub_id Serial PRIMARY KEY);
++            create temp table table4 (id serial, _stub_id Serial PRIMARY KEY);
+             """)
+         self.assertEqual(4, len(conn.notices))
+         self.assert_('table1' in conn.notices[0])
+@@ -152,7 +152,7 @@
+         if self.conn.info.server_version >= 90300:
+             cur.execute("set client_min_messages=debug1")
+         for i in range(0, 100, 10):
+-            sql = " ".join(["create temp table table%d (id serial);" % j
++            sql = " ".join(["create temp table table%d (id serial, _stub_id Serial PRIMARY KEY);" % j
+                             for j in range(i, i + 10)])
+             cur.execute(sql)
+ 
+@@ -169,12 +169,12 @@
+             cur.execute("set client_min_messages=debug1")
+ 
+         cur.execute("""
+-            create temp table table1 (id serial);
+-            create temp table table2 (id serial);
++            create temp table table1 (id serial, _stub_id Serial PRIMARY KEY);
++            create temp table table2 (id serial, _stub_id Serial PRIMARY KEY);
+             """)
+         cur.execute("""
+-            create temp table table3 (id serial);
+-            create temp table table4 (id serial);""")
++            create temp table table3 (id serial, _stub_id Serial PRIMARY KEY);
++            create temp table table4 (id serial, _stub_id Serial PRIMARY KEY);""")
+         self.assertEqual(len(conn.notices), 4)
+         self.assert_('table1' in conn.notices.popleft())
+         self.assert_('table2' in conn.notices.popleft())
+@@ -184,7 +184,7 @@
+ 
+         # not limited, but no error
+         for i in range(0, 100, 10):
+-            sql = " ".join(["create temp table table2_%d (id serial);" % j
++            sql = " ".join(["create temp table table2_%d (id serial, _stub_id Serial PRIMARY KEY);" % j
+                             for j in range(i, i + 10)])
+             cur.execute(sql)
+ 
+@@ -199,7 +199,7 @@
+         if self.conn.info.server_version >= 90300:
+             cur.execute("set client_min_messages=debug1")
+ 
+-        cur.execute("create temp table table1 (id serial);")
++        cur.execute("create temp table table1 (id serial, _stub_id Serial PRIMARY KEY);")
+ 
+         self.assertEqual(self.conn.notices, None)
+ 
+diff -ruN /original-sources/tests/test_extras_dictcursor.py ./tests/test_extras_dictcursor.py
+--- /original-sources/tests/test_extras_dictcursor.py	2023-04-02 15:56:29.000000000 +0000
++++ ./tests/test_extras_dictcursor.py	2023-09-15 10:53:04.873197158 +0000
+@@ -36,7 +36,7 @@
+         curs = self.conn.cursor()
+         if crdb_version(self.conn) is not None:
+             curs.execute("SET experimental_enable_temp_tables = 'on'")
+-        curs.execute("CREATE TEMPORARY TABLE ExtrasDictCursorTests (foo text)")
++        curs.execute("CREATE TEMPORARY TABLE ExtrasDictCursorTests (foo text, _stub_id Serial PRIMARY KEY)")
+         curs.execute("INSERT INTO ExtrasDictCursorTests VALUES ('bar')")
+         self.conn.commit()
+ 
+@@ -370,7 +370,7 @@
+         curs = self.conn.cursor()
+         if crdb_version(self.conn) is not None:
+             curs.execute("SET experimental_enable_temp_tables = 'on'")
+-        curs.execute("CREATE TEMPORARY TABLE nttest (i int, s text)")
++        curs.execute("CREATE TEMPORARY TABLE nttest (i int, s text, _stub_id Serial PRIMARY KEY)")
+         curs.execute("INSERT INTO nttest VALUES (1, 'foo')")
+         curs.execute("INSERT INTO nttest VALUES (2, 'bar')")
+         curs.execute("INSERT INTO nttest VALUES (3, 'baz')")
