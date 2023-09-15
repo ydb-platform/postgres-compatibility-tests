@@ -15,7 +15,7 @@ Run create-pgbench-data-dump.sh. The script require installed docker.
 
 ```bash
 cd <git-root>
-./apps/pgbench/create-pgbench-data-dump.bash > tmp/pgbench.sql
+./apps/c/pgbench/create-pgbench-data-dump.bash > tmp/pgbench.sql
 ```
 
 # Upload data to YDB.
