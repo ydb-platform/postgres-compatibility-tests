@@ -454,3 +454,22 @@ tickets:
     tests:
       python-psycopg2:
         - tests.test_types_extras.AdaptTypeTestCase.test_from_tables
+
+  - name: KIKIMR-19392 # ydb crashed on test TestBinaryByteSlicetoUUID
+    tests:
+      golang-lib-pq:
+        - TestByteSliceToText
+        - TestCloseBadConn
+        - TestCommitInFailedTransaction
+        - TestCommitInFailedTransactionWithCancelContext
+        - TestConnClose
+        - TestConnExecDeadlock
+        - TestConnPrepareContext
+        - TestConnPrepareContext/context.Background
+        - TestConnPrepareContext/context.WithTimeout
+        - TestCopyOutsideOfTxnError
+        - TestDecodeBool
+        - TestDecodeUUIDBackend
+        - TestEmptyResultSetColumns
+
+
