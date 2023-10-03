@@ -4226,22 +4226,30 @@ diff -ruN /original-sources/tests/test_connection.py ./tests/test_connection.py
  
 diff -ruN /original-sources/tests/test_extras_dictcursor.py ./tests/test_extras_dictcursor.py
 --- /original-sources/tests/test_extras_dictcursor.py	2023-04-02 15:56:29.000000000 +0000
-+++ ./tests/test_extras_dictcursor.py	2023-09-15 10:53:04.873197158 +0000
-@@ -36,7 +36,7 @@
++++ ./tests/test_extras_dictcursor.py	2023-10-03 09:02:15.350670599 +0000
+@@ -36,8 +36,8 @@
          curs = self.conn.cursor()
          if crdb_version(self.conn) is not None:
              curs.execute("SET experimental_enable_temp_tables = 'on'")
 -        curs.execute("CREATE TEMPORARY TABLE ExtrasDictCursorTests (foo text)")
+-        curs.execute("INSERT INTO ExtrasDictCursorTests VALUES ('bar')")
 +        curs.execute("CREATE TEMPORARY TABLE ExtrasDictCursorTests (foo text, _stub_id Serial PRIMARY KEY)")
-         curs.execute("INSERT INTO ExtrasDictCursorTests VALUES ('bar')")
++        curs.execute("INSERT INTO ExtrasDictCursorTests (foo) VALUES ('bar')")
          self.conn.commit()
  
-@@ -370,7 +370,7 @@
+     def _testIterRowNumber(self, curs):
+@@ -370,10 +370,10 @@
          curs = self.conn.cursor()
          if crdb_version(self.conn) is not None:
              curs.execute("SET experimental_enable_temp_tables = 'on'")
 -        curs.execute("CREATE TEMPORARY TABLE nttest (i int, s text)")
+-        curs.execute("INSERT INTO nttest VALUES (1, 'foo')")
+-        curs.execute("INSERT INTO nttest VALUES (2, 'bar')")
+-        curs.execute("INSERT INTO nttest VALUES (3, 'baz')")
 +        curs.execute("CREATE TEMPORARY TABLE nttest (i int, s text, _stub_id Serial PRIMARY KEY)")
-         curs.execute("INSERT INTO nttest VALUES (1, 'foo')")
-         curs.execute("INSERT INTO nttest VALUES (2, 'bar')")
-         curs.execute("INSERT INTO nttest VALUES (3, 'baz')")
++        curs.execute("INSERT INTO nttest (i, s) VALUES (1, 'foo')")
++        curs.execute("INSERT INTO nttest (i, s) VALUES (2, 'bar')")
++        curs.execute("INSERT INTO nttest (i, s) VALUES (3, 'baz')")
+         self.conn.commit()
+ 
+     @skip_if_crdb("named cursor", version="< 22.1")

@@ -7,6 +7,7 @@ tickets:
       golang-lib-pq:
         - TestCopySyntaxError
         - TestParseErrorInExtendedQuery
+        - TestErrorOnExec
       python-psycopg2:
         - tests.test_errors.ErrorsTests.test_exception_class
         - tests.test_errors.ErrorsTests.test_exception_class_fallback
@@ -225,41 +226,6 @@ tickets:
         - tests.test_extras_dictcursor.ExtrasDictCursorTests.test_iter_methods
         - tests.test_extras_dictcursor.ExtrasDictCursorTests.test_order
 
-  - name: KIKIMR-19006 # INSERT without column names (Missing key column in input)
-    tests:
-      golang-lib-pq:
-        - TestErrorOnExec
-      python-psycopg2:
-        - tests.test_with.WithConnectionTestCase.test_subclass_commit
-        - tests.test_with.WithConnectionTestCase.test_subclass_rollback
-        - tests.test_with.WithConnectionTestCase.test_with_autocommit_pgerror
-        - tests.test_with.WithConnectionTestCase.test_with_autocommit_pyerror
-        - tests.test_with.WithConnectionTestCase.test_with_connect_idiom
-        - tests.test_with.WithConnectionTestCase.test_with_error_db
-        - tests.test_with.WithConnectionTestCase.test_with_error_python
-        - tests.test_with.WithConnectionTestCase.test_with_ok
-        - tests.test_extras_dictcursor.ExtrasDictCursorTests.testDictConnCursorArgs
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_bad_col_names
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_cache
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_cursor_args
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_executemany
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_fetchall
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_fetchmany
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_fetchmany_noarg
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_fetchone
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_iter
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_max_cache
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_minimal_generation
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_named
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_named_fetchall
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_named_fetchmany
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_named_fetchone
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_named_rownumber
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_no_result_no_surprise
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_nonascii_name
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_not_greedy
-        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_record_updated
-
   - name: KIKIMR-18327 # Large objects
     tests:
       python-psycopg2:
@@ -381,6 +347,9 @@ tickets:
     tests:
       golang-lib-pq:
         - TestQueryRowBugWorkaround
+      python-psycopg2:
+        - tests.test_with.WithConnectionTestCase.test_with_autocommit_pgerror
+        - tests.test_with.WithConnectionTestCase.test_with_error_db
 
   - name: YQL-16630 # Default as column constraint
     tests:
@@ -472,4 +441,25 @@ tickets:
         - TestDecodeUUIDBackend
         - TestEmptyResultSetColumns
 
-
+  - name: KIKIMR-19548 # TEMP TABLE and Serial primary key
+    tests:
+      python-psycopg2:
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_cache
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_cursor_args
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_executemany
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_fetchall
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_fetchmany
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_fetchmany_noarg
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_fetchone
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_iter
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_max_cache
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_minimal_generation
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_named
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_named_fetchall
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_named_fetchmany
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_named_fetchone
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_named_rownumber
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_no_result_no_surprise
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_nonascii_name
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_not_greedy
+        - tests.test_extras_dictcursor.NamedTupleCursorTest.test_record_updated
