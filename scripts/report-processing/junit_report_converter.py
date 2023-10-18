@@ -276,7 +276,7 @@ def _change_error_to_failure(report: JUnitTestSuites):
     report.foreach_testcase(callback)
 
 
-def _remove_tests(report: JUnitTestSuites, tests_to_remove_list: List[str]):
+def _remove_tests(report: JUnitTestSuites, tests_to_remove_list: List[str], inconsistent_test_list):
     tests_to_remove = dict()
 
     for test in tests_to_remove_list:
@@ -292,15 +292,23 @@ def _remove_tests(report: JUnitTestSuites, tests_to_remove_list: List[str]):
     for tc in for_remove:
         tc.remove_from_suite()
 
-    assert tests_to_remove == {}
+    if len(tests_to_remove) > 0 and not inconsistent_test_list:
+        for test in tests_to_remove.keys():
+            print(f"not found test for remove: '{test}'")
+        raise Exception("not all tests can be removed")
 
 
-def _append_unexisted_tests(report: JUnitTestSuites, full_test_list: List[str]):
+def _append_unexisted_tests(report: JUnitTestSuites, full_test_list: List[str], inconsistent_test_list: bool):
     tests_to_append_list = full_test_list.copy()
 
     def remove_test(tc: JUnitTestSuites.TestCase):
-        print("remove: ", tc.fullname)
-        tests_to_append_list.remove(tc.fullname)
+        try:
+            tests_to_append_list.remove(tc.fullname)
+            print(f"test from report exists in full list: '{tc.fullname}'")
+        except ValueError:
+            print(f"test from report not exists in full list: '{tc.fullname}'")
+            if not inconsistent_test_list:
+                raise
 
     report.foreach_testcase(remove_test)
 
@@ -380,6 +388,7 @@ def process_report(
         report: JUnitTestSuites,
         config: Config,
         *,
+        inconsistent_test_list: bool = False,
         unit_tests: Optional[List[str]],
         full_test_list: Optional[List[str]],
 ):
@@ -392,14 +401,15 @@ def process_report(
     if config.convert.change_error_to_failure:
         _change_error_to_failure(report)
 
-    _append_unexisted_tests(report, full_test_list)
+    _append_unexisted_tests(report, full_test_list, inconsistent_test_list)
 
     reasons = get_skip_reasons(config)
     report.skip_tests(reasons)
 
-    _check_test_list_equals(report, full_test_list)
+    if not inconsistent_test_list:
+        _check_test_list_equals(report, full_test_list)
 
-    _remove_tests(report, unit_tests)
+    _remove_tests(report, unit_tests, inconsistent_test_list)
 
     _order_attributes(report)
 
@@ -411,6 +421,7 @@ def main():
     parser.add_argument("--output-report", default="test-result/result.xml", help="relative to test-dir")
     parser.add_argument("--full-test-list", default="full-test-list.txt", help="relative to test-dir")
     parser.add_argument("--list-unit-test", default="unit-tests.txt", help="relative to test-dir")
+    parser.add_argument("--inconsistent-test-list-flag-file", default="flag-allow-inconsistent-test-lists", help="Skip check of consistency test lists (if test names may be different in different runs)")
     args = parser.parse_args()
 
     config = Config()
@@ -434,7 +445,11 @@ def main():
     if args.full_test_list:
         full_test_list = _read_file_lines(normalize_path(args.test_dir, args.full_test_list))
 
-    process_report(report, config, unit_tests=unit_tests, full_test_list=full_test_list)
+    inconsistent_test_list = False
+    if args.inconsistent_test_list_flag_file:
+        inconsistent_test_list = os.path.exists(normalize_path(args.test_dir, args.inconsistent_test_list_flag_file))
+
+    process_report(report, config, unit_tests=unit_tests, full_test_list=full_test_list, inconsistent_test_list=inconsistent_test_list)
 
     report.save_to_file(normalize_path(args.test_dir, args.output_report))
 
