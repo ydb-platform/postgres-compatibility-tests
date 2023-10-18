@@ -15,6 +15,7 @@ def main():
 
     report = ju.load_report(args.input_reports)
     tests = ju.get_test_names(report, args.no_class, args.only_passed)
+    tests.sort()
     for test in tests:
         print(test)
 

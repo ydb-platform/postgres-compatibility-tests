@@ -1,286 +1,168 @@
-java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testSimpleBind
-java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testTrailingSemicolon
-java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testSimpleQuery
-java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testEmptyQuery
-java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testMultipleTrailingSemicolons
-java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testWhitespaceQuery
-java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testCompositeBasic
-java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testCompositeWithBinds
-java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testMove
-java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testHasReturning
-java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testTrailingSemicolonAndSpace
-java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testCompositeWithComments
-java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testQuotedQuestionmark
-java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testMultiQueryWithBind
-java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testMultipleEmptyQueries
-java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testRepeatedQuestionmark
-java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testDoubleQuestionmark
-java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testWithInsert
-java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testDelete
-java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testUnquotedQuestionmark
-java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testInsert
-java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testWithSelect
-java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testOnlyEmptyQueries
-java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testSelect
-java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testUpdate
-java-pgjdbc/org.postgresql.jdbcurlresolver.PgServiceConfParserTest.pgService11()
-java-pgjdbc/org.postgresql.jdbcurlresolver.PgServiceConfParserTest.pgService21()
-java-pgjdbc/org.postgresql.jdbcurlresolver.PgServiceConfParserTest.pgService22()
-java-pgjdbc/org.postgresql.jdbcurlresolver.PgServiceConfParserTest.pgService23()
-java-pgjdbc/org.postgresql.jdbcurlresolver.PgServiceConfParserTest.pgService31()
-java-pgjdbc/org.postgresql.jdbcurlresolver.PgServiceConfParserTest.pgService32()
-java-pgjdbc/org.postgresql.jdbcurlresolver.PgServiceConfParserTest.pgService41()
-java-pgjdbc/org.postgresql.jdbcurlresolver.PgServiceConfParserTest.pgService42()
-java-pgjdbc/org.postgresql.jdbcurlresolver.PgServiceConfParserTest.pgService43()
-java-pgjdbc/org.postgresql.jdbcurlresolver.PgServiceConfParserTest.pgService51()
-java-pgjdbc/org.postgresql.jdbcurlresolver.PgServiceConfParserTest.pgService52()
-java-pgjdbc/org.postgresql.jdbcurlresolver.PgServiceConfParserTest.pgService53()
-java-pgjdbc/org.postgresql.jdbcurlresolver.PgServiceConfParserTest.pgService61()
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 7.4.0.0, expected = 70,400]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 9.0.0.0, expected = 90,000]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 9.0.1.0, expected = 90,001]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 9.2.1.0, expected = 90,201]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 7.4.0, expected = 70,400]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 9.0.0, expected = 90,000]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 9.0.1, expected = 90,001]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 9.2.1, expected = 90,201]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 7.4, expected = 70,400]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 9.0, expected = 90,000]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 9.2, expected = 90,200]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 9.6, expected = 90,600]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 10, expected = 100,000]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 11, expected = 110,000]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 12, expected = 120,000]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 9.4.10, expected = 90,410]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 9.20.10, expected = 92,010]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 10.1, expected = 100,001]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 10.10, expected = 100,010]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 11.1, expected = 110,001]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 123.20, expected = 1,230,020]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 9.20.100, expected = -1]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 9.100.10, expected = -1]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 10.100.10, expected = -1]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 12345.1, expected = -1]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 90104, expected = 90,104]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 090104, expected = 90,104]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 070400, expected = 70,400]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 100004, expected = 100,004]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 10000, expected = 10,000]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 9.4devel, expected = 90,400]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 9.4beta1, expected = 90,400]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 10devel, expected = 100,000]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 10beta1, expected = 100,000]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 10.1devel, expected = 100,001]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 10.1beta1, expected = 100,001]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 9.4.1bobs, expected = 90,401]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 9.4.1bobspatched9.4, expected = 90,401]
-java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 9.4.1-bobs-patched-postgres-v2.2, expected = 90,401]
-java-pgjdbc/org.postgresql.jdbc.StringArraysTest.test2dBinary
-java-pgjdbc/org.postgresql.jdbc.StringArraysTest.testObjectArrayCopy
-java-pgjdbc/org.postgresql.jdbc.StringArraysTest.test2dString
-java-pgjdbc/org.postgresql.jdbc.StringArraysTest.test3dBinary
-java-pgjdbc/org.postgresql.jdbc.StringArraysTest.testObject3dArrayCopy
-java-pgjdbc/org.postgresql.jdbc.StringArraysTest.test3dString
-java-pgjdbc/org.postgresql.jdbc.StringArraysTest.testBinary
-java-pgjdbc/org.postgresql.jdbc.StringArraysTest.testString
-java-pgjdbc/org.postgresql.jdbc.StringArraysTest.testObject2dArrayCopy
-java-pgjdbc/org.postgresql.test.util.HostSpecTest.testShouldResolveWithWhiteSpaceSocksProxyHost
-java-pgjdbc/org.postgresql.test.util.HostSpecTest.testShouldResolveWithSocksNonProxyHostsNotMatching
-java-pgjdbc/org.postgresql.test.util.HostSpecTest.testShouldResolve
-java-pgjdbc/org.postgresql.test.util.HostSpecTest.testShouldReturnEmptyLocalAddressBind
-java-pgjdbc/org.postgresql.test.util.HostSpecTest.testShouldResolveWithSocksNonProxyHost
-java-pgjdbc/org.postgresql.test.util.HostSpecTest.testShouldReturnLocalAddressBind
-java-pgjdbc/org.postgresql.test.util.HostSpecTest.testShouldResolveWithSocksProxyHostWithLocalhost
-java-pgjdbc/org.postgresql.test.util.HostSpecTest.testShouldResolveWithSocksProxyHost
-java-pgjdbc/org.postgresql.test.util.HostSpecTest.testShouldResolveWithSocksNonProxyHosts
-java-pgjdbc/org.postgresql.test.util.HostSpecTest.testShouldResolveWithEmptySocksProxyHost
-java-pgjdbc/org.postgresql.test.ssl.LibPQFactoryHostNameTest.checkPattern[host=host.com, pattern=pattern.com]
-java-pgjdbc/org.postgresql.test.ssl.LibPQFactoryHostNameTest.checkPattern[host=host.com, pattern=.pattern.com]
-java-pgjdbc/org.postgresql.test.ssl.LibPQFactoryHostNameTest.checkPattern[host=host.com, pattern=*.pattern.com]
-java-pgjdbc/org.postgresql.test.ssl.LibPQFactoryHostNameTest.checkPattern[host=host.com, pattern=*.host.com]
-java-pgjdbc/org.postgresql.test.ssl.LibPQFactoryHostNameTest.checkPattern[host=a.com, pattern=*.host.com]
-java-pgjdbc/org.postgresql.test.ssl.LibPQFactoryHostNameTest.checkPattern[host=.a.com, pattern=*.host.com]
-java-pgjdbc/org.postgresql.test.ssl.LibPQFactoryHostNameTest.checkPattern[host=longhostname.com, pattern=*.com]
-java-pgjdbc/org.postgresql.test.ssl.LibPQFactoryHostNameTest.checkPattern[host=longhostname.ru, pattern=*.com]
-java-pgjdbc/org.postgresql.test.ssl.LibPQFactoryHostNameTest.checkPattern[host=host.com, pattern=host.com]
-java-pgjdbc/org.postgresql.test.ssl.LibPQFactoryHostNameTest.checkPattern[host=sub.host.com, pattern=host.com]
-java-pgjdbc/org.postgresql.test.ssl.LibPQFactoryHostNameTest.checkPattern[host=sub.host.com, pattern=sub.host.com]
-java-pgjdbc/org.postgresql.test.ssl.LibPQFactoryHostNameTest.checkPattern[host=sub.host.com, pattern=*.host.com]
-java-pgjdbc/org.postgresql.test.ssl.LibPQFactoryHostNameTest.checkPattern[host=Sub.host.com, pattern=sub.host.com]
-java-pgjdbc/org.postgresql.test.ssl.LibPQFactoryHostNameTest.checkPattern[host=sub.host.com, pattern=Sub.host.com]
-java-pgjdbc/org.postgresql.test.ssl.LibPQFactoryHostNameTest.checkPattern[host=sub.host.com, pattern=*.hoSt.com]
-java-pgjdbc/org.postgresql.test.ssl.LibPQFactoryHostNameTest.checkPattern[host=*.host.com, pattern=host.com]
-java-pgjdbc/org.postgresql.test.ssl.LibPQFactoryHostNameTest.checkPattern[host=sub.sub.host.com, pattern=*.host.com]
-java-pgjdbc/org.postgresql.test.ssl.LibPQFactoryHostNameTest.checkPattern[host=com, pattern=*]
-java-pgjdbc/org.postgresql.util.PGPropertyUtilTest.translatePGPropertyToPGService()
-java-pgjdbc/org.postgresql.util.PGPropertyUtilTest.propertiesConsistencyCheck()
-java-pgjdbc/org.postgresql.util.PGPropertyUtilTest.translatePGServiceToPGProperty()
-java-pgjdbc/org.postgresql.test.jdbc2.DriverTest.testAcceptsURL()
-java-pgjdbc/org.postgresql.test.jdbc2.DriverTest.urlIsNotForPostgreSQL()
-java-pgjdbc/org.postgresql.test.jdbc2.DriverTest.urlIsNull()
-java-pgjdbc/org.postgresql.test.jdbc2.DriverTest.testRegistration()
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 0.1]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 0.1]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 0.01]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 0.001]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 0.0001]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 0.00001]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 1]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 0]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 0.1000000000000000000000000000000000000000000000099]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = -1]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = -1]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 1.2]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = -2.05]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 0.00000000000000000000000000099]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = -0.00000000000000000000000000099]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 10.0000000000099]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 0.1]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 1.1]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 99,999.2]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 99,999]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = -99,999.2]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = -99,999]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 2,147,483,647]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = -2,147,483,648]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 2,147,483,648]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = -2,147,483,649]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 9,223,372,036,854,775,807]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = -9,223,372,036,854,775,808]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 9,223,372,036,854,775,808]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = -9,223,372,036,854,775,809]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 10,223,372,036,850,000,000]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 19,223,372,036,854,775,807]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 19,223,372,036,854,775,807.3]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = -19,223,372,036,854,775,807.3]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 12,345,678,909,876,543,210]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 123,456,789,098,765,432,100,000]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = -1,234,567,890,987,654,321,000]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 600,000,000]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 30,000]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 40,000]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 20,000]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 9,990,000]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 1,000,000]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 10,000,000,000,000,000,000,000,000,000,000,000,000]
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 90,000,000,000,000,000,000,000,000,000,000,000,000]
-java-pgjdbc/org.postgresql.test.osgi.PGDataSourceFactoryTest.testCreateConnectionPoolDataSourceDefault
-java-pgjdbc/org.postgresql.test.osgi.PGDataSourceFactoryTest.testCreateDriverDefault
-java-pgjdbc/org.postgresql.test.osgi.PGDataSourceFactoryTest.testCreateDataSourceDefault
-java-pgjdbc/org.postgresql.test.osgi.PGDataSourceFactoryTest.testCreateXADataSourceDefault
-java-pgjdbc/org.postgresql.test.osgi.PGDataSourceFactoryTest.testCreateDataSourceSimple
-java-pgjdbc/org.postgresql.test.osgi.PGDataSourceFactoryTest.testCreateXADataSourceConfigured
-java-pgjdbc/org.postgresql.test.osgi.PGDataSourceFactoryTest.testCreateConnectionPoolDataSourceConfigured
-java-pgjdbc/org.postgresql.test.osgi.PGDataSourceFactoryTest.testCreateDataSourcePooling
-java-pgjdbc/org.postgresql.test.util.ExpressionPropertiesTest.multipleParentProperties
-java-pgjdbc/org.postgresql.test.util.ExpressionPropertiesTest.simpleReplace
-java-pgjdbc/org.postgresql.test.util.ExpressionPropertiesTest.replacementMissing
-java-pgjdbc/org.postgresql.test.util.ExpressionPropertiesTest.rawValue
-java-pgjdbc/org.postgresql.test.util.ExpressionPropertiesTest.multipleReplacements
-java-pgjdbc/org.postgresql.jdbc.IntArraysTest.test2dBinary
-java-pgjdbc/org.postgresql.jdbc.IntArraysTest.testObjectArrayCopy
-java-pgjdbc/org.postgresql.jdbc.IntArraysTest.test2dString
-java-pgjdbc/org.postgresql.jdbc.IntArraysTest.test3dBinary
-java-pgjdbc/org.postgresql.jdbc.IntArraysTest.testObject3dArrayCopy
-java-pgjdbc/org.postgresql.jdbc.IntArraysTest.test3dString
-java-pgjdbc/org.postgresql.jdbc.IntArraysTest.testBinary
-java-pgjdbc/org.postgresql.jdbc.IntArraysTest.testString
-java-pgjdbc/org.postgresql.jdbc.IntArraysTest.testObject2dArrayCopy
-java-pgjdbc/org.postgresql.test.util.LruCacheTest.testEvictsLeastRecentlyUsed
-java-pgjdbc/org.postgresql.test.util.LruCacheTest.testCyclicReplacement
-java-pgjdbc/org.postgresql.test.util.LruCacheTest.testEvictsByNumberOfEntries
-java-pgjdbc/org.postgresql.test.util.LruCacheTest.testEvictsBySize
-java-pgjdbc/org.postgresql.test.util.LruCacheTest.testCaching
-java-pgjdbc/org.postgresql.test.util.LruCacheTest.testDuplicateKey
-java-pgjdbc/org.postgresql.jdbc.ArraysTest.testNoByteArray
-java-pgjdbc/org.postgresql.jdbc.ArraysTest.testNonArrayNotSupported
-java-pgjdbc/org.postgresql.jdbc.ArraysTest.testBinaryNotSupported
-java-pgjdbc/org.postgresql.core.OidToStringTest.run[expected=XML, value=142]
-java-pgjdbc/org.postgresql.core.OidToStringTest.run[expected=UNSPECIFIED, value=0]
-java-pgjdbc/org.postgresql.core.OidToStringTest.run[expected=<unknown:-235>, value=-235]
-java-pgjdbc/org.postgresql.jdbc.LongArraysTest.test2dBinary
-java-pgjdbc/org.postgresql.jdbc.LongArraysTest.testObjectArrayCopy
-java-pgjdbc/org.postgresql.jdbc.LongArraysTest.test2dString
-java-pgjdbc/org.postgresql.jdbc.LongArraysTest.test3dBinary
-java-pgjdbc/org.postgresql.jdbc.LongArraysTest.testObject3dArrayCopy
-java-pgjdbc/org.postgresql.jdbc.LongArraysTest.test3dString
-java-pgjdbc/org.postgresql.jdbc.LongArraysTest.testBinary
-java-pgjdbc/org.postgresql.jdbc.LongArraysTest.testString
-java-pgjdbc/org.postgresql.jdbc.LongArraysTest.testObject2dArrayCopy
-java-pgjdbc/org.postgresql.test.jdbc42.CustomizeDefaultFetchSizeTest.testNotAvailableSpecifyNegativeFetchSize
-java-pgjdbc/org.postgresql.test.jdbc2.optional.BaseDataSourceFailoverUrlsTest.testTwoWithPorts
-java-pgjdbc/org.postgresql.test.jdbc2.optional.BaseDataSourceFailoverUrlsTest.testEmptyPorts
-java-pgjdbc/org.postgresql.test.jdbc2.optional.BaseDataSourceFailoverUrlsTest.testTwoLastPort
-java-pgjdbc/org.postgresql.test.jdbc2.optional.BaseDataSourceFailoverUrlsTest.testFullDefault
-java-pgjdbc/org.postgresql.test.jdbc2.optional.BaseDataSourceFailoverUrlsTest.testTwoFirstPort
-java-pgjdbc/org.postgresql.test.jdbc2.optional.BaseDataSourceFailoverUrlsTest.testTwoNoPorts
-java-pgjdbc/org.postgresql.test.jdbc2.optional.BaseDataSourceFailoverUrlsTest.testNullPorts
-java-pgjdbc/org.postgresql.test.jdbc2.PGPropertyTest.testIsPresentWithParseURLResult
-java-pgjdbc/org.postgresql.test.jdbc2.PGPropertyTest.testOverWriteDSProperties
-java-pgjdbc/org.postgresql.test.jdbc2.PGPropertyTest.testEncodedUrlValues
-java-pgjdbc/org.postgresql.test.jdbc2.PGPropertyTest.testLowerCamelCase
-java-pgjdbc/org.postgresql.test.jdbc2.PGPropertyTest.testEnumConstantNaming
-java-pgjdbc/org.postgresql.test.jdbc2.PGPropertyTest.testPresenceCheck
-java-pgjdbc/org.postgresql.test.jdbc2.PGPropertyTest.testSortOrder
-java-pgjdbc/org.postgresql.test.jdbc2.PGPropertyTest.testDataSourceProperties
-java-pgjdbc/org.postgresql.test.jdbc2.PGPropertyTest.testGetSetAllProperties
-java-pgjdbc/org.postgresql.test.jdbc2.PGPropertyTest.testDriverGetPropertyInfo
-java-pgjdbc/org.postgresql.test.jdbc2.PGPropertyTest.testEncodedUrlValuesFromDataSource
-java-pgjdbc/org.postgresql.jdbc.ShortObjectArraysTest.test2dBinary
-java-pgjdbc/org.postgresql.jdbc.ShortObjectArraysTest.testObjectArrayCopy
-java-pgjdbc/org.postgresql.jdbc.ShortObjectArraysTest.test2dString
-java-pgjdbc/org.postgresql.jdbc.ShortObjectArraysTest.test3dBinary
-java-pgjdbc/org.postgresql.jdbc.ShortObjectArraysTest.testObject3dArrayCopy
-java-pgjdbc/org.postgresql.jdbc.ShortObjectArraysTest.test3dString
-java-pgjdbc/org.postgresql.jdbc.ShortObjectArraysTest.testBinary
-java-pgjdbc/org.postgresql.jdbc.ShortObjectArraysTest.testString
-java-pgjdbc/org.postgresql.jdbc.ShortObjectArraysTest.testObject2dArrayCopy
-java-pgjdbc/org.postgresql.core.AsciiStringInternerTest.testToString
-java-pgjdbc/org.postgresql.core.AsciiStringInternerTest.testStagedValue
 java-pgjdbc/org.postgresql.core.AsciiStringInternerTest.testCanonicalValue
 java-pgjdbc/org.postgresql.core.AsciiStringInternerTest.testGarbageCleaning
 java-pgjdbc/org.postgresql.core.AsciiStringInternerTest.testNonAsciiValue
-java-pgjdbc/org.postgresql.jdbc.IntegerObjectArraysTest.test2dBinary
-java-pgjdbc/org.postgresql.jdbc.IntegerObjectArraysTest.testObjectArrayCopy
-java-pgjdbc/org.postgresql.jdbc.IntegerObjectArraysTest.test2dString
-java-pgjdbc/org.postgresql.jdbc.IntegerObjectArraysTest.test3dBinary
-java-pgjdbc/org.postgresql.jdbc.IntegerObjectArraysTest.testObject3dArrayCopy
-java-pgjdbc/org.postgresql.jdbc.IntegerObjectArraysTest.test3dString
-java-pgjdbc/org.postgresql.jdbc.IntegerObjectArraysTest.testBinary
-java-pgjdbc/org.postgresql.jdbc.IntegerObjectArraysTest.testString
-java-pgjdbc/org.postgresql.jdbc.IntegerObjectArraysTest.testObject2dArrayCopy
-java-pgjdbc/org.postgresql.core.CommandCompleteParserTest.run[input=SELECT 0, oid=0, rows=0]
-java-pgjdbc/org.postgresql.core.CommandCompleteParserTest.run[input=SELECT -42, oid=0, rows=0]
-java-pgjdbc/org.postgresql.core.CommandCompleteParserTest.run[input=SELECT, oid=0, rows=0]
+java-pgjdbc/org.postgresql.core.AsciiStringInternerTest.testStagedValue
+java-pgjdbc/org.postgresql.core.AsciiStringInternerTest.testToString
+java-pgjdbc/org.postgresql.core.CommandCompleteParserNegativeTest.run[input=SELECT 0_0 0_0]
+java-pgjdbc/org.postgresql.core.CommandCompleteParserNegativeTest.run[input=SELECT 0_0 42]
+java-pgjdbc/org.postgresql.core.CommandCompleteParserNegativeTest.run[input=SELECT 42 0_0]
 java-pgjdbc/org.postgresql.core.CommandCompleteParserTest.run[input=, oid=0, rows=0]
 java-pgjdbc/org.postgresql.core.CommandCompleteParserTest.run[input=A, oid=0, rows=0]
-java-pgjdbc/org.postgresql.core.CommandCompleteParserTest.run[input=SELECT 42, oid=0, rows=42]
-java-pgjdbc/org.postgresql.core.CommandCompleteParserTest.run[input=UPDATE 43 42, oid=43, rows=42]
-java-pgjdbc/org.postgresql.core.CommandCompleteParserTest.run[input=UPDATE 43 9223372036854775807, oid=43, rows=9,223,372,036,854,775,807]
-java-pgjdbc/org.postgresql.core.CommandCompleteParserTest.run[input=UPDATE 9223372036854775807 9223372036854775807, oid=9,223,372,036,854,775,807, rows=9,223,372,036,854,775,807]
-java-pgjdbc/org.postgresql.core.CommandCompleteParserTest.run[input=UPDATE 922337203685477580 922337203685477580, oid=922,337,203,685,477,580, rows=922,337,203,685,477,580]
-java-pgjdbc/org.postgresql.core.CommandCompleteParserTest.run[input=UPDATE 92233720368547758 92233720368547758, oid=92,233,720,368,547,758, rows=92,233,720,368,547,758]
+java-pgjdbc/org.postgresql.core.CommandCompleteParserTest.run[input=CREATE OR DROP OR DELETE TABLE 42, oid=0, rows=42]
 java-pgjdbc/org.postgresql.core.CommandCompleteParserTest.run[input=CREATE TABLE 92233720368547758 92233720368547758, oid=92,233,720,368,547,758, rows=92,233,720,368,547,758]
 java-pgjdbc/org.postgresql.core.CommandCompleteParserTest.run[input=CREATE TABLE, oid=0, rows=0]
-java-pgjdbc/org.postgresql.core.CommandCompleteParserTest.run[input=CREATE OR DROP OR DELETE TABLE 42, oid=0, rows=42]
-java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=short simple, encoding=UTF-8]
-java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=longer but still not really all that long, encoding=UTF-8]
-java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=0123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354...(998890 chars), encoding=UTF-8]
-java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=0123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354...(998891 chars), encoding=UTF-8]
-java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=0123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354...(32773 chars), encoding=UTF-8]
-java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=0123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354...(32774 chars), encoding=UTF-8]
+java-pgjdbc/org.postgresql.core.CommandCompleteParserTest.run[input=SELECT -42, oid=0, rows=0]
+java-pgjdbc/org.postgresql.core.CommandCompleteParserTest.run[input=SELECT 0, oid=0, rows=0]
+java-pgjdbc/org.postgresql.core.CommandCompleteParserTest.run[input=SELECT 42, oid=0, rows=42]
+java-pgjdbc/org.postgresql.core.CommandCompleteParserTest.run[input=SELECT, oid=0, rows=0]
+java-pgjdbc/org.postgresql.core.CommandCompleteParserTest.run[input=UPDATE 43 42, oid=43, rows=42]
+java-pgjdbc/org.postgresql.core.CommandCompleteParserTest.run[input=UPDATE 43 9223372036854775807, oid=43, rows=9,223,372,036,854,775,807]
+java-pgjdbc/org.postgresql.core.CommandCompleteParserTest.run[input=UPDATE 92233720368547758 92233720368547758, oid=92,233,720,368,547,758, rows=92,233,720,368,547,758]
+java-pgjdbc/org.postgresql.core.CommandCompleteParserTest.run[input=UPDATE 922337203685477580 922337203685477580, oid=922,337,203,685,477,580, rows=922,337,203,685,477,580]
+java-pgjdbc/org.postgresql.core.CommandCompleteParserTest.run[input=UPDATE 9223372036854775807 9223372036854775807, oid=9,223,372,036,854,775,807, rows=9,223,372,036,854,775,807]
+java-pgjdbc/org.postgresql.core.OidToStringTest.run[expected=<unknown:-235>, value=-235]
+java-pgjdbc/org.postgresql.core.OidToStringTest.run[expected=UNSPECIFIED, value=0]
+java-pgjdbc/org.postgresql.core.OidToStringTest.run[expected=XML, value=142]
+java-pgjdbc/org.postgresql.core.OidValueOfTest.run[expected=0, value=UNSPECIFIED]
+java-pgjdbc/org.postgresql.core.OidValueOfTest.run[expected=100, value=100]
+java-pgjdbc/org.postgresql.core.OidValueOfTest.run[expected=199, value=JSON_ARRAY]
+java-pgjdbc/org.postgresql.core.OidValueOfTest.run[expected=25, value=TEXT]
+java-pgjdbc/org.postgresql.core.ParserTest.alterTableParseWithOnDeleteClause
+java-pgjdbc/org.postgresql.core.ParserTest.alterTableParseWithOnUpdateClause
+java-pgjdbc/org.postgresql.core.ParserTest.createTableParseWithOnDeleteClause
+java-pgjdbc/org.postgresql.core.ParserTest.createTableParseWithOnUpdateClause
+java-pgjdbc/org.postgresql.core.ParserTest.insertBatchedReWriteOnConflict
+java-pgjdbc/org.postgresql.core.ParserTest.insertBatchedReWriteOnConflictUpdateBind
+java-pgjdbc/org.postgresql.core.ParserTest.insertBatchedReWriteOnConflictUpdateConstant
+java-pgjdbc/org.postgresql.core.ParserTest.insertMultiInsert
+java-pgjdbc/org.postgresql.core.ParserTest.insertReturningInWith
+java-pgjdbc/org.postgresql.core.ParserTest.insertSelectReturning
+java-pgjdbc/org.postgresql.core.ParserTest.testDeleteCommandParsing
+java-pgjdbc/org.postgresql.core.ParserTest.testEscapeProcessing
+java-pgjdbc/org.postgresql.core.ParserTest.testModifyJdbcCall
+java-pgjdbc/org.postgresql.core.ParserTest.testMoveCommandParsing
+java-pgjdbc/org.postgresql.core.ParserTest.testParseV14functions
+java-pgjdbc/org.postgresql.core.ParserTest.testSelectCommandParsing
+java-pgjdbc/org.postgresql.core.ParserTest.testUnterminatedEscape
+java-pgjdbc/org.postgresql.core.ParserTest.testUpdateCommandParsing
+java-pgjdbc/org.postgresql.core.ParserTest.testWithCommandParsing
+java-pgjdbc/org.postgresql.core.ParserTest.valuesTableParse
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returning  , returning=  returning  ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returning  , returning=  returningreturning  ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returning *, returning=  returning *]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returning *, returning=  returningreturning *]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returning , returning=  returning ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returning , returning=  returningreturning ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returning 3, returning=  returning 3]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returning 3, returning=  returningreturning 3]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returning _, returning=  returning _]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returning _, returning=  returningreturning _]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returningreturning  , returning=  returning  ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returningreturning  , returning=  returningreturning  ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returningreturning *, returning=  returning *]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returningreturning *, returning=  returningreturning *]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returningreturning , returning=  returning ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returningreturning , returning=  returningreturning ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returningreturning 3, returning=  returning 3]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returningreturning 3, returning=  returningreturning 3]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returningreturning _, returning=  returning _]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returningreturning _, returning=  returningreturning _]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returning  , returning= returning  ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returning  , returning= returningreturning  ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returning *, returning= returning *]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returning *, returning= returningreturning *]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returning , returning= returning ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returning , returning= returningreturning ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returning 3, returning= returning 3]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returning 3, returning= returningreturning 3]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returning _, returning= returning _]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returning _, returning= returningreturning _]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returningreturning  , returning= returning  ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returningreturning  , returning= returningreturning  ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returningreturning *, returning= returning *]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returningreturning *, returning= returningreturning *]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returningreturning , returning= returning ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returningreturning , returning= returningreturning ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returningreturning 3, returning= returning 3]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returningreturning 3, returning= returningreturning 3]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returningreturning _, returning= returning _]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returningreturning _, returning= returningreturning _]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returning  , returning=* returning  ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returning  , returning=* returningreturning  ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returning *, returning=* returning *]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returning *, returning=* returningreturning *]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returning , returning=* returning ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returning , returning=* returningreturning ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returning 3, returning=* returning 3]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returning 3, returning=* returningreturning 3]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returning _, returning=* returning _]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returning _, returning=* returningreturning _]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returningreturning  , returning=* returning  ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returningreturning  , returning=* returningreturning  ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returningreturning *, returning=* returning *]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returningreturning *, returning=* returningreturning *]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returningreturning , returning=* returning ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returningreturning , returning=* returningreturning ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returningreturning 3, returning=* returning 3]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returningreturning 3, returning=* returningreturning 3]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returningreturning _, returning=* returning _]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returningreturning _, returning=* returningreturning _]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returning  , returning=3 returning  ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returning  , returning=3 returningreturning  ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returning *, returning=3 returning *]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returning *, returning=3 returningreturning *]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returning , returning=3 returning ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returning , returning=3 returningreturning ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returning 3, returning=3 returning 3]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returning 3, returning=3 returningreturning 3]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returning _, returning=3 returning _]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returning _, returning=3 returningreturning _]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returningreturning  , returning=3 returning  ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returningreturning  , returning=3 returningreturning  ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returningreturning *, returning=3 returning *]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returningreturning *, returning=3 returningreturning *]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returningreturning , returning=3 returning ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returningreturning , returning=3 returningreturning ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returningreturning 3, returning=3 returning 3]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returningreturning 3, returning=3 returningreturning 3]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returningreturning _, returning=3 returning _]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returningreturning _, returning=3 returningreturning _]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returning  , returning=_ returning  ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returning  , returning=_ returningreturning  ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returning *, returning=_ returning *]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returning *, returning=_ returningreturning *]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returning , returning=_ returning ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returning , returning=_ returningreturning ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returning 3, returning=_ returning 3]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returning 3, returning=_ returningreturning 3]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returning _, returning=_ returning _]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returning _, returning=_ returningreturning _]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returningreturning  , returning=_ returning  ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returningreturning  , returning=_ returningreturning  ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returningreturning *, returning=_ returning *]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returningreturning *, returning=_ returningreturning *]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returningreturning , returning=_ returning ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returningreturning , returning=_ returningreturning ]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returningreturning 3, returning=_ returning 3]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returningreturning 3, returning=_ returningreturning 3]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returningreturning _, returning=_ returning _]
+java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returningreturning _, returning=_ returningreturning _]
 java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=0123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354...(16389 chars), encoding=UTF-8]
 java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=0123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354...(16390 chars), encoding=UTF-8]
-java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=eät Σ π 福, it is good, encoding=UTF-8]
+java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=0123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354...(32773 chars), encoding=UTF-8]
+java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=0123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354...(32774 chars), encoding=UTF-8]
+java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=0123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354...(998890 chars), encoding=UTF-8]
+java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=0123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354...(998891 chars), encoding=UTF-8]
 java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=????????__code9;__code10;??__code13;?????????????????? !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcd...(8192 chars), encoding=UTF-8]
-java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=          ​‌‍‎‏‐‑‒–—―‖‗‘’‚‛“”„‟†‡•‣․‥…‧  ‪‫‬‭‮ ‰‱′″‴‵‶‷‸‹›※‼‽‾‿⁀⁁⁂⁃⁄⁅⁆⁇⁈⁉⁊⁋⁌⁍⁎⁏⁐⁑⁒⁓⁔⁕⁖⁗⁘⁙⁚⁛⁜⁝⁞ ⁠⁡⁢⁣⁤...(8192 chars), encoding=UTF-8]
-java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=䀁䀂䀃䀄䀅䀆䀇䀈䀉䀊䀋䀌䀍䀎䀏䀐䀑䀒䀓䀔䀕䀖䀗䀘䀙䀚䀛䀜䀝䀞䀟䀠䀡䀢䀣䀤䀥䀦䀧䀨䀩䀪䀫䀬䀭䀮䀯䀰䀱䀲䀳䀴䀵䀶䀷䀸䀹䀺䀻䀼䀽䀾䀿䁀䁁䁂䁃䁄䁅䁆䁇䁈䁉䁊䁋䁌䁍䁎䁏䁐䁑䁒䁓䁔䁕䁖䁗䁘䁙䁚䁛䁜䁝䁞䁟䁠䁡䁢䁣䁤...(8192 chars), encoding=UTF-8]
-java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=态怂怃怄怅怆怇怈怉怊怋怌怍怎怏怐怑怒怓怔怕怖怗怘怙怚怛怜思怞怟怠怡怢怣怤急怦性怨怩怪怫怬怭怮怯怰怱怲怳怴怵怶怷怸怹怺总怼怽怾怿恀恁恂恃恄恅恆恇恈恉恊恋恌恍恎恏恐恑恒恓恔恕恖恗恘恙恚恛恜恝恞恟恠恡恢恣恤...(8192 chars), encoding=UTF-8]
-java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=老耂考耄者耆耇耈耉耊耋而耍耎耏耐耑耒耓耔耕耖耗耘耙耚耛耜耝耞耟耠耡耢耣耤耥耦耧耨耩耪耫耬耭耮耯耰耱耲耳耴耵耶耷耸耹耺耻耼耽耾耿聀聁聂聃聄聅聆聇聈聉聊聋职聍聎聏聐聑聒聓联聕聖聗聘聙聚聛聜聝聞聟聠聡聢聣聤...(8192 chars), encoding=UTF-8]
-java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=ꀁꀂꀃꀄꀅꀆꀇꀈꀉꀊꀋꀌꀍꀎꀏꀐꀑꀒꀓꀔꀕꀖꀗꀘꀙꀚꀛꀜꀝꀞꀟꀠꀡꀢꀣꀤꀥꀦꀧꀨꀩꀪꀫꀬꀭꀮꀯꀰꀱꀲꀳꀴꀵꀶꀷꀸꀹꀺꀻꀼꀽꀾꀿꁀꁁꁂꁃꁄꁅꁆꁇꁈꁉꁊꁋꁌꁍꁎꁏꁐꁑꁒꁓꁔꁕꁖꁗꁘꁙꁚꁛꁜꁝꁞꁟꁠꁡꁢꁣꁤ...(8192 chars), encoding=UTF-8]
-java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=쀁쀂쀃쀄쀅쀆쀇쀈쀉쀊쀋쀌쀍쀎쀏쀐쀑쀒쀓쀔쀕쀖쀗쀘쀙쀚쀛쀜쀝쀞쀟쀠쀡쀢쀣쀤쀥쀦쀧쀨쀩쀪쀫쀬쀭쀮쀯쀰쀱쀲쀳쀴쀵쀶쀷쀸쀹쀺쀻쀼쀽쀾쀿쁀쁁쁂쁃쁄쁅쁆쁇쁈쁉쁊쁋쁌쁍쁎쁏쁐쁑쁒쁓쁔쁕쁖쁗쁘쁙쁚쁛쁜쁝쁞쁟쁠쁡쁢쁣쁤...(6143 chars), encoding=UTF-8]
-java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=...(8192 chars), encoding=UTF-8]
+java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=__codex100000;__codex100001;__codex100002;__codex100003;__codex100004;__codex100005;__codex100006;__codex100007;__codex100008;__codex100009;__codex10000a;__codex10000b;__codex10000c;__codex10000d;__codex10000e;__codex10000f;__codex100010;__codex100011;__codex100012;__codex100013;__codex100014;__codex100015;__codex100016;__codex100017;__codex100018;__codex100019;__codex10001a;__codex10001b;__codex10001c;__codex10001d;__codex10001e;__codex10001f;__codex100020;__codex100021;__codex100022;__codex100023;__codex100024;__codex100025;__codex100026;__codex100027;__codex100028;__codex100029;__codex10002a;__codex10002b;__codex10002c;__codex10002d;__codex10002e;__codex10002f;__codex100030;__codex100031;...(16384 chars), encoding=UTF-8]
 java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=__codex10000;__codex10001;__codex10002;__codex10003;__codex10004;__codex10005;__codex10006;__codex10007;__codex10008;__codex10009;__codex1000a;__codex1000b;__codex1000c;__codex1000d;__codex1000e;__codex1000f;__codex10010;__codex10011;__codex10012;__codex10013;__codex10014;__codex10015;__codex10016;__codex10017;__codex10018;__codex10019;__codex1001a;__codex1001b;__codex1001c;__codex1001d;__codex1001e;__codex1001f;__codex10020;__codex10021;__codex10022;__codex10023;__codex10024;__codex10025;__codex10026;__codex10027;__codex10028;__codex10029;__codex1002a;__codex1002b;__codex1002c;__codex1002d;__codex1002e;__codex1002f;__codex10030;__codex10031;...(16384 chars), encoding=UTF-8]
+java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=__codex102000;__codex102001;__codex102002;__codex102003;__codex102004;__codex102005;__codex102006;__codex102007;__codex102008;__codex102009;__codex10200a;__codex10200b;__codex10200c;__codex10200d;__codex10200e;__codex10200f;__codex102010;__codex102011;__codex102012;__codex102013;__codex102014;__codex102015;__codex102016;__codex102017;__codex102018;__codex102019;__codex10201a;__codex10201b;__codex10201c;__codex10201d;__codex10201e;__codex10201f;__codex102020;__codex102021;__codex102022;__codex102023;__codex102024;__codex102025;__codex102026;__codex102027;__codex102028;__codex102029;__codex10202a;__codex10202b;__codex10202c;__codex10202d;__codex10202e;__codex10202f;__codex102030;__codex102031;...(16384 chars), encoding=UTF-8]
+java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=__codex104000;__codex104001;__codex104002;__codex104003;__codex104004;__codex104005;__codex104006;__codex104007;__codex104008;__codex104009;__codex10400a;__codex10400b;__codex10400c;__codex10400d;__codex10400e;__codex10400f;__codex104010;__codex104011;__codex104012;__codex104013;__codex104014;__codex104015;__codex104016;__codex104017;__codex104018;__codex104019;__codex10401a;__codex10401b;__codex10401c;__codex10401d;__codex10401e;__codex10401f;__codex104020;__codex104021;__codex104022;__codex104023;__codex104024;__codex104025;__codex104026;__codex104027;__codex104028;__codex104029;__codex10402a;__codex10402b;__codex10402c;__codex10402d;__codex10402e;__codex10402f;__codex104030;__codex104031;...(16384 chars), encoding=UTF-8]
+java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=__codex106000;__codex106001;__codex106002;__codex106003;__codex106004;__codex106005;__codex106006;__codex106007;__codex106008;__codex106009;__codex10600a;__codex10600b;__codex10600c;__codex10600d;__codex10600e;__codex10600f;__codex106010;__codex106011;__codex106012;__codex106013;__codex106014;__codex106015;__codex106016;__codex106017;__codex106018;__codex106019;__codex10601a;__codex10601b;__codex10601c;__codex10601d;__codex10601e;__codex10601f;__codex106020;__codex106021;__codex106022;__codex106023;__codex106024;__codex106025;__codex106026;__codex106027;__codex106028;__codex106029;__codex10602a;__codex10602b;__codex10602c;__codex10602d;__codex10602e;__codex10602f;__codex106030;__codex106031;...(16384 chars), encoding=UTF-8]
+java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=__codex108000;__codex108001;__codex108002;__codex108003;__codex108004;__codex108005;__codex108006;__codex108007;__codex108008;__codex108009;__codex10800a;__codex10800b;__codex10800c;__codex10800d;__codex10800e;__codex10800f;__codex108010;__codex108011;__codex108012;__codex108013;__codex108014;__codex108015;__codex108016;__codex108017;__codex108018;__codex108019;__codex10801a;__codex10801b;__codex10801c;__codex10801d;__codex10801e;__codex10801f;__codex108020;__codex108021;__codex108022;__codex108023;__codex108024;__codex108025;__codex108026;__codex108027;__codex108028;__codex108029;__codex10802a;__codex10802b;__codex10802c;__codex10802d;__codex10802e;__codex10802f;__codex108030;__codex108031;...(16384 chars), encoding=UTF-8]
+java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=__codex10a000;__codex10a001;__codex10a002;__codex10a003;__codex10a004;__codex10a005;__codex10a006;__codex10a007;__codex10a008;__codex10a009;__codex10a00a;__codex10a00b;__codex10a00c;__codex10a00d;__codex10a00e;__codex10a00f;__codex10a010;__codex10a011;__codex10a012;__codex10a013;__codex10a014;__codex10a015;__codex10a016;__codex10a017;__codex10a018;__codex10a019;__codex10a01a;__codex10a01b;__codex10a01c;__codex10a01d;__codex10a01e;__codex10a01f;__codex10a020;__codex10a021;__codex10a022;__codex10a023;__codex10a024;__codex10a025;__codex10a026;__codex10a027;__codex10a028;__codex10a029;__codex10a02a;__codex10a02b;__codex10a02c;__codex10a02d;__codex10a02e;__codex10a02f;__codex10a030;__codex10a031;...(16384 chars), encoding=UTF-8]
+java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=__codex10c000;__codex10c001;__codex10c002;__codex10c003;__codex10c004;__codex10c005;__codex10c006;__codex10c007;__codex10c008;__codex10c009;__codex10c00a;__codex10c00b;__codex10c00c;__codex10c00d;__codex10c00e;__codex10c00f;__codex10c010;__codex10c011;__codex10c012;__codex10c013;__codex10c014;__codex10c015;__codex10c016;__codex10c017;__codex10c018;__codex10c019;__codex10c01a;__codex10c01b;__codex10c01c;__codex10c01d;__codex10c01e;__codex10c01f;__codex10c020;__codex10c021;__codex10c022;__codex10c023;__codex10c024;__codex10c025;__codex10c026;__codex10c027;__codex10c028;__codex10c029;__codex10c02a;__codex10c02b;__codex10c02c;__codex10c02d;__codex10c02e;__codex10c02f;__codex10c030;__codex10c031;...(16384 chars), encoding=UTF-8]
+java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=__codex10e000;__codex10e001;__codex10e002;__codex10e003;__codex10e004;__codex10e005;__codex10e006;__codex10e007;__codex10e008;__codex10e009;__codex10e00a;__codex10e00b;__codex10e00c;__codex10e00d;__codex10e00e;__codex10e00f;__codex10e010;__codex10e011;__codex10e012;__codex10e013;__codex10e014;__codex10e015;__codex10e016;__codex10e017;__codex10e018;__codex10e019;__codex10e01a;__codex10e01b;__codex10e01c;__codex10e01d;__codex10e01e;__codex10e01f;__codex10e020;__codex10e021;__codex10e022;__codex10e023;__codex10e024;__codex10e025;__codex10e026;__codex10e027;__codex10e028;__codex10e029;__codex10e02a;__codex10e02b;__codex10e02c;__codex10e02d;__codex10e02e;__codex10e02f;__codex10e030;__codex10e031;...(16384 chars), encoding=UTF-8]
 java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=__codex12000;__codex12001;__codex12002;__codex12003;__codex12004;__codex12005;__codex12006;__codex12007;__codex12008;__codex12009;__codex1200a;__codex1200b;__codex1200c;__codex1200d;__codex1200e;__codex1200f;__codex12010;__codex12011;__codex12012;__codex12013;__codex12014;__codex12015;__codex12016;__codex12017;__codex12018;__codex12019;__codex1201a;__codex1201b;__codex1201c;__codex1201d;__codex1201e;__codex1201f;__codex12020;__codex12021;__codex12022;__codex12023;__codex12024;__codex12025;__codex12026;__codex12027;__codex12028;__codex12029;__codex1202a;__codex1202b;__codex1202c;__codex1202d;__codex1202e;__codex1202f;__codex12030;__codex12031;...(16384 chars), encoding=UTF-8]
 java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=__codex14000;__codex14001;__codex14002;__codex14003;__codex14004;__codex14005;__codex14006;__codex14007;__codex14008;__codex14009;__codex1400a;__codex1400b;__codex1400c;__codex1400d;__codex1400e;__codex1400f;__codex14010;__codex14011;__codex14012;__codex14013;__codex14014;__codex14015;__codex14016;__codex14017;__codex14018;__codex14019;__codex1401a;__codex1401b;__codex1401c;__codex1401d;__codex1401e;__codex1401f;__codex14020;__codex14021;__codex14022;__codex14023;__codex14024;__codex14025;__codex14026;__codex14027;__codex14028;__codex14029;__codex1402a;__codex1402b;__codex1402c;__codex1402d;__codex1402e;__codex1402f;__codex14030;__codex14031;...(16384 chars), encoding=UTF-8]
 java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=__codex16000;__codex16001;__codex16002;__codex16003;__codex16004;__codex16005;__codex16006;__codex16007;__codex16008;__codex16009;__codex1600a;__codex1600b;__codex1600c;__codex1600d;__codex1600e;__codex1600f;__codex16010;__codex16011;__codex16012;__codex16013;__codex16014;__codex16015;__codex16016;__codex16017;__codex16018;__codex16019;__codex1601a;__codex1601b;__codex1601c;__codex1601d;__codex1601e;__codex1601f;__codex16020;__codex16021;__codex16022;__codex16023;__codex16024;__codex16025;__codex16026;__codex16027;__codex16028;__codex16029;__codex1602a;__codex1602b;__codex1602c;__codex1602d;__codex1602e;__codex1602f;__codex16030;__codex16031;...(16384 chars), encoding=UTF-8]
@@ -400,381 +282,499 @@ java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=__codexf8000;__code
 java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=__codexfa000;__codexfa001;__codexfa002;__codexfa003;__codexfa004;__codexfa005;__codexfa006;__codexfa007;__codexfa008;__codexfa009;__codexfa00a;__codexfa00b;__codexfa00c;__codexfa00d;__codexfa00e;__codexfa00f;__codexfa010;__codexfa011;__codexfa012;__codexfa013;__codexfa014;__codexfa015;__codexfa016;__codexfa017;__codexfa018;__codexfa019;__codexfa01a;__codexfa01b;__codexfa01c;__codexfa01d;__codexfa01e;__codexfa01f;__codexfa020;__codexfa021;__codexfa022;__codexfa023;__codexfa024;__codexfa025;__codexfa026;__codexfa027;__codexfa028;__codexfa029;__codexfa02a;__codexfa02b;__codexfa02c;__codexfa02d;__codexfa02e;__codexfa02f;__codexfa030;__codexfa031;...(16384 chars), encoding=UTF-8]
 java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=__codexfc000;__codexfc001;__codexfc002;__codexfc003;__codexfc004;__codexfc005;__codexfc006;__codexfc007;__codexfc008;__codexfc009;__codexfc00a;__codexfc00b;__codexfc00c;__codexfc00d;__codexfc00e;__codexfc00f;__codexfc010;__codexfc011;__codexfc012;__codexfc013;__codexfc014;__codexfc015;__codexfc016;__codexfc017;__codexfc018;__codexfc019;__codexfc01a;__codexfc01b;__codexfc01c;__codexfc01d;__codexfc01e;__codexfc01f;__codexfc020;__codexfc021;__codexfc022;__codexfc023;__codexfc024;__codexfc025;__codexfc026;__codexfc027;__codexfc028;__codexfc029;__codexfc02a;__codexfc02b;__codexfc02c;__codexfc02d;__codexfc02e;__codexfc02f;__codexfc030;__codexfc031;...(16384 chars), encoding=UTF-8]
 java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=__codexfe000;__codexfe001;__codexfe002;__codexfe003;__codexfe004;__codexfe005;__codexfe006;__codexfe007;__codexfe008;__codexfe009;__codexfe00a;__codexfe00b;__codexfe00c;__codexfe00d;__codexfe00e;__codexfe00f;__codexfe010;__codexfe011;__codexfe012;__codexfe013;__codexfe014;__codexfe015;__codexfe016;__codexfe017;__codexfe018;__codexfe019;__codexfe01a;__codexfe01b;__codexfe01c;__codexfe01d;__codexfe01e;__codexfe01f;__codexfe020;__codexfe021;__codexfe022;__codexfe023;__codexfe024;__codexfe025;__codexfe026;__codexfe027;__codexfe028;__codexfe029;__codexfe02a;__codexfe02b;__codexfe02c;__codexfe02d;__codexfe02e;__codexfe02f;__codexfe030;__codexfe031;...(16384 chars), encoding=UTF-8]
-java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=__codex100000;__codex100001;__codex100002;__codex100003;__codex100004;__codex100005;__codex100006;__codex100007;__codex100008;__codex100009;__codex10000a;__codex10000b;__codex10000c;__codex10000d;__codex10000e;__codex10000f;__codex100010;__codex100011;__codex100012;__codex100013;__codex100014;__codex100015;__codex100016;__codex100017;__codex100018;__codex100019;__codex10001a;__codex10001b;__codex10001c;__codex10001d;__codex10001e;__codex10001f;__codex100020;__codex100021;__codex100022;__codex100023;__codex100024;__codex100025;__codex100026;__codex100027;__codex100028;__codex100029;__codex10002a;__codex10002b;__codex10002c;__codex10002d;__codex10002e;__codex10002f;__codex100030;__codex100031;...(16384 chars), encoding=UTF-8]
-java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=__codex102000;__codex102001;__codex102002;__codex102003;__codex102004;__codex102005;__codex102006;__codex102007;__codex102008;__codex102009;__codex10200a;__codex10200b;__codex10200c;__codex10200d;__codex10200e;__codex10200f;__codex102010;__codex102011;__codex102012;__codex102013;__codex102014;__codex102015;__codex102016;__codex102017;__codex102018;__codex102019;__codex10201a;__codex10201b;__codex10201c;__codex10201d;__codex10201e;__codex10201f;__codex102020;__codex102021;__codex102022;__codex102023;__codex102024;__codex102025;__codex102026;__codex102027;__codex102028;__codex102029;__codex10202a;__codex10202b;__codex10202c;__codex10202d;__codex10202e;__codex10202f;__codex102030;__codex102031;...(16384 chars), encoding=UTF-8]
-java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=__codex104000;__codex104001;__codex104002;__codex104003;__codex104004;__codex104005;__codex104006;__codex104007;__codex104008;__codex104009;__codex10400a;__codex10400b;__codex10400c;__codex10400d;__codex10400e;__codex10400f;__codex104010;__codex104011;__codex104012;__codex104013;__codex104014;__codex104015;__codex104016;__codex104017;__codex104018;__codex104019;__codex10401a;__codex10401b;__codex10401c;__codex10401d;__codex10401e;__codex10401f;__codex104020;__codex104021;__codex104022;__codex104023;__codex104024;__codex104025;__codex104026;__codex104027;__codex104028;__codex104029;__codex10402a;__codex10402b;__codex10402c;__codex10402d;__codex10402e;__codex10402f;__codex104030;__codex104031;...(16384 chars), encoding=UTF-8]
-java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=__codex106000;__codex106001;__codex106002;__codex106003;__codex106004;__codex106005;__codex106006;__codex106007;__codex106008;__codex106009;__codex10600a;__codex10600b;__codex10600c;__codex10600d;__codex10600e;__codex10600f;__codex106010;__codex106011;__codex106012;__codex106013;__codex106014;__codex106015;__codex106016;__codex106017;__codex106018;__codex106019;__codex10601a;__codex10601b;__codex10601c;__codex10601d;__codex10601e;__codex10601f;__codex106020;__codex106021;__codex106022;__codex106023;__codex106024;__codex106025;__codex106026;__codex106027;__codex106028;__codex106029;__codex10602a;__codex10602b;__codex10602c;__codex10602d;__codex10602e;__codex10602f;__codex106030;__codex106031;...(16384 chars), encoding=UTF-8]
-java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=__codex108000;__codex108001;__codex108002;__codex108003;__codex108004;__codex108005;__codex108006;__codex108007;__codex108008;__codex108009;__codex10800a;__codex10800b;__codex10800c;__codex10800d;__codex10800e;__codex10800f;__codex108010;__codex108011;__codex108012;__codex108013;__codex108014;__codex108015;__codex108016;__codex108017;__codex108018;__codex108019;__codex10801a;__codex10801b;__codex10801c;__codex10801d;__codex10801e;__codex10801f;__codex108020;__codex108021;__codex108022;__codex108023;__codex108024;__codex108025;__codex108026;__codex108027;__codex108028;__codex108029;__codex10802a;__codex10802b;__codex10802c;__codex10802d;__codex10802e;__codex10802f;__codex108030;__codex108031;...(16384 chars), encoding=UTF-8]
-java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=__codex10a000;__codex10a001;__codex10a002;__codex10a003;__codex10a004;__codex10a005;__codex10a006;__codex10a007;__codex10a008;__codex10a009;__codex10a00a;__codex10a00b;__codex10a00c;__codex10a00d;__codex10a00e;__codex10a00f;__codex10a010;__codex10a011;__codex10a012;__codex10a013;__codex10a014;__codex10a015;__codex10a016;__codex10a017;__codex10a018;__codex10a019;__codex10a01a;__codex10a01b;__codex10a01c;__codex10a01d;__codex10a01e;__codex10a01f;__codex10a020;__codex10a021;__codex10a022;__codex10a023;__codex10a024;__codex10a025;__codex10a026;__codex10a027;__codex10a028;__codex10a029;__codex10a02a;__codex10a02b;__codex10a02c;__codex10a02d;__codex10a02e;__codex10a02f;__codex10a030;__codex10a031;...(16384 chars), encoding=UTF-8]
-java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=__codex10c000;__codex10c001;__codex10c002;__codex10c003;__codex10c004;__codex10c005;__codex10c006;__codex10c007;__codex10c008;__codex10c009;__codex10c00a;__codex10c00b;__codex10c00c;__codex10c00d;__codex10c00e;__codex10c00f;__codex10c010;__codex10c011;__codex10c012;__codex10c013;__codex10c014;__codex10c015;__codex10c016;__codex10c017;__codex10c018;__codex10c019;__codex10c01a;__codex10c01b;__codex10c01c;__codex10c01d;__codex10c01e;__codex10c01f;__codex10c020;__codex10c021;__codex10c022;__codex10c023;__codex10c024;__codex10c025;__codex10c026;__codex10c027;__codex10c028;__codex10c029;__codex10c02a;__codex10c02b;__codex10c02c;__codex10c02d;__codex10c02e;__codex10c02f;__codex10c030;__codex10c031;...(16384 chars), encoding=UTF-8]
-java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=__codex10e000;__codex10e001;__codex10e002;__codex10e003;__codex10e004;__codex10e005;__codex10e006;__codex10e007;__codex10e008;__codex10e009;__codex10e00a;__codex10e00b;__codex10e00c;__codex10e00d;__codex10e00e;__codex10e00f;__codex10e010;__codex10e011;__codex10e012;__codex10e013;__codex10e014;__codex10e015;__codex10e016;__codex10e017;__codex10e018;__codex10e019;__codex10e01a;__codex10e01b;__codex10e01c;__codex10e01d;__codex10e01e;__codex10e01f;__codex10e020;__codex10e021;__codex10e022;__codex10e023;__codex10e024;__codex10e025;__codex10e026;__codex10e027;__codex10e028;__codex10e029;__codex10e02a;__codex10e02b;__codex10e02c;__codex10e02d;__codex10e02e;__codex10e02f;__codex10e030;__codex10e031;...(16384 chars), encoding=UTF-8]
-java-pgjdbc/org.postgresql.jdbc.LongObjectArraysTest.test2dBinary
-java-pgjdbc/org.postgresql.jdbc.LongObjectArraysTest.testObjectArrayCopy
-java-pgjdbc/org.postgresql.jdbc.LongObjectArraysTest.test2dString
-java-pgjdbc/org.postgresql.jdbc.LongObjectArraysTest.test3dBinary
-java-pgjdbc/org.postgresql.jdbc.LongObjectArraysTest.testObject3dArrayCopy
-java-pgjdbc/org.postgresql.jdbc.LongObjectArraysTest.test3dString
-java-pgjdbc/org.postgresql.jdbc.LongObjectArraysTest.testBinary
-java-pgjdbc/org.postgresql.jdbc.LongObjectArraysTest.testString
-java-pgjdbc/org.postgresql.jdbc.LongObjectArraysTest.testObject2dArrayCopy
-java-pgjdbc/org.postgresql.jdbc.ByteaArraysTest.testObjectArrayWrapper
-java-pgjdbc/org.postgresql.jdbc.ByteaArraysTest.test2dBinary
-java-pgjdbc/org.postgresql.jdbc.ByteaArraysTest.testObjectArrayCopy
-java-pgjdbc/org.postgresql.jdbc.ByteaArraysTest.test2dString
-java-pgjdbc/org.postgresql.jdbc.ByteaArraysTest.test3dBinary
-java-pgjdbc/org.postgresql.jdbc.ByteaArraysTest.testObject3dArrayCopy
-java-pgjdbc/org.postgresql.jdbc.ByteaArraysTest.test3dString
-java-pgjdbc/org.postgresql.jdbc.ByteaArraysTest.testBinary
-java-pgjdbc/org.postgresql.jdbc.ByteaArraysTest.testString
-java-pgjdbc/org.postgresql.jdbc.ByteaArraysTest.testObject2dArrayCopy
-java-pgjdbc/org.postgresql.util.BigDecimalByteConverter2Test.testBigDecimal10_pow_131072_minus_1
-java-pgjdbc/org.postgresql.jdbc.DoubleObjectArraysTest.test2dBinary
-java-pgjdbc/org.postgresql.jdbc.DoubleObjectArraysTest.testObjectArrayCopy
-java-pgjdbc/org.postgresql.jdbc.DoubleObjectArraysTest.test2dString
-java-pgjdbc/org.postgresql.jdbc.DoubleObjectArraysTest.test3dBinary
-java-pgjdbc/org.postgresql.jdbc.DoubleObjectArraysTest.testObject3dArrayCopy
-java-pgjdbc/org.postgresql.jdbc.DoubleObjectArraysTest.test3dString
-java-pgjdbc/org.postgresql.jdbc.DoubleObjectArraysTest.testBinary
-java-pgjdbc/org.postgresql.jdbc.DoubleObjectArraysTest.testString
-java-pgjdbc/org.postgresql.jdbc.DoubleObjectArraysTest.testObject2dArrayCopy
-java-pgjdbc/org.postgresql.test.ssl.LazyKeyManagerTest.testChooseClientAlias
-java-pgjdbc/org.postgresql.test.ssl.LazyKeyManagerTest.testLoadP12Key
-java-pgjdbc/org.postgresql.test.ssl.LazyKeyManagerTest.testLoadKey
-java-pgjdbc/org.postgresql.util.OSUtilTest.getUserConfigRootDirectory()
-java-pgjdbc/org.postgresql.core.ParserTest.testEscapeProcessing
-java-pgjdbc/org.postgresql.core.ParserTest.testUpdateCommandParsing
-java-pgjdbc/org.postgresql.core.ParserTest.insertReturningInWith
-java-pgjdbc/org.postgresql.core.ParserTest.testSelectCommandParsing
-java-pgjdbc/org.postgresql.core.ParserTest.testUnterminatedEscape
-java-pgjdbc/org.postgresql.core.ParserTest.testDeleteCommandParsing
-java-pgjdbc/org.postgresql.core.ParserTest.testMoveCommandParsing
-java-pgjdbc/org.postgresql.core.ParserTest.testWithCommandParsing
-java-pgjdbc/org.postgresql.core.ParserTest.createTableParseWithOnUpdateClause
-java-pgjdbc/org.postgresql.core.ParserTest.createTableParseWithOnDeleteClause
-java-pgjdbc/org.postgresql.core.ParserTest.insertBatchedReWriteOnConflictUpdateConstant
-java-pgjdbc/org.postgresql.core.ParserTest.testModifyJdbcCall
-java-pgjdbc/org.postgresql.core.ParserTest.insertSelectReturning
-java-pgjdbc/org.postgresql.core.ParserTest.valuesTableParse
-java-pgjdbc/org.postgresql.core.ParserTest.insertBatchedReWriteOnConflictUpdateBind
-java-pgjdbc/org.postgresql.core.ParserTest.alterTableParseWithOnUpdateClause
-java-pgjdbc/org.postgresql.core.ParserTest.alterTableParseWithOnDeleteClause
-java-pgjdbc/org.postgresql.core.ParserTest.insertMultiInsert
-java-pgjdbc/org.postgresql.core.ParserTest.insertBatchedReWriteOnConflict
-java-pgjdbc/org.postgresql.core.ParserTest.testParseV14functions
-java-pgjdbc/org.postgresql.test.core.FixedLengthOutputStreamTest.testSingleByteWrites
-java-pgjdbc/org.postgresql.test.core.FixedLengthOutputStreamTest.testMultipleByteWrites
-java-pgjdbc/org.postgresql.test.core.FixedLengthOutputStreamTest.testMultipleBytesOverLimit
-java-pgjdbc/org.postgresql.test.core.FixedLengthOutputStreamTest.testSingleByteOverLimit
-java-pgjdbc/org.postgresql.util.ReaderInputStreamTest.unmatchedTrailingSurrogateInputTest
-java-pgjdbc/org.postgresql.util.ReaderInputStreamTest.singleCharArrayReadTest
-java-pgjdbc/org.postgresql.util.ReaderInputStreamTest.nullArrayReadTest
-java-pgjdbc/org.postgresql.util.ReaderInputStreamTest.zeroLengthArrayReadTest
-java-pgjdbc/org.postgresql.util.ReaderInputStreamTest.unmatchedLeadingSurrogateInputTest
-java-pgjdbc/org.postgresql.util.ReaderInputStreamTest.readsEqualToBlockSizeTest
-java-pgjdbc/org.postgresql.util.ReaderInputStreamTest.negativeOffsetArrayReadTest
-java-pgjdbc/org.postgresql.util.ReaderInputStreamTest.invalidOffsetArrayReadTest
-java-pgjdbc/org.postgresql.util.ReaderInputStreamTest.SimpleTest
-java-pgjdbc/org.postgresql.util.ReaderInputStreamTest.cbufTooSmallReaderTest
-java-pgjdbc/org.postgresql.util.ReaderInputStreamTest.invalidInputTest
-java-pgjdbc/org.postgresql.util.ReaderInputStreamTest.malformedSingleCharArrayReadTest
-java-pgjdbc/org.postgresql.util.ReaderInputStreamTest.negativeLengthArrayReadTest
-java-pgjdbc/org.postgresql.util.ReaderInputStreamTest.NullReaderTest
-java-pgjdbc/org.postgresql.util.ReaderInputStreamTest.inputSmallerThanCbufsizeTest
-java-pgjdbc/org.postgresql.util.ReaderInputStreamTest.tooManyReadsTest
-java-pgjdbc/org.postgresql.util.ReaderInputStreamTest.invalidLengthArrayReadTest
-java-pgjdbc/org.postgresql.util.ReaderInputStreamTest.surrogatePairSpansCharBufBoundaryTest
-java-pgjdbc/org.postgresql.util.PGbyteaTest.testHexDecode_lower
-java-pgjdbc/org.postgresql.util.PGbyteaTest.testHexDecode_upper
-java-pgjdbc/org.postgresql.test.jdbc2.EncodingTest.testCreation
-java-pgjdbc/org.postgresql.test.jdbc2.EncodingTest.testTransformations
-java-pgjdbc/org.postgresql.test.jdbc2.EncodingTest.testReader
+java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=eät Σ π 福, it is good, encoding=UTF-8]
+java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=longer but still not really all that long, encoding=UTF-8]
+java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=short simple, encoding=UTF-8]
+java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=          ​‌‍‎‏‐‑‒–—―‖‗‘’‚‛“”„‟†‡•‣․‥…‧  ‪‫‬‭‮ ‰‱′″‴‵‶‷‸‹›※‼‽‾‿⁀⁁⁂⁃⁄⁅⁆⁇⁈⁉⁊⁋⁌⁍⁎⁏⁐⁑⁒⁓⁔⁕⁖⁗⁘⁙⁚⁛⁜⁝⁞ ⁠⁡⁢⁣⁤...(8192 chars), encoding=UTF-8]
+java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=䀁䀂䀃䀄䀅䀆䀇䀈䀉䀊䀋䀌䀍䀎䀏䀐䀑䀒䀓䀔䀕䀖䀗䀘䀙䀚䀛䀜䀝䀞䀟䀠䀡䀢䀣䀤䀥䀦䀧䀨䀩䀪䀫䀬䀭䀮䀯䀰䀱䀲䀳䀴䀵䀶䀷䀸䀹䀺䀻䀼䀽䀾䀿䁀䁁䁂䁃䁄䁅䁆䁇䁈䁉䁊䁋䁌䁍䁎䁏䁐䁑䁒䁓䁔䁕䁖䁗䁘䁙䁚䁛䁜䁝䁞䁟䁠䁡䁢䁣䁤...(8192 chars), encoding=UTF-8]
+java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=态怂怃怄怅怆怇怈怉怊怋怌怍怎怏怐怑怒怓怔怕怖怗怘怙怚怛怜思怞怟怠怡怢怣怤急怦性怨怩怪怫怬怭怮怯怰怱怲怳怴怵怶怷怸怹怺总怼怽怾怿恀恁恂恃恄恅恆恇恈恉恊恋恌恍恎恏恐恑恒恓恔恕恖恗恘恙恚恛恜恝恞恟恠恡恢恣恤...(8192 chars), encoding=UTF-8]
+java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=老耂考耄者耆耇耈耉耊耋而耍耎耏耐耑耒耓耔耕耖耗耘耙耚耛耜耝耞耟耠耡耢耣耤耥耦耧耨耩耪耫耬耭耮耯耰耱耲耳耴耵耶耷耸耹耺耻耼耽耾耿聀聁聂聃聄聅聆聇聈聉聊聋职聍聎聏聐聑聒聓联聕聖聗聘聙聚聛聜聝聞聟聠聡聢聣聤...(8192 chars), encoding=UTF-8]
+java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=ꀁꀂꀃꀄꀅꀆꀇꀈꀉꀊꀋꀌꀍꀎꀏꀐꀑꀒꀓꀔꀕꀖꀗꀘꀙꀚꀛꀜꀝꀞꀟꀠꀡꀢꀣꀤꀥꀦꀧꀨꀩꀪꀫꀬꀭꀮꀯꀰꀱꀲꀳꀴꀵꀶꀷꀸꀹꀺꀻꀼꀽꀾꀿꁀꁁꁂꁃꁄꁅꁆꁇꁈꁉꁊꁋꁌꁍꁎꁏꁐꁑꁒꁓꁔꁕꁖꁗꁘꁙꁚꁛꁜꁝꁞꁟꁠꁡꁢꁣꁤ...(8192 chars), encoding=UTF-8]
+java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=쀁쀂쀃쀄쀅쀆쀇쀈쀉쀊쀋쀌쀍쀎쀏쀐쀑쀒쀓쀔쀕쀖쀗쀘쀙쀚쀛쀜쀝쀞쀟쀠쀡쀢쀣쀤쀥쀦쀧쀨쀩쀪쀫쀬쀭쀮쀯쀰쀱쀲쀳쀴쀵쀶쀷쀸쀹쀺쀻쀼쀽쀾쀿쁀쁁쁂쁃쁄쁅쁆쁇쁈쁉쁊쁋쁌쁍쁎쁏쁐쁑쁒쁓쁔쁕쁖쁗쁘쁙쁚쁛쁜쁝쁞쁟쁠쁡쁢쁣쁤...(6143 chars), encoding=UTF-8]
+java-pgjdbc/org.postgresql.core.UTF8EncodingTest.test[string=...(8192 chars), encoding=UTF-8]
+java-pgjdbc/org.postgresql.core.v3.V3ParameterListTests.testMergeOfParameterLists
+java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testAddingSameQueryTwoTimes
+java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testAddingSameQueryTwoTimesWithoutAdaptiveFetch
+java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testAddingSingleQuery
+java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testAddingSingleQueryWithoutAdaptiveFetch
+java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testAddingTwoDifferentQueries
+java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testAddingTwoDifferentQueriesWithoutAdaptiveFetch
+java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testConstructorDefault
+java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testConstructorWithAdaptiveFetch
+java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testConstructorWithAllProperties
+java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testConstructorWithMaximumSize
+java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testConstructorWithMinimumSize
+java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testGettingAdaptiveFetchIfFalse
+java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testGettingAdaptiveFetchIfTrue
+java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testGettingFetchSizeForExistingQuery
+java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testGettingFetchSizeForExistingQueryIfAdaptiveFetchFalse
+java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testGettingFetchSizeForNotExistingQuery
+java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testGettingFetchSizeForNotExistingQueryIfAdaptiveFetchFalse
+java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testRemovingExistingQuery
+java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testRemovingExistingQueryIfAdaptiveFetchFalse
+java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testRemovingExistingQueryWithLargeCounter
+java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testRemovingExistingQueryWithLargeCounterIfAdaptiveFetchFalse
+java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testRemovingExistingQueryWithMoreQueriesCached
+java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testRemovingExistingQueryWithMoreQueriesCachedIfAdaptiveFetchFalse
+java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testRemovingNotExistingQuery
+java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testRemovingNotExistingQueryIfAdaptiveFetchFalse
+java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testSettingAdaptiveFetchAsFalse
+java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testSettingAdaptiveFetchAsTrue
+java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testUpdatingAdaptiveFetchSize
+java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testUpdatingAdaptiveFetchSizeForNotExistingQuery
+java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testUpdatingAdaptiveFetchSizeForNotExistingQueryIfAdaptiveFetchFalse
+java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testUpdatingAdaptiveFetchSizeIfAdaptiveFetchFalse
+java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testUpdatingAdaptiveFetchSizeWithMaximumSize
+java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testUpdatingAdaptiveFetchSizeWithMaximumSizeIfAdaptiveFetchFalse
+java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testUpdatingAdaptiveFetchSizeWithMinimumSize
+java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testUpdatingAdaptiveFetchSizeWithMinimumSizeIfAdaptiveFetchFalse
+java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testUpdatingAdaptiveFetchSizeWithMoreQueriesInMap
+java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testUpdatingAdaptiveFetchSizeWithMoreQueriesInMapIfAdaptiveFetchFalse
+java-pgjdbc/org.postgresql.jdbc.ArraysTest.testBinaryNotSupported
+java-pgjdbc/org.postgresql.jdbc.ArraysTest.testNoByteArray
+java-pgjdbc/org.postgresql.jdbc.ArraysTest.testNonArrayNotSupported
+java-pgjdbc/org.postgresql.jdbc.BigDecimalObjectArraysTest.test2dBinary
+java-pgjdbc/org.postgresql.jdbc.BigDecimalObjectArraysTest.test2dString
+java-pgjdbc/org.postgresql.jdbc.BigDecimalObjectArraysTest.test3dBinary
+java-pgjdbc/org.postgresql.jdbc.BigDecimalObjectArraysTest.test3dString
+java-pgjdbc/org.postgresql.jdbc.BigDecimalObjectArraysTest.testBinary
+java-pgjdbc/org.postgresql.jdbc.BigDecimalObjectArraysTest.testObject2dArrayCopy
+java-pgjdbc/org.postgresql.jdbc.BigDecimalObjectArraysTest.testObject3dArrayCopy
+java-pgjdbc/org.postgresql.jdbc.BigDecimalObjectArraysTest.testObjectArrayCopy
+java-pgjdbc/org.postgresql.jdbc.BigDecimalObjectArraysTest.testString
 java-pgjdbc/org.postgresql.jdbc.BooleanArraysTest.test2dBinary
-java-pgjdbc/org.postgresql.jdbc.BooleanArraysTest.testObjectArrayCopy
 java-pgjdbc/org.postgresql.jdbc.BooleanArraysTest.test2dString
 java-pgjdbc/org.postgresql.jdbc.BooleanArraysTest.test3dBinary
-java-pgjdbc/org.postgresql.jdbc.BooleanArraysTest.testObject3dArrayCopy
 java-pgjdbc/org.postgresql.jdbc.BooleanArraysTest.test3dString
 java-pgjdbc/org.postgresql.jdbc.BooleanArraysTest.testBinary
-java-pgjdbc/org.postgresql.jdbc.BooleanArraysTest.testString
 java-pgjdbc/org.postgresql.jdbc.BooleanArraysTest.testObject2dArrayCopy
-java-pgjdbc/org.postgresql.test.ssl.CommonNameVerifierTest.comparePatterns[a=com, b=host.com]
-java-pgjdbc/org.postgresql.test.ssl.CommonNameVerifierTest.comparePatterns[a=*.com, b=host.com]
-java-pgjdbc/org.postgresql.test.ssl.CommonNameVerifierTest.comparePatterns[a=*.com, b=*.*.com]
-java-pgjdbc/org.postgresql.test.ssl.CommonNameVerifierTest.comparePatterns[a=**.com, b=*.com]
-java-pgjdbc/org.postgresql.test.ssl.CommonNameVerifierTest.comparePatterns[a=a.com, b=*.host.com]
-java-pgjdbc/org.postgresql.test.ssl.CommonNameVerifierTest.comparePatterns[a=host.com, b=subhost.host.com]
-java-pgjdbc/org.postgresql.test.ssl.CommonNameVerifierTest.comparePatterns[a=host.com, b=host.com]
-java-pgjdbc/org.postgresql.test.util.ObjectFactoryTest.testInstantiateInvalidSocketFactory()
-java-pgjdbc/org.postgresql.test.util.ObjectFactoryTest.testInvalidAuthenticationPlugin()
-java-pgjdbc/org.postgresql.test.util.ObjectFactoryTest.testInvalidSocketFactory()
-java-pgjdbc/org.postgresql.test.jdbc42.TimestampUtilsTest.testToOffsetTime
-java-pgjdbc/org.postgresql.test.jdbc42.TimestampUtilsTest.testToStringOfLocalTime
-java-pgjdbc/org.postgresql.test.jdbc42.TimestampUtilsTest.testToStringOfOffsetTime
-java-pgjdbc/org.postgresql.test.jdbc42.TimestampUtilsTest.testToLocalTime
+java-pgjdbc/org.postgresql.jdbc.BooleanArraysTest.testObject3dArrayCopy
+java-pgjdbc/org.postgresql.jdbc.BooleanArraysTest.testObjectArrayCopy
+java-pgjdbc/org.postgresql.jdbc.BooleanArraysTest.testString
+java-pgjdbc/org.postgresql.jdbc.BooleanObjectArraysTest.test2dBinary
+java-pgjdbc/org.postgresql.jdbc.BooleanObjectArraysTest.test2dString
+java-pgjdbc/org.postgresql.jdbc.BooleanObjectArraysTest.test3dBinary
+java-pgjdbc/org.postgresql.jdbc.BooleanObjectArraysTest.test3dString
+java-pgjdbc/org.postgresql.jdbc.BooleanObjectArraysTest.testBinary
+java-pgjdbc/org.postgresql.jdbc.BooleanObjectArraysTest.testObject2dArrayCopy
+java-pgjdbc/org.postgresql.jdbc.BooleanObjectArraysTest.testObject3dArrayCopy
+java-pgjdbc/org.postgresql.jdbc.BooleanObjectArraysTest.testObjectArrayCopy
+java-pgjdbc/org.postgresql.jdbc.BooleanObjectArraysTest.testString
+java-pgjdbc/org.postgresql.jdbc.ByteaArraysTest.test2dBinary
+java-pgjdbc/org.postgresql.jdbc.ByteaArraysTest.test2dString
+java-pgjdbc/org.postgresql.jdbc.ByteaArraysTest.test3dBinary
+java-pgjdbc/org.postgresql.jdbc.ByteaArraysTest.test3dString
+java-pgjdbc/org.postgresql.jdbc.ByteaArraysTest.testBinary
+java-pgjdbc/org.postgresql.jdbc.ByteaArraysTest.testObject2dArrayCopy
+java-pgjdbc/org.postgresql.jdbc.ByteaArraysTest.testObject3dArrayCopy
+java-pgjdbc/org.postgresql.jdbc.ByteaArraysTest.testObjectArrayCopy
+java-pgjdbc/org.postgresql.jdbc.ByteaArraysTest.testObjectArrayWrapper
+java-pgjdbc/org.postgresql.jdbc.ByteaArraysTest.testString
 java-pgjdbc/org.postgresql.jdbc.DoubleArraysTest.test2dBinary
-java-pgjdbc/org.postgresql.jdbc.DoubleArraysTest.testObjectArrayCopy
 java-pgjdbc/org.postgresql.jdbc.DoubleArraysTest.test2dString
 java-pgjdbc/org.postgresql.jdbc.DoubleArraysTest.test3dBinary
-java-pgjdbc/org.postgresql.jdbc.DoubleArraysTest.testObject3dArrayCopy
 java-pgjdbc/org.postgresql.jdbc.DoubleArraysTest.test3dString
 java-pgjdbc/org.postgresql.jdbc.DoubleArraysTest.testBinary
-java-pgjdbc/org.postgresql.jdbc.DoubleArraysTest.testString
 java-pgjdbc/org.postgresql.jdbc.DoubleArraysTest.testObject2dArrayCopy
-java-pgjdbc/org.postgresql.test.jdbc2.LoginTimeoutTest.testTimeoutOccurs
-java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValueException[0: Test with valueToParse=100, expectedResult=100]
-java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValue[0: Test with valueToParse=100, expectedResult=100]
-java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValueException[1: Test with valueToParse=10K, expectedResult=10,000]
-java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValue[1: Test with valueToParse=10K, expectedResult=10,000]
-java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValueException[2: Test with valueToParse=25M, expectedResult=25,000,000]
-java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValue[2: Test with valueToParse=25M, expectedResult=25,000,000]
-java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValueException[3: Test with valueToParse=35G, expectedResult=1,449,551,462]
-java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValue[3: Test with valueToParse=35G, expectedResult=1,449,551,462]
-java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValueException[4: Test with valueToParse=1T, expectedResult=1,449,551,462]
-java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValue[4: Test with valueToParse=1T, expectedResult=1,449,551,462]
-java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValueException[5: Test with valueToParse=5p, expectedResult=80,530,636]
-java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValue[5: Test with valueToParse=5p, expectedResult=80,530,636]
-java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValueException[6: Test with valueToParse=10pct, expectedResult=161,061,273]
-java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValue[6: Test with valueToParse=10pct, expectedResult=161,061,273]
-java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValueException[7: Test with valueToParse=15percent, expectedResult=241,591,910]
-java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValue[7: Test with valueToParse=15percent, expectedResult=241,591,910]
-java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValueException[8: Test with valueToParse=, expectedResult=-1]
-java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValue[8: Test with valueToParse=, expectedResult=-1]
-java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValueException[9: Test with valueToParse=null, expectedResult=-1]
-java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValue[9: Test with valueToParse=null, expectedResult=-1]
-java-pgjdbc/org.postgresql.util.PGtokenizerTest.tokenize()
-java-pgjdbc/org.postgresql.util.PGtokenizerTest.tokenize2()
-java-pgjdbc/org.postgresql.util.PGtokenizerTest.tokenize3()
-java-pgjdbc/org.postgresql.util.PGtokenizerTest.tokenize4()
-java-pgjdbc/org.postgresql.util.PGtokenizerTest.removePara()
-java-pgjdbc/org.postgresql.core.v3.V3ParameterListTests.testMergeOfParameterLists
+java-pgjdbc/org.postgresql.jdbc.DoubleArraysTest.testObject3dArrayCopy
+java-pgjdbc/org.postgresql.jdbc.DoubleArraysTest.testObjectArrayCopy
+java-pgjdbc/org.postgresql.jdbc.DoubleArraysTest.testString
+java-pgjdbc/org.postgresql.jdbc.DoubleObjectArraysTest.test2dBinary
+java-pgjdbc/org.postgresql.jdbc.DoubleObjectArraysTest.test2dString
+java-pgjdbc/org.postgresql.jdbc.DoubleObjectArraysTest.test3dBinary
+java-pgjdbc/org.postgresql.jdbc.DoubleObjectArraysTest.test3dString
+java-pgjdbc/org.postgresql.jdbc.DoubleObjectArraysTest.testBinary
+java-pgjdbc/org.postgresql.jdbc.DoubleObjectArraysTest.testObject2dArrayCopy
+java-pgjdbc/org.postgresql.jdbc.DoubleObjectArraysTest.testObject3dArrayCopy
+java-pgjdbc/org.postgresql.jdbc.DoubleObjectArraysTest.testObjectArrayCopy
+java-pgjdbc/org.postgresql.jdbc.DoubleObjectArraysTest.testString
+java-pgjdbc/org.postgresql.jdbc.FloatArraysTest.test2dBinary
+java-pgjdbc/org.postgresql.jdbc.FloatArraysTest.test2dString
+java-pgjdbc/org.postgresql.jdbc.FloatArraysTest.test3dBinary
+java-pgjdbc/org.postgresql.jdbc.FloatArraysTest.test3dString
+java-pgjdbc/org.postgresql.jdbc.FloatArraysTest.testBinary
+java-pgjdbc/org.postgresql.jdbc.FloatArraysTest.testObject2dArrayCopy
+java-pgjdbc/org.postgresql.jdbc.FloatArraysTest.testObject3dArrayCopy
+java-pgjdbc/org.postgresql.jdbc.FloatArraysTest.testObjectArrayCopy
+java-pgjdbc/org.postgresql.jdbc.FloatArraysTest.testString
+java-pgjdbc/org.postgresql.jdbc.FloatObjectArraysTest.test2dBinary
+java-pgjdbc/org.postgresql.jdbc.FloatObjectArraysTest.test2dString
+java-pgjdbc/org.postgresql.jdbc.FloatObjectArraysTest.test3dBinary
+java-pgjdbc/org.postgresql.jdbc.FloatObjectArraysTest.test3dString
+java-pgjdbc/org.postgresql.jdbc.FloatObjectArraysTest.testBinary
+java-pgjdbc/org.postgresql.jdbc.FloatObjectArraysTest.testObject2dArrayCopy
+java-pgjdbc/org.postgresql.jdbc.FloatObjectArraysTest.testObject3dArrayCopy
+java-pgjdbc/org.postgresql.jdbc.FloatObjectArraysTest.testObjectArrayCopy
+java-pgjdbc/org.postgresql.jdbc.FloatObjectArraysTest.testString
+java-pgjdbc/org.postgresql.jdbc.IntArraysTest.test2dBinary
+java-pgjdbc/org.postgresql.jdbc.IntArraysTest.test2dString
+java-pgjdbc/org.postgresql.jdbc.IntArraysTest.test3dBinary
+java-pgjdbc/org.postgresql.jdbc.IntArraysTest.test3dString
+java-pgjdbc/org.postgresql.jdbc.IntArraysTest.testBinary
+java-pgjdbc/org.postgresql.jdbc.IntArraysTest.testObject2dArrayCopy
+java-pgjdbc/org.postgresql.jdbc.IntArraysTest.testObject3dArrayCopy
+java-pgjdbc/org.postgresql.jdbc.IntArraysTest.testObjectArrayCopy
+java-pgjdbc/org.postgresql.jdbc.IntArraysTest.testString
+java-pgjdbc/org.postgresql.jdbc.IntegerObjectArraysTest.test2dBinary
+java-pgjdbc/org.postgresql.jdbc.IntegerObjectArraysTest.test2dString
+java-pgjdbc/org.postgresql.jdbc.IntegerObjectArraysTest.test3dBinary
+java-pgjdbc/org.postgresql.jdbc.IntegerObjectArraysTest.test3dString
+java-pgjdbc/org.postgresql.jdbc.IntegerObjectArraysTest.testBinary
+java-pgjdbc/org.postgresql.jdbc.IntegerObjectArraysTest.testObject2dArrayCopy
+java-pgjdbc/org.postgresql.jdbc.IntegerObjectArraysTest.testObject3dArrayCopy
+java-pgjdbc/org.postgresql.jdbc.IntegerObjectArraysTest.testObjectArrayCopy
+java-pgjdbc/org.postgresql.jdbc.IntegerObjectArraysTest.testString
+java-pgjdbc/org.postgresql.jdbc.LongArraysTest.test2dBinary
+java-pgjdbc/org.postgresql.jdbc.LongArraysTest.test2dString
+java-pgjdbc/org.postgresql.jdbc.LongArraysTest.test3dBinary
+java-pgjdbc/org.postgresql.jdbc.LongArraysTest.test3dString
+java-pgjdbc/org.postgresql.jdbc.LongArraysTest.testBinary
+java-pgjdbc/org.postgresql.jdbc.LongArraysTest.testObject2dArrayCopy
+java-pgjdbc/org.postgresql.jdbc.LongArraysTest.testObject3dArrayCopy
+java-pgjdbc/org.postgresql.jdbc.LongArraysTest.testObjectArrayCopy
+java-pgjdbc/org.postgresql.jdbc.LongArraysTest.testString
+java-pgjdbc/org.postgresql.jdbc.LongObjectArraysTest.test2dBinary
+java-pgjdbc/org.postgresql.jdbc.LongObjectArraysTest.test2dString
+java-pgjdbc/org.postgresql.jdbc.LongObjectArraysTest.test3dBinary
+java-pgjdbc/org.postgresql.jdbc.LongObjectArraysTest.test3dString
+java-pgjdbc/org.postgresql.jdbc.LongObjectArraysTest.testBinary
+java-pgjdbc/org.postgresql.jdbc.LongObjectArraysTest.testObject2dArrayCopy
+java-pgjdbc/org.postgresql.jdbc.LongObjectArraysTest.testObject3dArrayCopy
+java-pgjdbc/org.postgresql.jdbc.LongObjectArraysTest.testObjectArrayCopy
+java-pgjdbc/org.postgresql.jdbc.LongObjectArraysTest.testString
+java-pgjdbc/org.postgresql.jdbc.ShortArraysTest.test2dBinary
+java-pgjdbc/org.postgresql.jdbc.ShortArraysTest.test2dString
+java-pgjdbc/org.postgresql.jdbc.ShortArraysTest.test3dBinary
+java-pgjdbc/org.postgresql.jdbc.ShortArraysTest.test3dString
+java-pgjdbc/org.postgresql.jdbc.ShortArraysTest.testBinary
+java-pgjdbc/org.postgresql.jdbc.ShortArraysTest.testObject2dArrayCopy
+java-pgjdbc/org.postgresql.jdbc.ShortArraysTest.testObject3dArrayCopy
+java-pgjdbc/org.postgresql.jdbc.ShortArraysTest.testObjectArrayCopy
+java-pgjdbc/org.postgresql.jdbc.ShortArraysTest.testString
+java-pgjdbc/org.postgresql.jdbc.ShortObjectArraysTest.test2dBinary
+java-pgjdbc/org.postgresql.jdbc.ShortObjectArraysTest.test2dString
+java-pgjdbc/org.postgresql.jdbc.ShortObjectArraysTest.test3dBinary
+java-pgjdbc/org.postgresql.jdbc.ShortObjectArraysTest.test3dString
+java-pgjdbc/org.postgresql.jdbc.ShortObjectArraysTest.testBinary
+java-pgjdbc/org.postgresql.jdbc.ShortObjectArraysTest.testObject2dArrayCopy
+java-pgjdbc/org.postgresql.jdbc.ShortObjectArraysTest.testObject3dArrayCopy
+java-pgjdbc/org.postgresql.jdbc.ShortObjectArraysTest.testObjectArrayCopy
+java-pgjdbc/org.postgresql.jdbc.ShortObjectArraysTest.testString
+java-pgjdbc/org.postgresql.jdbc.StringArraysTest.test2dBinary
+java-pgjdbc/org.postgresql.jdbc.StringArraysTest.test2dString
+java-pgjdbc/org.postgresql.jdbc.StringArraysTest.test3dBinary
+java-pgjdbc/org.postgresql.jdbc.StringArraysTest.test3dString
+java-pgjdbc/org.postgresql.jdbc.StringArraysTest.testBinary
+java-pgjdbc/org.postgresql.jdbc.StringArraysTest.testObject2dArrayCopy
+java-pgjdbc/org.postgresql.jdbc.StringArraysTest.testObject3dArrayCopy
+java-pgjdbc/org.postgresql.jdbc.StringArraysTest.testObjectArrayCopy
+java-pgjdbc/org.postgresql.jdbc.StringArraysTest.testString
 java-pgjdbc/org.postgresql.jdbcurlresolver.PgPassParserTest.getPassword11()
 java-pgjdbc/org.postgresql.jdbcurlresolver.PgPassParserTest.getPassword22()
 java-pgjdbc/org.postgresql.jdbcurlresolver.PgPassParserTest.getPassword31()
 java-pgjdbc/org.postgresql.jdbcurlresolver.PgPassParserTest.getPassword32()
 java-pgjdbc/org.postgresql.jdbcurlresolver.PgPassParserTest.getPassword41()
 java-pgjdbc/org.postgresql.jdbcurlresolver.PgPassParserTest.getPassword42()
-java-pgjdbc/org.postgresql.jdbc.ShortArraysTest.test2dBinary
-java-pgjdbc/org.postgresql.jdbc.ShortArraysTest.testObjectArrayCopy
-java-pgjdbc/org.postgresql.jdbc.ShortArraysTest.test2dString
-java-pgjdbc/org.postgresql.jdbc.ShortArraysTest.test3dBinary
-java-pgjdbc/org.postgresql.jdbc.ShortArraysTest.testObject3dArrayCopy
-java-pgjdbc/org.postgresql.jdbc.ShortArraysTest.test3dString
-java-pgjdbc/org.postgresql.jdbc.ShortArraysTest.testBinary
-java-pgjdbc/org.postgresql.jdbc.ShortArraysTest.testString
-java-pgjdbc/org.postgresql.jdbc.ShortArraysTest.testObject2dArrayCopy
+java-pgjdbc/org.postgresql.jdbcurlresolver.PgServiceConfParserTest.pgService11()
+java-pgjdbc/org.postgresql.jdbcurlresolver.PgServiceConfParserTest.pgService21()
+java-pgjdbc/org.postgresql.jdbcurlresolver.PgServiceConfParserTest.pgService22()
+java-pgjdbc/org.postgresql.jdbcurlresolver.PgServiceConfParserTest.pgService23()
+java-pgjdbc/org.postgresql.jdbcurlresolver.PgServiceConfParserTest.pgService31()
+java-pgjdbc/org.postgresql.jdbcurlresolver.PgServiceConfParserTest.pgService32()
+java-pgjdbc/org.postgresql.jdbcurlresolver.PgServiceConfParserTest.pgService41()
+java-pgjdbc/org.postgresql.jdbcurlresolver.PgServiceConfParserTest.pgService42()
+java-pgjdbc/org.postgresql.jdbcurlresolver.PgServiceConfParserTest.pgService43()
+java-pgjdbc/org.postgresql.jdbcurlresolver.PgServiceConfParserTest.pgService51()
+java-pgjdbc/org.postgresql.jdbcurlresolver.PgServiceConfParserTest.pgService52()
+java-pgjdbc/org.postgresql.jdbcurlresolver.PgServiceConfParserTest.pgService53()
+java-pgjdbc/org.postgresql.jdbcurlresolver.PgServiceConfParserTest.pgService61()
+java-pgjdbc/org.postgresql.replication.LogSequenceNumberTest.testCompareToMixedSign
+java-pgjdbc/org.postgresql.replication.LogSequenceNumberTest.testCompareToNegativeValues
+java-pgjdbc/org.postgresql.replication.LogSequenceNumberTest.testCompareToPositiveValues
+java-pgjdbc/org.postgresql.replication.LogSequenceNumberTest.testCompareToSameValue
+java-pgjdbc/org.postgresql.replication.LogSequenceNumberTest.testCompareToWithInvalid
+java-pgjdbc/org.postgresql.replication.LogSequenceNumberTest.testConvertNumericLSNToString
+java-pgjdbc/org.postgresql.replication.LogSequenceNumberTest.testConvertNumericLSNToString_2
+java-pgjdbc/org.postgresql.replication.LogSequenceNumberTest.testDifferentLSNHaveDifferentHash
+java-pgjdbc/org.postgresql.replication.LogSequenceNumberTest.testEqualLSN
+java-pgjdbc/org.postgresql.replication.LogSequenceNumberTest.testEqualLSNCreateByDifferentWay
+java-pgjdbc/org.postgresql.replication.LogSequenceNumberTest.testNotEqualLSN
+java-pgjdbc/org.postgresql.replication.LogSequenceNumberTest.testNotNullWhenCreateFromStr
+java-pgjdbc/org.postgresql.replication.LogSequenceNumberTest.testParseLSNFromStringAndConvertToLong
+java-pgjdbc/org.postgresql.replication.LogSequenceNumberTest.testParseNotValidLSNStr
+java-pgjdbc/org.postgresql.replication.LogSequenceNumberTest.testSameLSNHaveSameHash
+java-pgjdbc/org.postgresql.test.core.FixedLengthOutputStreamTest.testMultipleByteWrites
+java-pgjdbc/org.postgresql.test.core.FixedLengthOutputStreamTest.testMultipleBytesOverLimit
+java-pgjdbc/org.postgresql.test.core.FixedLengthOutputStreamTest.testSingleByteOverLimit
+java-pgjdbc/org.postgresql.test.core.FixedLengthOutputStreamTest.testSingleByteWrites
+java-pgjdbc/org.postgresql.test.core.JavaVersionTest.testGetRuntimeVersion
+java-pgjdbc/org.postgresql.test.jdbc2.DriverTest.testAcceptsURL()
+java-pgjdbc/org.postgresql.test.jdbc2.DriverTest.testRegistration()
+java-pgjdbc/org.postgresql.test.jdbc2.DriverTest.urlIsNotForPostgreSQL()
+java-pgjdbc/org.postgresql.test.jdbc2.DriverTest.urlIsNull()
+java-pgjdbc/org.postgresql.test.jdbc2.EncodingTest.testCreation
+java-pgjdbc/org.postgresql.test.jdbc2.EncodingTest.testReader
+java-pgjdbc/org.postgresql.test.jdbc2.EncodingTest.testTransformations
+java-pgjdbc/org.postgresql.test.jdbc2.LoginTimeoutTest.testTimeoutOccurs
+java-pgjdbc/org.postgresql.test.jdbc2.PGPropertyTest.testDataSourceProperties
+java-pgjdbc/org.postgresql.test.jdbc2.PGPropertyTest.testDriverGetPropertyInfo
+java-pgjdbc/org.postgresql.test.jdbc2.PGPropertyTest.testEncodedUrlValues
+java-pgjdbc/org.postgresql.test.jdbc2.PGPropertyTest.testEncodedUrlValuesFromDataSource
+java-pgjdbc/org.postgresql.test.jdbc2.PGPropertyTest.testEnumConstantNaming
+java-pgjdbc/org.postgresql.test.jdbc2.PGPropertyTest.testGetSetAllProperties
+java-pgjdbc/org.postgresql.test.jdbc2.PGPropertyTest.testIsPresentWithParseURLResult
+java-pgjdbc/org.postgresql.test.jdbc2.PGPropertyTest.testLowerCamelCase
+java-pgjdbc/org.postgresql.test.jdbc2.PGPropertyTest.testOverWriteDSProperties
+java-pgjdbc/org.postgresql.test.jdbc2.PGPropertyTest.testPresenceCheck
+java-pgjdbc/org.postgresql.test.jdbc2.PGPropertyTest.testSortOrder
+java-pgjdbc/org.postgresql.test.jdbc2.TestACL.testParseACL
+java-pgjdbc/org.postgresql.test.jdbc2.optional.BaseDataSourceFailoverUrlsTest.testEmptyPorts
+java-pgjdbc/org.postgresql.test.jdbc2.optional.BaseDataSourceFailoverUrlsTest.testFullDefault
+java-pgjdbc/org.postgresql.test.jdbc2.optional.BaseDataSourceFailoverUrlsTest.testNullPorts
+java-pgjdbc/org.postgresql.test.jdbc2.optional.BaseDataSourceFailoverUrlsTest.testTwoFirstPort
+java-pgjdbc/org.postgresql.test.jdbc2.optional.BaseDataSourceFailoverUrlsTest.testTwoLastPort
+java-pgjdbc/org.postgresql.test.jdbc2.optional.BaseDataSourceFailoverUrlsTest.testTwoNoPorts
+java-pgjdbc/org.postgresql.test.jdbc2.optional.BaseDataSourceFailoverUrlsTest.testTwoWithPorts
+java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testCompositeBasic
+java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testCompositeWithBinds
+java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testCompositeWithComments
+java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testDelete
+java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testDoubleQuestionmark
+java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testEmptyQuery
+java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testHasReturning
+java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testInsert
+java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testMove
+java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testMultiQueryWithBind
+java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testMultipleEmptyQueries
+java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testMultipleTrailingSemicolons
+java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testOnlyEmptyQueries
+java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testQuotedQuestionmark
+java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testRepeatedQuestionmark
+java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testSelect
+java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testSimpleBind
+java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testSimpleQuery
+java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testTrailingSemicolon
+java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testTrailingSemicolonAndSpace
+java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testUnquotedQuestionmark
+java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testUpdate
+java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testWhitespaceQuery
+java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testWithInsert
+java-pgjdbc/org.postgresql.test.jdbc3.CompositeQueryParseTest.testWithSelect
+java-pgjdbc/org.postgresql.test.jdbc3.SqlCommandParseTest.run[expected=INSERT, sql=INSERT/*fool /*nest comments -- parser*/*/ INTO genkeys (b,c) VALUES ('a', 2), ('b', 4) SELECT]
+java-pgjdbc/org.postgresql.test.jdbc3.SqlCommandParseTest.run[expected=INSERT, sql=insert/**/ into table(select) values(1)]
+java-pgjdbc/org.postgresql.test.jdbc3.SqlCommandParseTest.run[expected=INSERT, sql=with update as (update foo set (a=?,b=?,c=?)) insert /**/ into table(select) values(1)]
+java-pgjdbc/org.postgresql.test.jdbc3.SqlCommandParseTest.run[expected=INSERT, sql=with update as (update foo set (a=?,b=?,c=?)) insert into table(select) select * from update]
+java-pgjdbc/org.postgresql.test.jdbc3.SqlCommandParseTest.run[expected=INSERT, sql=with update as (update foo set (a=?,b=?,c=?)) insert into table(select) values(1)]
+java-pgjdbc/org.postgresql.test.jdbc3.SqlCommandParseTest.run[expected=INSERT, sql=with update as (update foo set (a=?,b=?,c=?)) insert/**/ into table(select) values(1)]
+java-pgjdbc/org.postgresql.test.jdbc3.SqlCommandParseTest.run[expected=SELECT, sql=WITH x as (INSERT INTO genkeys(a,b,c) VALUES (1, 'a', 2) returning  returning a, b) select * from x]
+java-pgjdbc/org.postgresql.test.jdbc3.SqlCommandParseTest.run[expected=SELECT, sql=select'abc'/**/ as insert]
+java-pgjdbc/org.postgresql.test.jdbc3.SqlCommandParseTest.run[expected=SELECT, sql=with update as (update foo set (a=?,b=?,c=?)) insert --__code10;/* dfhg __code10;*/__code10;as () select 1]
+java-pgjdbc/org.postgresql.test.jdbc3.SqlCommandParseTest.run[expected=SELECT, sql=with update as (update foo set (a=?,b=?,c=?)) insert --__code10;as () select 1]
+java-pgjdbc/org.postgresql.test.jdbc3.SqlCommandParseTest.run[expected=WITH, sql=with update as (update foo set (a=?,b=?,c=?)) copy from stdin]
+java-pgjdbc/org.postgresql.test.jdbc4.jdbc41.SharedTimerClassLoaderLeakTest.sharedTimerDoesNotCauseLeak
+java-pgjdbc/org.postgresql.test.jdbc42.CustomizeDefaultFetchSizeTest.testNotAvailableSpecifyNegativeFetchSize
+java-pgjdbc/org.postgresql.test.jdbc42.TimestampUtilsTest.testToLocalTime
+java-pgjdbc/org.postgresql.test.jdbc42.TimestampUtilsTest.testToOffsetTime
+java-pgjdbc/org.postgresql.test.jdbc42.TimestampUtilsTest.testToStringOfLocalTime
+java-pgjdbc/org.postgresql.test.jdbc42.TimestampUtilsTest.testToStringOfOffsetTime
+java-pgjdbc/org.postgresql.test.osgi.PGDataSourceFactoryTest.testCreateConnectionPoolDataSourceConfigured
+java-pgjdbc/org.postgresql.test.osgi.PGDataSourceFactoryTest.testCreateConnectionPoolDataSourceDefault
+java-pgjdbc/org.postgresql.test.osgi.PGDataSourceFactoryTest.testCreateDataSourceDefault
+java-pgjdbc/org.postgresql.test.osgi.PGDataSourceFactoryTest.testCreateDataSourcePooling
+java-pgjdbc/org.postgresql.test.osgi.PGDataSourceFactoryTest.testCreateDataSourceSimple
+java-pgjdbc/org.postgresql.test.osgi.PGDataSourceFactoryTest.testCreateDriverDefault
+java-pgjdbc/org.postgresql.test.osgi.PGDataSourceFactoryTest.testCreateXADataSourceConfigured
+java-pgjdbc/org.postgresql.test.osgi.PGDataSourceFactoryTest.testCreateXADataSourceDefault
+java-pgjdbc/org.postgresql.test.ssl.CommonNameVerifierTest.comparePatterns[a=**.com, b=*.com]
+java-pgjdbc/org.postgresql.test.ssl.CommonNameVerifierTest.comparePatterns[a=*.com, b=*.*.com]
+java-pgjdbc/org.postgresql.test.ssl.CommonNameVerifierTest.comparePatterns[a=*.com, b=host.com]
+java-pgjdbc/org.postgresql.test.ssl.CommonNameVerifierTest.comparePatterns[a=a.com, b=*.host.com]
+java-pgjdbc/org.postgresql.test.ssl.CommonNameVerifierTest.comparePatterns[a=com, b=host.com]
+java-pgjdbc/org.postgresql.test.ssl.CommonNameVerifierTest.comparePatterns[a=host.com, b=host.com]
+java-pgjdbc/org.postgresql.test.ssl.CommonNameVerifierTest.comparePatterns[a=host.com, b=subhost.host.com]
+java-pgjdbc/org.postgresql.test.ssl.LazyKeyManagerTest.testChooseClientAlias
+java-pgjdbc/org.postgresql.test.ssl.LazyKeyManagerTest.testLoadKey
+java-pgjdbc/org.postgresql.test.ssl.LazyKeyManagerTest.testLoadP12Key
+java-pgjdbc/org.postgresql.test.ssl.LibPQFactoryHostNameTest.checkPattern[host=*.host.com, pattern=host.com]
+java-pgjdbc/org.postgresql.test.ssl.LibPQFactoryHostNameTest.checkPattern[host=.a.com, pattern=*.host.com]
+java-pgjdbc/org.postgresql.test.ssl.LibPQFactoryHostNameTest.checkPattern[host=Sub.host.com, pattern=sub.host.com]
+java-pgjdbc/org.postgresql.test.ssl.LibPQFactoryHostNameTest.checkPattern[host=a.com, pattern=*.host.com]
+java-pgjdbc/org.postgresql.test.ssl.LibPQFactoryHostNameTest.checkPattern[host=com, pattern=*]
+java-pgjdbc/org.postgresql.test.ssl.LibPQFactoryHostNameTest.checkPattern[host=host.com, pattern=*.host.com]
+java-pgjdbc/org.postgresql.test.ssl.LibPQFactoryHostNameTest.checkPattern[host=host.com, pattern=*.pattern.com]
+java-pgjdbc/org.postgresql.test.ssl.LibPQFactoryHostNameTest.checkPattern[host=host.com, pattern=.pattern.com]
+java-pgjdbc/org.postgresql.test.ssl.LibPQFactoryHostNameTest.checkPattern[host=host.com, pattern=host.com]
+java-pgjdbc/org.postgresql.test.ssl.LibPQFactoryHostNameTest.checkPattern[host=host.com, pattern=pattern.com]
+java-pgjdbc/org.postgresql.test.ssl.LibPQFactoryHostNameTest.checkPattern[host=longhostname.com, pattern=*.com]
+java-pgjdbc/org.postgresql.test.ssl.LibPQFactoryHostNameTest.checkPattern[host=longhostname.ru, pattern=*.com]
+java-pgjdbc/org.postgresql.test.ssl.LibPQFactoryHostNameTest.checkPattern[host=sub.host.com, pattern=*.hoSt.com]
+java-pgjdbc/org.postgresql.test.ssl.LibPQFactoryHostNameTest.checkPattern[host=sub.host.com, pattern=*.host.com]
+java-pgjdbc/org.postgresql.test.ssl.LibPQFactoryHostNameTest.checkPattern[host=sub.host.com, pattern=Sub.host.com]
+java-pgjdbc/org.postgresql.test.ssl.LibPQFactoryHostNameTest.checkPattern[host=sub.host.com, pattern=host.com]
+java-pgjdbc/org.postgresql.test.ssl.LibPQFactoryHostNameTest.checkPattern[host=sub.host.com, pattern=sub.host.com]
+java-pgjdbc/org.postgresql.test.ssl.LibPQFactoryHostNameTest.checkPattern[host=sub.sub.host.com, pattern=*.host.com]
+java-pgjdbc/org.postgresql.test.ssl.PKCS12KeyTest.TestChooseClientAlias
 java-pgjdbc/org.postgresql.test.util.ByteBufferByteStreamWriterTest.testCopiesDataCorrectly
 java-pgjdbc/org.postgresql.test.util.ByteBufferByteStreamWriterTest.testPropagatesException
 java-pgjdbc/org.postgresql.test.util.ByteBufferByteStreamWriterTest.testReportsLengthCorrectly
-java-pgjdbc/org.postgresql.test.jdbc2.TestACL.testParseACL
-java-pgjdbc/org.postgresql.test.core.JavaVersionTest.testGetRuntimeVersion
-java-pgjdbc/org.postgresql.test.jdbc3.SqlCommandParseTest.run[expected=INSERT, sql=insert/**/ into table(select) values(1)]
-java-pgjdbc/org.postgresql.test.jdbc3.SqlCommandParseTest.run[expected=SELECT, sql=select'abc'/**/ as insert]
-java-pgjdbc/org.postgresql.test.jdbc3.SqlCommandParseTest.run[expected=INSERT, sql=INSERT/*fool /*nest comments -- parser*/*/ INTO genkeys (b,c) VALUES ('a', 2), ('b', 4) SELECT]
-java-pgjdbc/org.postgresql.test.jdbc3.SqlCommandParseTest.run[expected=INSERT, sql=with update as (update foo set (a=?,b=?,c=?)) insert into table(select) values(1)]
-java-pgjdbc/org.postgresql.test.jdbc3.SqlCommandParseTest.run[expected=INSERT, sql=with update as (update foo set (a=?,b=?,c=?)) insert into table(select) select * from update]
-java-pgjdbc/org.postgresql.test.jdbc3.SqlCommandParseTest.run[expected=INSERT, sql=with update as (update foo set (a=?,b=?,c=?)) insert/**/ into table(select) values(1)]
-java-pgjdbc/org.postgresql.test.jdbc3.SqlCommandParseTest.run[expected=INSERT, sql=with update as (update foo set (a=?,b=?,c=?)) insert /**/ into table(select) values(1)]
-java-pgjdbc/org.postgresql.test.jdbc3.SqlCommandParseTest.run[expected=SELECT, sql=with update as (update foo set (a=?,b=?,c=?)) insert --__code10;as () select 1]
-java-pgjdbc/org.postgresql.test.jdbc3.SqlCommandParseTest.run[expected=SELECT, sql=with update as (update foo set (a=?,b=?,c=?)) insert --__code10;/* dfhg __code10;*/__code10;as () select 1]
-java-pgjdbc/org.postgresql.test.jdbc3.SqlCommandParseTest.run[expected=SELECT, sql=WITH x as (INSERT INTO genkeys(a,b,c) VALUES (1, 'a', 2) returning  returning a, b) select * from x]
-java-pgjdbc/org.postgresql.test.jdbc3.SqlCommandParseTest.run[expected=WITH, sql=with update as (update foo set (a=?,b=?,c=?)) copy from stdin]
-java-pgjdbc/org.postgresql.core.OidValueOfTest.run[expected=25, value=TEXT]
-java-pgjdbc/org.postgresql.core.OidValueOfTest.run[expected=0, value=UNSPECIFIED]
-java-pgjdbc/org.postgresql.core.OidValueOfTest.run[expected=199, value=JSON_ARRAY]
-java-pgjdbc/org.postgresql.core.OidValueOfTest.run[expected=100, value=100]
-java-pgjdbc/org.postgresql.test.ssl.PKCS12KeyTest.TestChooseClientAlias
-java-pgjdbc/org.postgresql.replication.LogSequenceNumberTest.testDifferentLSNHaveDifferentHash
-java-pgjdbc/org.postgresql.replication.LogSequenceNumberTest.testSameLSNHaveSameHash
-java-pgjdbc/org.postgresql.replication.LogSequenceNumberTest.testCompareToWithInvalid
-java-pgjdbc/org.postgresql.replication.LogSequenceNumberTest.testEqualLSNCreateByDifferentWay
-java-pgjdbc/org.postgresql.replication.LogSequenceNumberTest.testNotNullWhenCreateFromStr
-java-pgjdbc/org.postgresql.replication.LogSequenceNumberTest.testNotEqualLSN
-java-pgjdbc/org.postgresql.replication.LogSequenceNumberTest.testConvertNumericLSNToString
-java-pgjdbc/org.postgresql.replication.LogSequenceNumberTest.testCompareToSameValue
-java-pgjdbc/org.postgresql.replication.LogSequenceNumberTest.testCompareToMixedSign
-java-pgjdbc/org.postgresql.replication.LogSequenceNumberTest.testCompareToNegativeValues
-java-pgjdbc/org.postgresql.replication.LogSequenceNumberTest.testEqualLSN
-java-pgjdbc/org.postgresql.replication.LogSequenceNumberTest.testParseLSNFromStringAndConvertToLong
-java-pgjdbc/org.postgresql.replication.LogSequenceNumberTest.testConvertNumericLSNToString_2
-java-pgjdbc/org.postgresql.replication.LogSequenceNumberTest.testCompareToPositiveValues
-java-pgjdbc/org.postgresql.replication.LogSequenceNumberTest.testParseNotValidLSNStr
-java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testConstructorDefault
-java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testConstructorWithAllProperties
-java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testAddingSingleQueryWithoutAdaptiveFetch
-java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testGettingFetchSizeForNotExistingQuery
-java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testSettingAdaptiveFetchAsFalse
-java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testUpdatingAdaptiveFetchSizeWithMaximumSize
-java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testConstructorWithMinimumSize
-java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testAddingTwoDifferentQueriesWithoutAdaptiveFetch
-java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testUpdatingAdaptiveFetchSizeWithMoreQueriesInMap
-java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testAddingTwoDifferentQueries
-java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testRemovingNotExistingQueryIfAdaptiveFetchFalse
-java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testConstructorWithMaximumSize
-java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testRemovingExistingQueryWithLargeCounterIfAdaptiveFetchFalse
-java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testRemovingExistingQueryWithLargeCounter
-java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testRemovingExistingQueryIfAdaptiveFetchFalse
-java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testGettingFetchSizeForNotExistingQueryIfAdaptiveFetchFalse
-java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testRemovingExistingQuery
-java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testRemovingExistingQueryWithMoreQueriesCachedIfAdaptiveFetchFalse
-java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testUpdatingAdaptiveFetchSizeWithMaximumSizeIfAdaptiveFetchFalse
-java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testUpdatingAdaptiveFetchSizeForNotExistingQueryIfAdaptiveFetchFalse
-java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testGettingAdaptiveFetchIfTrue
-java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testAddingSameQueryTwoTimes
-java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testSettingAdaptiveFetchAsTrue
-java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testRemovingNotExistingQuery
-java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testUpdatingAdaptiveFetchSizeWithMoreQueriesInMapIfAdaptiveFetchFalse
-java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testAddingSameQueryTwoTimesWithoutAdaptiveFetch
-java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testUpdatingAdaptiveFetchSizeForNotExistingQuery
-java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testGettingFetchSizeForExistingQueryIfAdaptiveFetchFalse
-java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testUpdatingAdaptiveFetchSizeIfAdaptiveFetchFalse
-java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testGettingFetchSizeForExistingQuery
-java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testConstructorWithAdaptiveFetch
-java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testUpdatingAdaptiveFetchSizeWithMinimumSizeIfAdaptiveFetchFalse
-java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testAddingSingleQuery
-java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testRemovingExistingQueryWithMoreQueriesCached
-java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testUpdatingAdaptiveFetchSizeWithMinimumSize
-java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testUpdatingAdaptiveFetchSize
-java-pgjdbc/org.postgresql.core.v3.adaptivefetch.AdaptiveFetchCacheTest.testGettingAdaptiveFetchIfFalse
-java-pgjdbc/org.postgresql.test.jdbc4.jdbc41.SharedTimerClassLoaderLeakTest.sharedTimerDoesNotCauseLeak
-java-pgjdbc/org.postgresql.util.UnusualBigDecimalByteConverterTest.test_4_leading_0
-java-pgjdbc/org.postgresql.jdbc.FloatObjectArraysTest.test2dBinary
-java-pgjdbc/org.postgresql.jdbc.FloatObjectArraysTest.testObjectArrayCopy
-java-pgjdbc/org.postgresql.jdbc.FloatObjectArraysTest.test2dString
-java-pgjdbc/org.postgresql.jdbc.FloatObjectArraysTest.test3dBinary
-java-pgjdbc/org.postgresql.jdbc.FloatObjectArraysTest.testObject3dArrayCopy
-java-pgjdbc/org.postgresql.jdbc.FloatObjectArraysTest.test3dString
-java-pgjdbc/org.postgresql.jdbc.FloatObjectArraysTest.testBinary
-java-pgjdbc/org.postgresql.jdbc.FloatObjectArraysTest.testString
-java-pgjdbc/org.postgresql.jdbc.FloatObjectArraysTest.testObject2dArrayCopy
-java-pgjdbc/org.postgresql.jdbc.FloatArraysTest.test2dBinary
-java-pgjdbc/org.postgresql.jdbc.FloatArraysTest.testObjectArrayCopy
-java-pgjdbc/org.postgresql.jdbc.FloatArraysTest.test2dString
-java-pgjdbc/org.postgresql.jdbc.FloatArraysTest.test3dBinary
-java-pgjdbc/org.postgresql.jdbc.FloatArraysTest.testObject3dArrayCopy
-java-pgjdbc/org.postgresql.jdbc.FloatArraysTest.test3dString
-java-pgjdbc/org.postgresql.jdbc.FloatArraysTest.testBinary
-java-pgjdbc/org.postgresql.jdbc.FloatArraysTest.testString
-java-pgjdbc/org.postgresql.jdbc.FloatArraysTest.testObject2dArrayCopy
-java-pgjdbc/org.postgresql.core.CommandCompleteParserNegativeTest.run[input=SELECT 0_0 42]
-java-pgjdbc/org.postgresql.core.CommandCompleteParserNegativeTest.run[input=SELECT 42 0_0]
-java-pgjdbc/org.postgresql.core.CommandCompleteParserNegativeTest.run[input=SELECT 0_0 0_0]
-java-pgjdbc/org.postgresql.jdbc.BigDecimalObjectArraysTest.test2dBinary
-java-pgjdbc/org.postgresql.jdbc.BigDecimalObjectArraysTest.testObjectArrayCopy
-java-pgjdbc/org.postgresql.jdbc.BigDecimalObjectArraysTest.test2dString
-java-pgjdbc/org.postgresql.jdbc.BigDecimalObjectArraysTest.test3dBinary
-java-pgjdbc/org.postgresql.jdbc.BigDecimalObjectArraysTest.testObject3dArrayCopy
-java-pgjdbc/org.postgresql.jdbc.BigDecimalObjectArraysTest.test3dString
-java-pgjdbc/org.postgresql.jdbc.BigDecimalObjectArraysTest.testBinary
-java-pgjdbc/org.postgresql.jdbc.BigDecimalObjectArraysTest.testString
-java-pgjdbc/org.postgresql.jdbc.BigDecimalObjectArraysTest.testObject2dArrayCopy
+java-pgjdbc/org.postgresql.test.util.ExpressionPropertiesTest.multipleParentProperties
+java-pgjdbc/org.postgresql.test.util.ExpressionPropertiesTest.multipleReplacements
+java-pgjdbc/org.postgresql.test.util.ExpressionPropertiesTest.rawValue
+java-pgjdbc/org.postgresql.test.util.ExpressionPropertiesTest.replacementMissing
+java-pgjdbc/org.postgresql.test.util.ExpressionPropertiesTest.simpleReplace
+java-pgjdbc/org.postgresql.test.util.HostSpecTest.testShouldResolve
+java-pgjdbc/org.postgresql.test.util.HostSpecTest.testShouldResolveWithEmptySocksProxyHost
+java-pgjdbc/org.postgresql.test.util.HostSpecTest.testShouldResolveWithSocksNonProxyHost
+java-pgjdbc/org.postgresql.test.util.HostSpecTest.testShouldResolveWithSocksNonProxyHosts
+java-pgjdbc/org.postgresql.test.util.HostSpecTest.testShouldResolveWithSocksNonProxyHostsNotMatching
+java-pgjdbc/org.postgresql.test.util.HostSpecTest.testShouldResolveWithSocksProxyHost
+java-pgjdbc/org.postgresql.test.util.HostSpecTest.testShouldResolveWithSocksProxyHostWithLocalhost
+java-pgjdbc/org.postgresql.test.util.HostSpecTest.testShouldResolveWithWhiteSpaceSocksProxyHost
+java-pgjdbc/org.postgresql.test.util.HostSpecTest.testShouldReturnEmptyLocalAddressBind
+java-pgjdbc/org.postgresql.test.util.HostSpecTest.testShouldReturnLocalAddressBind
+java-pgjdbc/org.postgresql.test.util.LruCacheTest.testCaching
+java-pgjdbc/org.postgresql.test.util.LruCacheTest.testCyclicReplacement
+java-pgjdbc/org.postgresql.test.util.LruCacheTest.testDuplicateKey
+java-pgjdbc/org.postgresql.test.util.LruCacheTest.testEvictsByNumberOfEntries
+java-pgjdbc/org.postgresql.test.util.LruCacheTest.testEvictsBySize
+java-pgjdbc/org.postgresql.test.util.LruCacheTest.testEvictsLeastRecentlyUsed
+java-pgjdbc/org.postgresql.test.util.ObjectFactoryTest.testInstantiateInvalidSocketFactory()
+java-pgjdbc/org.postgresql.test.util.ObjectFactoryTest.testInvalidAuthenticationPlugin()
+java-pgjdbc/org.postgresql.test.util.ObjectFactoryTest.testInvalidSocketFactory()
+java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValueException[0: Test with valueToParse=100, expectedResult=100]
+java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValueException[1: Test with valueToParse=10K, expectedResult=10,000]
+java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValueException[2: Test with valueToParse=25M, expectedResult=25,000,000]
+java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValueException[3: Test with valueToParse=35G, expectedResult=1,449,551,462]
+java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValueException[4: Test with valueToParse=1T, expectedResult=1,449,551,462]
+java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValueException[5: Test with valueToParse=5p, expectedResult=80,530,636]
+java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValueException[6: Test with valueToParse=10pct, expectedResult=161,061,273]
+java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValueException[7: Test with valueToParse=15percent, expectedResult=241,591,910]
+java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValueException[8: Test with valueToParse=, expectedResult=-1]
+java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValueException[9: Test with valueToParse=null, expectedResult=-1]
+java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValue[0: Test with valueToParse=100, expectedResult=100]
+java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValue[1: Test with valueToParse=10K, expectedResult=10,000]
+java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValue[2: Test with valueToParse=25M, expectedResult=25,000,000]
+java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValue[3: Test with valueToParse=35G, expectedResult=1,449,551,462]
+java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValue[4: Test with valueToParse=1T, expectedResult=1,449,551,462]
+java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValue[5: Test with valueToParse=5p, expectedResult=80,530,636]
+java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValue[6: Test with valueToParse=10pct, expectedResult=161,061,273]
+java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValue[7: Test with valueToParse=15percent, expectedResult=241,591,910]
+java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValue[8: Test with valueToParse=, expectedResult=-1]
+java-pgjdbc/org.postgresql.test.util.PGPropertyMaxResultBufferParserTest.testGetMaxResultBufferValue[9: Test with valueToParse=null, expectedResult=-1]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 070400, expected = 70,400]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 090104, expected = 90,104]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 10, expected = 100,000]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 10.1, expected = 100,001]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 10.10, expected = 100,010]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 10.100.10, expected = -1]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 10.1beta1, expected = 100,001]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 10.1devel, expected = 100,001]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 10000, expected = 10,000]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 100004, expected = 100,004]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 10beta1, expected = 100,000]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 10devel, expected = 100,000]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 11, expected = 110,000]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 11.1, expected = 110,001]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 12, expected = 120,000]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 123.20, expected = 1,230,020]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 12345.1, expected = -1]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 7.4, expected = 70,400]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 7.4.0, expected = 70,400]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 7.4.0.0, expected = 70,400]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 9.0, expected = 90,000]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 9.0.0, expected = 90,000]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 9.0.0.0, expected = 90,000]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 9.0.1, expected = 90,001]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 9.0.1.0, expected = 90,001]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 9.100.10, expected = -1]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 9.2, expected = 90,200]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 9.2.1, expected = 90,201]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 9.2.1.0, expected = 90,201]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 9.20.10, expected = 92,010]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 9.20.100, expected = -1]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 9.4.1-bobs-patched-postgres-v2.2, expected = 90,401]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 9.4.10, expected = 90,410]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 9.4.1bobs, expected = 90,401]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 9.4.1bobspatched9.4, expected = 90,401]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 9.4beta1, expected = 90,400]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 9.4devel, expected = 90,400]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 9.6, expected = 90,600]
+java-pgjdbc/org.postgresql.test.util.ServerVersionParseTest.run[str = 90104, expected = 90,104]
 java-pgjdbc/org.postgresql.test.util.ServerVersionTest.testVersions
 java-pgjdbc/org.postgresql.test.util.ServerVersionTest.versionIncreases
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returning , returning= returning ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returning , returning= returningreturning ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returning _, returning= returning _]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returning _, returning= returningreturning _]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returning 3, returning= returning 3]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returning 3, returning= returningreturning 3]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returning *, returning= returning *]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returning *, returning= returningreturning *]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returning  , returning= returning  ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returning  , returning= returningreturning  ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returning , returning=_ returning ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returning , returning=_ returningreturning ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returning _, returning=_ returning _]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returning _, returning=_ returningreturning _]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returning 3, returning=_ returning 3]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returning 3, returning=_ returningreturning 3]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returning *, returning=_ returning *]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returning *, returning=_ returningreturning *]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returning  , returning=_ returning  ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returning  , returning=_ returningreturning  ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returning , returning=3 returning ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returning , returning=3 returningreturning ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returning _, returning=3 returning _]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returning _, returning=3 returningreturning _]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returning 3, returning=3 returning 3]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returning 3, returning=3 returningreturning 3]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returning *, returning=3 returning *]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returning *, returning=3 returningreturning *]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returning  , returning=3 returning  ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returning  , returning=3 returningreturning  ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returning , returning=* returning ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returning , returning=* returningreturning ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returning _, returning=* returning _]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returning _, returning=* returningreturning _]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returning 3, returning=* returning 3]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returning 3, returning=* returningreturning 3]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returning *, returning=* returning *]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returning *, returning=* returningreturning *]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returning  , returning=* returning  ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returning  , returning=* returningreturning  ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returning , returning=  returning ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returning , returning=  returningreturning ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returning _, returning=  returning _]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returning _, returning=  returningreturning _]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returning 3, returning=  returning 3]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returning 3, returning=  returningreturning 3]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returning *, returning=  returning *]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returning *, returning=  returningreturning *]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returning  , returning=  returning  ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returning  , returning=  returningreturning  ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returningreturning , returning= returning ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returningreturning , returning= returningreturning ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returningreturning _, returning= returning _]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returningreturning _, returning= returningreturning _]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returningreturning 3, returning= returning 3]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returningreturning 3, returning= returningreturning 3]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returningreturning *, returning= returning *]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returningreturning *, returning= returningreturning *]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returningreturning  , returning= returning  ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName= returningreturning  , returning= returningreturning  ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returningreturning , returning=_ returning ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returningreturning , returning=_ returningreturning ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returningreturning _, returning=_ returning _]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returningreturning _, returning=_ returningreturning _]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returningreturning 3, returning=_ returning 3]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returningreturning 3, returning=_ returningreturning 3]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returningreturning *, returning=_ returning *]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returningreturning *, returning=_ returningreturning *]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returningreturning  , returning=_ returning  ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=_ returningreturning  , returning=_ returningreturning  ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returningreturning , returning=3 returning ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returningreturning , returning=3 returningreturning ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returningreturning _, returning=3 returning _]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returningreturning _, returning=3 returningreturning _]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returningreturning 3, returning=3 returning 3]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returningreturning 3, returning=3 returningreturning 3]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returningreturning *, returning=3 returning *]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returningreturning *, returning=3 returningreturning *]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returningreturning  , returning=3 returning  ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=3 returningreturning  , returning=3 returningreturning  ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returningreturning , returning=* returning ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returningreturning , returning=* returningreturning ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returningreturning _, returning=* returning _]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returningreturning _, returning=* returningreturning _]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returningreturning 3, returning=* returning 3]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returningreturning 3, returning=* returningreturning 3]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returningreturning *, returning=* returning *]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returningreturning *, returning=* returningreturning *]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returningreturning  , returning=* returning  ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=* returningreturning  , returning=* returningreturning  ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returningreturning , returning=  returning ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returningreturning , returning=  returningreturning ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returningreturning _, returning=  returning _]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returningreturning _, returning=  returningreturning _]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returningreturning 3, returning=  returning 3]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returningreturning 3, returning=  returningreturning 3]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returningreturning *, returning=  returning *]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returningreturning *, returning=  returningreturning *]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returningreturning  , returning=  returning  ]
-java-pgjdbc/org.postgresql.core.ReturningParserTest.test[columnName=  returningreturning  , returning=  returningreturning  ]
-java-pgjdbc/org.postgresql.jdbc.BooleanObjectArraysTest.test2dBinary
-java-pgjdbc/org.postgresql.jdbc.BooleanObjectArraysTest.testObjectArrayCopy
-java-pgjdbc/org.postgresql.jdbc.BooleanObjectArraysTest.test2dString
-java-pgjdbc/org.postgresql.jdbc.BooleanObjectArraysTest.test3dBinary
-java-pgjdbc/org.postgresql.jdbc.BooleanObjectArraysTest.testObject3dArrayCopy
-java-pgjdbc/org.postgresql.jdbc.BooleanObjectArraysTest.test3dString
-java-pgjdbc/org.postgresql.jdbc.BooleanObjectArraysTest.testBinary
-java-pgjdbc/org.postgresql.jdbc.BooleanObjectArraysTest.testString
-java-pgjdbc/org.postgresql.jdbc.BooleanObjectArraysTest.testObject2dArrayCopy
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverter2Test.testBigDecimal10_pow_131072_minus_1
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = -0.00000000000000000000000000099]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = -1,234,567,890,987,654,321,000]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = -19,223,372,036,854,775,807.3]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = -1]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = -1]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = -2,147,483,648]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = -2,147,483,649]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = -2.05]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = -9,223,372,036,854,775,808]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = -9,223,372,036,854,775,809]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = -99,999.2]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = -99,999]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 0.00000000000000000000000000099]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 0.00001]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 0.0001]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 0.001]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 0.01]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 0.1000000000000000000000000000000000000000000000099]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 0.1]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 0.1]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 0.1]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 0]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 1,000,000]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 1.1]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 1.2]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 10,000,000,000,000,000,000,000,000,000,000,000,000]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 10,223,372,036,850,000,000]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 10.0000000000099]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 12,345,678,909,876,543,210]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 123,456,789,098,765,432,100,000]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 19,223,372,036,854,775,807.3]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 19,223,372,036,854,775,807]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 1]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 2,147,483,647]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 2,147,483,648]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 20,000]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 30,000]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 40,000]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 600,000,000]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 9,223,372,036,854,775,807]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 9,223,372,036,854,775,808]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 9,990,000]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 90,000,000,000,000,000,000,000,000,000,000,000,000]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 99,999.2]
+java-pgjdbc/org.postgresql.util.BigDecimalByteConverterTest.testBinary[number = 99,999]
+java-pgjdbc/org.postgresql.util.OSUtilTest.getUserConfigRootDirectory()
+java-pgjdbc/org.postgresql.util.PGPropertyUtilTest.propertiesConsistencyCheck()
+java-pgjdbc/org.postgresql.util.PGPropertyUtilTest.translatePGPropertyToPGService()
+java-pgjdbc/org.postgresql.util.PGPropertyUtilTest.translatePGServiceToPGProperty()
+java-pgjdbc/org.postgresql.util.PGbyteaTest.testHexDecode_lower
+java-pgjdbc/org.postgresql.util.PGbyteaTest.testHexDecode_upper
+java-pgjdbc/org.postgresql.util.PGtokenizerTest.removePara()
+java-pgjdbc/org.postgresql.util.PGtokenizerTest.tokenize()
+java-pgjdbc/org.postgresql.util.PGtokenizerTest.tokenize2()
+java-pgjdbc/org.postgresql.util.PGtokenizerTest.tokenize3()
+java-pgjdbc/org.postgresql.util.PGtokenizerTest.tokenize4()
+java-pgjdbc/org.postgresql.util.ReaderInputStreamTest.NullReaderTest
+java-pgjdbc/org.postgresql.util.ReaderInputStreamTest.SimpleTest
+java-pgjdbc/org.postgresql.util.ReaderInputStreamTest.cbufTooSmallReaderTest
+java-pgjdbc/org.postgresql.util.ReaderInputStreamTest.inputSmallerThanCbufsizeTest
+java-pgjdbc/org.postgresql.util.ReaderInputStreamTest.invalidInputTest
+java-pgjdbc/org.postgresql.util.ReaderInputStreamTest.invalidLengthArrayReadTest
+java-pgjdbc/org.postgresql.util.ReaderInputStreamTest.invalidOffsetArrayReadTest
+java-pgjdbc/org.postgresql.util.ReaderInputStreamTest.malformedSingleCharArrayReadTest
+java-pgjdbc/org.postgresql.util.ReaderInputStreamTest.negativeLengthArrayReadTest
+java-pgjdbc/org.postgresql.util.ReaderInputStreamTest.negativeOffsetArrayReadTest
+java-pgjdbc/org.postgresql.util.ReaderInputStreamTest.nullArrayReadTest
+java-pgjdbc/org.postgresql.util.ReaderInputStreamTest.readsEqualToBlockSizeTest
+java-pgjdbc/org.postgresql.util.ReaderInputStreamTest.singleCharArrayReadTest
+java-pgjdbc/org.postgresql.util.ReaderInputStreamTest.surrogatePairSpansCharBufBoundaryTest
+java-pgjdbc/org.postgresql.util.ReaderInputStreamTest.tooManyReadsTest
+java-pgjdbc/org.postgresql.util.ReaderInputStreamTest.unmatchedLeadingSurrogateInputTest
+java-pgjdbc/org.postgresql.util.ReaderInputStreamTest.unmatchedTrailingSurrogateInputTest
+java-pgjdbc/org.postgresql.util.ReaderInputStreamTest.zeroLengthArrayReadTest
+java-pgjdbc/org.postgresql.util.UnusualBigDecimalByteConverterTest.test_4_leading_0
