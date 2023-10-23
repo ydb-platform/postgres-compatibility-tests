@@ -14,7 +14,7 @@ if [ -e /exchange/sources ]; then
 else
     echo "Copy sources"
     mkdir -p /exchange/sources
-    cp -R /project/sources/. /exchange/sources
+    cp -R /project/ext-sources/. /exchange/sources
 fi
 
 cd /project/sources/
