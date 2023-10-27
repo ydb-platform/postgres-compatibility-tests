@@ -1,0 +1,17 @@
+services:
+  database:
+    image: postgres:14
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=local
+  mediawiki:
+    build:
+      dockerfile: install-pg-mediawiki.Dockerfile
+    dns:
+      - 77.88.8.8
+    restart: always
+    ports:
+      - 8080:80
+    links:
+      - database
