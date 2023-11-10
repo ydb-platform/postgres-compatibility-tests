@@ -6,10 +6,14 @@ Instruction for upload pgbench data to YDB benchmark postgres layer.
 Download already prepared data from [gist](https://gist.githubusercontent.com/rekby/95e0f0c2fd6ff595054c03c2c2ae776a/raw/pgbench.sql)
 
 ```
-wget https://gist.githubusercontent.com/rekby/95e0f0c2fd6ff595054c03c2c2ae776a/raw/pgbench.sql -O tmp/pgbench.sql  # scale factor 1
+# Short dataset (10 records)
+wget https://gist.githubusercontent.com/rekby/95e0f0c2fd6ff595054c03c2c2ae776a/raw/pgbench-short.sql -O tmp/pgbench.sql
 
-OR
-wget https://gist.githubusercontent.com/rekby/95e0f0c2fd6ff595054c03c2c2ae776a/raw/pgbench-9.sql -O tmp/pgbench.sql # scale factor 9, near 100MB file
+# Dataset with scale factor 1
+wget https://gist.githubusercontent.com/rekby/95e0f0c2fd6ff595054c03c2c2ae776a/raw/pgbench.sql -O tmp/pgbench.sql
+
+# Dataset with scale factor 9, near 100MB
+wget https://gist.githubusercontent.com/rekby/95e0f0c2fd6ff595054c03c2c2ae776a/raw/pgbench-9.sql -O tmp/pgbench.sql
 ```
 
 ## Generate new data with script
