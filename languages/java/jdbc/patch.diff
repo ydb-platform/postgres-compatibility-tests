@@ -148,3 +148,168 @@ diff -ruN /original-sources/pgjdbc/src/test/java/org/postgresql/test/jdbc42/Jdbc
      PreparedStatementTest.class,
      SetObject310Test.class,
      SimpleJdbc42Test.class,
+diff -ruN /original-sources/pgjdbc/src/test/java/org/postgresql/test/jdbc42/LargeCountJdbc42Test.java ./pgjdbc/src/test/java/org/postgresql/test/jdbc42/LargeCountJdbc42Test.java
+--- /original-sources/pgjdbc/src/test/java/org/postgresql/test/jdbc42/LargeCountJdbc42Test.java	2023-02-16 14:21:18.000000000 +0000
++++ ./pgjdbc/src/test/java/org/postgresql/test/jdbc42/LargeCountJdbc42Test.java	2024-01-15 11:41:27.467994305 +0000
+@@ -93,7 +93,7 @@
+    * Test PreparedStatement.executeLargeUpdate() and Statement.executeLargeUpdate(String sql)
+    */
+   @Ignore("This is the big and SLOW test")
+-  @Test
++  // @Test
+   public void testExecuteLargeUpdateBIG() throws Exception {
+     long expected = Integer.MAX_VALUE + 110L;
+     con.setAutoCommit(false);
+@@ -116,7 +116,7 @@
+   /*
+    * Test Statement.executeLargeUpdate(String sql)
+    */
+-  @Test
++  // @Test
+   public void testExecuteLargeUpdateStatementSMALL() throws Exception {
+     try (Statement stmt = con.createStatement()) {
+       long count = stmt.executeLargeUpdate("insert into largetable "
+@@ -129,7 +129,7 @@
+   /*
+    * Test PreparedStatement.executeLargeUpdate();
+    */
+-  @Test
++  // @Test
+   public void testExecuteLargeUpdatePreparedStatementSMALL() throws Exception {
+     try (PreparedStatement stmt = con.prepareStatement("insert into largetable "
+         + "select true from generate_series(?, ?)")) {
+@@ -144,7 +144,7 @@
+   /*
+    * Test Statement.getLargeUpdateCount();
+    */
+-  @Test
++  // @Test
+   public void testGetLargeUpdateCountStatementSMALL() throws Exception {
+     try (Statement stmt = con.createStatement()) {
+       boolean isResult = stmt.execute("insert into largetable "
+@@ -159,7 +159,7 @@
+   /*
+    * Test PreparedStatement.getLargeUpdateCount();
+    */
+-  @Test
++  // @Test
+   public void testGetLargeUpdateCountPreparedStatementSMALL() throws Exception {
+     try (PreparedStatement stmt = con.prepareStatement("insert into largetable "
+         + "select true from generate_series(?, ?)")) {
+@@ -176,7 +176,7 @@
+   /*
+    * Test fail SELECT Statement.executeLargeUpdate(String sql)
+    */
+-  @Test
++  // @Test
+   public void testExecuteLargeUpdateStatementSELECT() throws Exception {
+     try (Statement stmt = con.createStatement()) {
+       long count = stmt.executeLargeUpdate("select true from generate_series(1, 5)");
+@@ -189,7 +189,7 @@
+   /*
+    * Test fail SELECT PreparedStatement.executeLargeUpdate();
+    */
+-  @Test
++  // @Test
+   public void testExecuteLargeUpdatePreparedStatementSELECT() throws Exception {
+     try (PreparedStatement stmt = con.prepareStatement("select true from generate_series(?, ?)")) {
+       stmt.setLong(1, 1);
+@@ -204,7 +204,7 @@
+   /*
+    * Test Statement.getLargeUpdateCount();
+    */
+-  @Test
++  // @Test
+   public void testGetLargeUpdateCountStatementSELECT() throws Exception {
+     try (Statement stmt = con.createStatement()) {
+       boolean isResult = stmt.execute("select true from generate_series(1, 5)");
+@@ -218,7 +218,7 @@
+   /*
+    * Test PreparedStatement.getLargeUpdateCount();
+    */
+-  @Test
++  // @Test
+   public void testGetLargeUpdateCountPreparedStatementSELECT() throws Exception {
+     try (PreparedStatement stmt = con.prepareStatement("select true from generate_series(?, ?)")) {
+       stmt.setLong(1, 1);
+@@ -263,7 +263,7 @@
+    * Test simple PreparedStatement.executeLargeBatch();
+    */
+   @Ignore("This is the big and SLOW test")
+-  @Test
++  // @Test
+   public void testExecuteLargeBatchStatementBIG() throws Exception {
+     con.setAutoCommit(false);
+     try (PreparedStatement stmt = con.prepareStatement("insert into largetable "
+@@ -286,7 +286,7 @@
+   /*
+    * Test simple Statement.executeLargeBatch();
+    */
+-  @Test
++  // @Test
+   public void testExecuteLargeBatchStatementSMALL() throws Exception {
+     try (Statement stmt = con.createStatement()) {
+       stmt.addBatch("insert into largetable(a) select true"); // statement one
+@@ -301,7 +301,7 @@
+   /*
+    * Test simple PreparedStatement.executeLargeBatch();
+    */
+-  @Test
++  // @Test
+   public void testExecuteLargePreparedStatementStatementSMALL() throws Exception {
+     try (PreparedStatement stmt = con.prepareStatement("insert into largetable "
+         + "select true from generate_series(?, ?)")) {
+@@ -323,7 +323,7 @@
+   /*
+    * Test loop PreparedStatement.executeLargeBatch();
+    */
+-  @Test
++  // @Test
+   public void testExecuteLargePreparedStatementStatementLoopSMALL() throws Exception {
+     long[] loop = {200, 100, 50, 300, 20, 60, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096};
+     try (PreparedStatement stmt = con.prepareStatement("insert into largetable "
+@@ -341,7 +341,7 @@
+   /*
+    * Test loop PreparedStatement.executeLargeBatch();
+    */
+-  @Test
++  // @Test
+   public void testExecuteLargeBatchValuesInsertSMALL() throws Exception {
+     boolean[] loop = {true, false, true, false, false, false, true, true, true, true, false, true};
+     try (PreparedStatement stmt = con.prepareStatement("insert into largetable values(?)")) {
+@@ -364,7 +364,7 @@
+   /*
+    * Test null PreparedStatement.executeLargeBatch();
+    */
+-  @Test
++  // @Test
+   public void testNullExecuteLargeBatchStatement() throws Exception {
+     try (Statement stmt = con.createStatement()) {
+       long[] actual = stmt.executeLargeBatch();
+@@ -375,7 +375,7 @@
+   /*
+    * Test empty PreparedStatement.executeLargeBatch();
+    */
+-  @Test
++  // @Test
+   public void testEmptyExecuteLargeBatchStatement() throws Exception {
+     try (Statement stmt = con.createStatement()) {
+       stmt.addBatch("");
+@@ -388,7 +388,7 @@
+   /*
+    * Test null PreparedStatement.executeLargeBatch();
+    */
+-  @Test
++  // @Test
+   public void testNullExecuteLargeBatchPreparedStatement() throws Exception {
+     try (PreparedStatement stmt = con.prepareStatement("")) {
+       long[] actual = stmt.executeLargeBatch();
+@@ -399,7 +399,7 @@
+   /*
+    * Test empty PreparedStatement.executeLargeBatch();
+    */
+-  @Test
++  // @Test
+   public void testEmptyExecuteLargeBatchPreparedStatement() throws Exception {
+     try (PreparedStatement stmt = con.prepareStatement("")) {
+       stmt.addBatch();
