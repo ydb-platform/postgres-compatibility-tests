@@ -1,7 +1,7 @@
 version: "3"
 services:
   ydb:
-    image: cr.yandex/yc/yandex-docker-local-ydb:trunk
+    image: ghcr.io/ydb-platform/local-ydb:nightly
     environment:
       - "YDB_DEFAULT_LOG_LEVEL=DEBUG"
       - "GRPC_TLS_PORT=2135"
