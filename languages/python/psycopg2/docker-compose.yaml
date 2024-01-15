@@ -1,7 +1,7 @@
 version: "3"
 services:
   ydb:
-    image: ghcr.io/nikitka/local-ydb@sha256:a25f9b546c5a704367fab6616053759cde71dcf892401ee96adc9c8b962f1868
+    image: ghcr.io/ydb-platform/local-ydb:nightly
     environment:
       - "YDB_DEFAULT_LOG_LEVEL=DEBUG"
       - "GRPC_TLS_PORT=2135"
