@@ -2,7 +2,7 @@ Results from test stand.
 
 command for benchmark:
 ```bash
-BENCHMARK=select-only PROTOCOL=simple pgbench postgres://root:1234@localhost:5432/local  -t 100 -b $BENCHMARK --protocol=$PROTOCOL
+BENCHMARK=select-only PROTOCOL=simple pgbench postgres://root:1234@localhost:5432/local  -t 100 -b $BENCHMARK --protocol=$PROTOCOL -n
 ```
 
 YDB: compiled from trunk in release mode.
