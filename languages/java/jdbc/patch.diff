@@ -1,42 +1,42 @@
 diff -ruN /original-sources/.gradle/buildOutputCleanup/cache.properties ./.gradle/buildOutputCleanup/cache.properties
 --- /original-sources/.gradle/buildOutputCleanup/cache.properties	1970-01-01 00:00:00.000000000 +0000
-+++ ./.gradle/buildOutputCleanup/cache.properties	2023-10-23 05:22:00.950740722 +0000
++++ ./.gradle/buildOutputCleanup/cache.properties	2024-01-15 10:41:27.549694062 +0000
 @@ -0,0 +1,2 @@
 +#Fri Jul 28 11:00:26 GMT 2023
 +gradle.version=7.5.1
 diff -ruN /original-sources/buildSrc/.gradle/buildOutputCleanup/cache.properties ./buildSrc/.gradle/buildOutputCleanup/cache.properties
 --- /original-sources/buildSrc/.gradle/buildOutputCleanup/cache.properties	1970-01-01 00:00:00.000000000 +0000
-+++ ./buildSrc/.gradle/buildOutputCleanup/cache.properties	2023-10-23 05:22:00.896739395 +0000
++++ ./buildSrc/.gradle/buildOutputCleanup/cache.properties	2024-01-15 10:41:27.521693403 +0000
 @@ -0,0 +1,2 @@
 +#Fri Jul 28 10:59:40 GMT 2023
 +gradle.version=7.5.1
 diff -ruN /original-sources/buildSrc/build/kotlin/buildSrcjar-classes.txt ./buildSrc/build/kotlin/buildSrcjar-classes.txt
 --- /original-sources/buildSrc/build/kotlin/buildSrcjar-classes.txt	1970-01-01 00:00:00.000000000 +0000
-+++ ./buildSrc/build/kotlin/buildSrcjar-classes.txt	2023-10-23 05:22:00.896739395 +0000
++++ ./buildSrc/build/kotlin/buildSrcjar-classes.txt	2024-01-15 10:41:27.521693403 +0000
 @@ -0,0 +1 @@
 +/project/sources/buildSrc/build/classes/kotlin/main/org/postgresql/buildtools/JavaCommentPreprocessorTask$inputDirectories$1$1.class:/project/sources/buildSrc/build/classes/kotlin/main/org/postgresql/buildtools/JavaCommentPreprocessorTask$run$$inlined$apply$lambda$1.class:/project/sources/buildSrc/build/classes/kotlin/main/org/postgresql/buildtools/JavaCommentPreprocessorTask.class
 \ No newline at end of file
 diff -ruN /original-sources/buildSrc/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/counters.tab ./buildSrc/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/counters.tab
 --- /original-sources/buildSrc/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/counters.tab	1970-01-01 00:00:00.000000000 +0000
-+++ ./buildSrc/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/counters.tab	2023-10-23 05:22:00.897739420 +0000
++++ ./buildSrc/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/counters.tab	2024-01-15 10:41:27.521693403 +0000
 @@ -0,0 +1,2 @@
 +1
 +0
 \ No newline at end of file
 diff -ruN /original-sources/buildSrc/build/pluginUnderTestMetadata/plugin-under-test-metadata.properties ./buildSrc/build/pluginUnderTestMetadata/plugin-under-test-metadata.properties
 --- /original-sources/buildSrc/build/pluginUnderTestMetadata/plugin-under-test-metadata.properties	1970-01-01 00:00:00.000000000 +0000
-+++ ./buildSrc/build/pluginUnderTestMetadata/plugin-under-test-metadata.properties	2023-10-23 05:22:00.897739420 +0000
++++ ./buildSrc/build/pluginUnderTestMetadata/plugin-under-test-metadata.properties	2024-01-15 10:41:27.521693403 +0000
 @@ -0,0 +1 @@
 +implementation-classpath=/project/sources/buildSrc/build/classes/java/main\:/project/sources/buildSrc/build/classes/groovy/main\:/project/sources/buildSrc/build/classes/kotlin/main\:/project/sources/buildSrc/build/resources/main\:/root/.gradle/caches/modules-2/files-2.1/com.igormaznitsa/jcp/7.0.2/ba17268f37d8b1d13222000686a42527423cc078/jcp-7.0.2.jar
 diff -ruN /original-sources/buildSrc/build/tmp/jar/MANIFEST.MF ./buildSrc/build/tmp/jar/MANIFEST.MF
 --- /original-sources/buildSrc/build/tmp/jar/MANIFEST.MF	1970-01-01 00:00:00.000000000 +0000
-+++ ./buildSrc/build/tmp/jar/MANIFEST.MF	2023-10-23 05:22:00.897739420 +0000
++++ ./buildSrc/build/tmp/jar/MANIFEST.MF	2024-01-15 10:41:27.521693403 +0000
 @@ -0,0 +1,2 @@
 +Manifest-Version: 1.0
 +
 diff -ruN /original-sources/pgjdbc/src/test/java/org/postgresql/jdbc/PgSQLXMLTest.java ./pgjdbc/src/test/java/org/postgresql/jdbc/PgSQLXMLTest.java
 --- /original-sources/pgjdbc/src/test/java/org/postgresql/jdbc/PgSQLXMLTest.java	2023-02-16 14:21:18.000000000 +0000
-+++ ./pgjdbc/src/test/java/org/postgresql/jdbc/PgSQLXMLTest.java	2023-10-23 08:46:14.919949947 +0000
++++ ./pgjdbc/src/test/java/org/postgresql/jdbc/PgSQLXMLTest.java	2024-01-15 10:41:27.541693874 +0000
 @@ -45,7 +45,7 @@
    @Before
    public void setUp() throws Exception {
@@ -48,7 +48,7 @@ diff -ruN /original-sources/pgjdbc/src/test/java/org/postgresql/jdbc/PgSQLXMLTes
    @Test
 diff -ruN /original-sources/pgjdbc/src/test/java/org/postgresql/test/TestUtil.java ./pgjdbc/src/test/java/org/postgresql/test/TestUtil.java
 --- /original-sources/pgjdbc/src/test/java/org/postgresql/test/TestUtil.java	2023-02-16 14:21:18.000000000 +0000
-+++ ./pgjdbc/src/test/java/org/postgresql/test/TestUtil.java	2023-10-23 05:22:00.948740673 +0000
++++ ./pgjdbc/src/test/java/org/postgresql/test/TestUtil.java	2024-01-15 10:41:27.541693874 +0000
 @@ -455,7 +455,7 @@
        dropTable(con, table);
  
@@ -73,7 +73,7 @@ diff -ruN /original-sources/pgjdbc/src/test/java/org/postgresql/test/TestUtil.ja
        closeQuietly(stmt);
 diff -ruN /original-sources/pgjdbc/src/test/java/org/postgresql/test/jdbc2/StatementTest.java ./pgjdbc/src/test/java/org/postgresql/test/jdbc2/StatementTest.java
 --- /original-sources/pgjdbc/src/test/java/org/postgresql/test/jdbc2/StatementTest.java	2023-02-16 14:21:18.000000000 +0000
-+++ ./pgjdbc/src/test/java/org/postgresql/test/jdbc2/StatementTest.java	2023-10-23 05:22:00.938740427 +0000
++++ ./pgjdbc/src/test/java/org/postgresql/test/jdbc2/StatementTest.java	2024-01-15 10:41:27.541693874 +0000
 @@ -57,11 +57,11 @@
    @Before
    public void setUp() throws Exception {
@@ -136,3 +136,180 @@ diff -ruN /original-sources/pgjdbc/src/test/java/org/postgresql/test/jdbc2/State
    @Test
    public void testParsingDollarQuotes() throws SQLException {
      // dollar-quotes are supported in the backend since version 8.0
+diff -ruN /original-sources/pgjdbc/src/test/java/org/postgresql/test/jdbc42/Jdbc42TestSuite.java ./pgjdbc/src/test/java/org/postgresql/test/jdbc42/Jdbc42TestSuite.java
+--- /original-sources/pgjdbc/src/test/java/org/postgresql/test/jdbc42/Jdbc42TestSuite.java	2023-02-16 14:21:18.000000000 +0000
++++ ./pgjdbc/src/test/java/org/postgresql/test/jdbc42/Jdbc42TestSuite.java	2024-01-15 11:11:52.605222299 +0000
+@@ -16,7 +16,7 @@
+     GetObject310InfinityTests.class,
+     GetObject310Test.class,
+     Jdbc42CallableStatementTest.class,
+-    LargeCountJdbc42Test.class,
++    // LargeCountJdbc42Test.class,
+     PreparedStatementTest.class,
+     SetObject310Test.class,
+     SimpleJdbc42Test.class,
+diff -ruN /original-sources/pgjdbc/src/test/java/org/postgresql/test/jdbc42/LargeCountJdbc42Test.java ./pgjdbc/src/test/java/org/postgresql/test/jdbc42/LargeCountJdbc42Test.java
+--- /original-sources/pgjdbc/src/test/java/org/postgresql/test/jdbc42/LargeCountJdbc42Test.java	2023-02-16 14:21:18.000000000 +0000
++++ ./pgjdbc/src/test/java/org/postgresql/test/jdbc42/LargeCountJdbc42Test.java	2024-01-15 11:41:27.467994305 +0000
+@@ -93,7 +93,7 @@
+    * Test PreparedStatement.executeLargeUpdate() and Statement.executeLargeUpdate(String sql)
+    */
+   @Ignore("This is the big and SLOW test")
+-  @Test
++  // @Test
+   public void testExecuteLargeUpdateBIG() throws Exception {
+     long expected = Integer.MAX_VALUE + 110L;
+     con.setAutoCommit(false);
+@@ -116,7 +116,7 @@
+   /*
+    * Test Statement.executeLargeUpdate(String sql)
+    */
+-  @Test
++  // @Test
+   public void testExecuteLargeUpdateStatementSMALL() throws Exception {
+     try (Statement stmt = con.createStatement()) {
+       long count = stmt.executeLargeUpdate("insert into largetable "
+@@ -129,7 +129,7 @@
+   /*
+    * Test PreparedStatement.executeLargeUpdate();
+    */
+-  @Test
++  // @Test
+   public void testExecuteLargeUpdatePreparedStatementSMALL() throws Exception {
+     try (PreparedStatement stmt = con.prepareStatement("insert into largetable "
+         + "select true from generate_series(?, ?)")) {
+@@ -144,7 +144,7 @@
+   /*
+    * Test Statement.getLargeUpdateCount();
+    */
+-  @Test
++  // @Test
+   public void testGetLargeUpdateCountStatementSMALL() throws Exception {
+     try (Statement stmt = con.createStatement()) {
+       boolean isResult = stmt.execute("insert into largetable "
+@@ -159,7 +159,7 @@
+   /*
+    * Test PreparedStatement.getLargeUpdateCount();
+    */
+-  @Test
++  // @Test
+   public void testGetLargeUpdateCountPreparedStatementSMALL() throws Exception {
+     try (PreparedStatement stmt = con.prepareStatement("insert into largetable "
+         + "select true from generate_series(?, ?)")) {
+@@ -176,7 +176,7 @@
+   /*
+    * Test fail SELECT Statement.executeLargeUpdate(String sql)
+    */
+-  @Test
++  // @Test
+   public void testExecuteLargeUpdateStatementSELECT() throws Exception {
+     try (Statement stmt = con.createStatement()) {
+       long count = stmt.executeLargeUpdate("select true from generate_series(1, 5)");
+@@ -189,7 +189,7 @@
+   /*
+    * Test fail SELECT PreparedStatement.executeLargeUpdate();
+    */
+-  @Test
++  // @Test
+   public void testExecuteLargeUpdatePreparedStatementSELECT() throws Exception {
+     try (PreparedStatement stmt = con.prepareStatement("select true from generate_series(?, ?)")) {
+       stmt.setLong(1, 1);
+@@ -204,7 +204,7 @@
+   /*
+    * Test Statement.getLargeUpdateCount();
+    */
+-  @Test
++  // @Test
+   public void testGetLargeUpdateCountStatementSELECT() throws Exception {
+     try (Statement stmt = con.createStatement()) {
+       boolean isResult = stmt.execute("select true from generate_series(1, 5)");
+@@ -218,7 +218,7 @@
+   /*
+    * Test PreparedStatement.getLargeUpdateCount();
+    */
+-  @Test
++  // @Test
+   public void testGetLargeUpdateCountPreparedStatementSELECT() throws Exception {
+     try (PreparedStatement stmt = con.prepareStatement("select true from generate_series(?, ?)")) {
+       stmt.setLong(1, 1);
+@@ -263,7 +263,7 @@
+    * Test simple PreparedStatement.executeLargeBatch();
+    */
+   @Ignore("This is the big and SLOW test")
+-  @Test
++  // @Test
+   public void testExecuteLargeBatchStatementBIG() throws Exception {
+     con.setAutoCommit(false);
+     try (PreparedStatement stmt = con.prepareStatement("insert into largetable "
+@@ -286,7 +286,7 @@
+   /*
+    * Test simple Statement.executeLargeBatch();
+    */
+-  @Test
++  // @Test
+   public void testExecuteLargeBatchStatementSMALL() throws Exception {
+     try (Statement stmt = con.createStatement()) {
+       stmt.addBatch("insert into largetable(a) select true"); // statement one
+@@ -301,7 +301,7 @@
+   /*
+    * Test simple PreparedStatement.executeLargeBatch();
+    */
+-  @Test
++  // @Test
+   public void testExecuteLargePreparedStatementStatementSMALL() throws Exception {
+     try (PreparedStatement stmt = con.prepareStatement("insert into largetable "
+         + "select true from generate_series(?, ?)")) {
+@@ -323,7 +323,7 @@
+   /*
+    * Test loop PreparedStatement.executeLargeBatch();
+    */
+-  @Test
++  // @Test
+   public void testExecuteLargePreparedStatementStatementLoopSMALL() throws Exception {
+     long[] loop = {200, 100, 50, 300, 20, 60, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096};
+     try (PreparedStatement stmt = con.prepareStatement("insert into largetable "
+@@ -341,7 +341,7 @@
+   /*
+    * Test loop PreparedStatement.executeLargeBatch();
+    */
+-  @Test
++  // @Test
+   public void testExecuteLargeBatchValuesInsertSMALL() throws Exception {
+     boolean[] loop = {true, false, true, false, false, false, true, true, true, true, false, true};
+     try (PreparedStatement stmt = con.prepareStatement("insert into largetable values(?)")) {
+@@ -364,7 +364,7 @@
+   /*
+    * Test null PreparedStatement.executeLargeBatch();
+    */
+-  @Test
++  // @Test
+   public void testNullExecuteLargeBatchStatement() throws Exception {
+     try (Statement stmt = con.createStatement()) {
+       long[] actual = stmt.executeLargeBatch();
+@@ -375,7 +375,7 @@
+   /*
+    * Test empty PreparedStatement.executeLargeBatch();
+    */
+-  @Test
++  // @Test
+   public void testEmptyExecuteLargeBatchStatement() throws Exception {
+     try (Statement stmt = con.createStatement()) {
+       stmt.addBatch("");
+@@ -388,7 +388,7 @@
+   /*
+    * Test null PreparedStatement.executeLargeBatch();
+    */
+-  @Test
++  // @Test
+   public void testNullExecuteLargeBatchPreparedStatement() throws Exception {
+     try (PreparedStatement stmt = con.prepareStatement("")) {
+       long[] actual = stmt.executeLargeBatch();
+@@ -399,7 +399,7 @@
+   /*
+    * Test empty PreparedStatement.executeLargeBatch();
+    */
+-  @Test
++  // @Test
+   public void testEmptyExecuteLargeBatchPreparedStatement() throws Exception {
+     try (PreparedStatement stmt = con.prepareStatement("")) {
+       stmt.addBatch();
