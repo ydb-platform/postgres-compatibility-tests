@@ -10,6 +10,7 @@ postgres: docker-image postgres:14
 
 Test run on virtual computer at Yandex cloud. CPU: Intel Xeon Processor (Icelake), 32 cores, RAM: 64 GB, DISK: SSD
 
+Date: 2024-03-06
 
 | server   | benchmark     | protocol |   tps |
 | -------- | ------------- | -------- | ----: |
