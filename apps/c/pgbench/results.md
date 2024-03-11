@@ -12,17 +12,12 @@ Test run on virtual computer at Yandex cloud. CPU: Intel Xeon Processor (Icelake
 
 Date: 2024-03-06
 
-| server   | benchmark     | protocol |   tps |
-| -------- | ------------- | -------- | ----: |
-| ydb      | select-only   | simple   |  1864 |
-| ydb      | select-only   | prepared |    22 |
-| ydb      | simple-update | simple   |    95 |
-| ydb      | simple-update | prepared |     4 |
-| ydb      | tpcb-like     | simple   |    49 |
-| ydb      | tpcb-like     | prepared |     3 |
-| postgres | select-only   | simple   | 10620 |
-| postgres | select-only   | prepared | 14296 |
-| postgres | simple-update | simple   |   670 |
-| postgres | simple-update | prepared |   877 |
-| postgres | tpcb-like     | simple   |   661 |
-| postgres | tpcb-like     | prepared |   681 |
+| server | benchmark     | protocol | ydb tps | pg tsp |
+| ------ | ------------- | -------- | ------: | -----: |
+| ydb    | select-only   | simple   |    1864 |  10620 |
+| ydb    | select-only   | prepared |      22 |  14296 |
+| ydb    | simple-update | simple   |      95 |    670 |
+| ydb    | simple-update | prepared |       4 |    877 |
+| ydb    | tpcb-like     | simple   |      49 |    661 |
+| ydb    | tpcb-like     | prepared |       3 |    681 |
+
