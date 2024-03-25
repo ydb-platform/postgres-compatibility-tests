@@ -25,7 +25,7 @@
 --
 
 CREATE TABLE actor (
-    actor_id BIGSERIAL NOT NULL,
+    actor_id SERIAL NOT NULL,
     actor_user integer,
     actor_name text NOT NULL,
     PRIMARY KEY(actor_id)
@@ -64,7 +64,7 @@ CREATE TABLE bot_passwords (
     bp_token text DEFAULT '' NOT NULL,
     bp_restrictions text NOT NULL,
     bp_grants text NOT NULL,
-    __ydb_stub_id BIGSERIAL PRIMARY KEY
+    __ydb_stub_id SERIAL PRIMARY KEY
 );
 
 
@@ -93,7 +93,7 @@ CREATE TABLE categorylinks (
     cl_timestamp timestamp with time zone NOT NULL,
     cl_collation text DEFAULT '' NOT NULL,
     cl_type text DEFAULT 'page' NOT NULL,
-    __ydb_stub_id BIGSERIAL PRIMARY KEY
+    __ydb_stub_id SERIAL PRIMARY KEY
 );
 
 
@@ -130,7 +130,7 @@ CREATE TABLE change_tag_def (
 --
 
 CREATE TABLE comment (
-    comment_id BIGSERIAL NOT NULL,
+    comment_id SERIAL NOT NULL,
     comment_hash integer NOT NULL,
     comment_text text NOT NULL,
     comment_data text,
@@ -142,7 +142,7 @@ CREATE TABLE comment (
 --
 
 CREATE TABLE content (
-    content_id BIGSERIAL NOT NULL,
+    content_id SERIAL NOT NULL,
     content_size integer NOT NULL,
     content_sha1 text NOT NULL,
     content_model integer NOT NULL,
@@ -233,7 +233,7 @@ CREATE TABLE imagelinks (
     il_from integer DEFAULT 0 NOT NULL,
     il_to text DEFAULT '' NOT NULL,
     il_from_namespace integer DEFAULT 0 NOT NULL,
-    __ydb_stub_id BIGSERIAL PRIMARY KEY
+    __ydb_stub_id SERIAL PRIMARY KEY
 );
 
 
@@ -299,7 +299,7 @@ CREATE TABLE ipblocks_restrictions (
     ir_ipb_id integer NOT NULL,
     ir_type integer NOT NULL,
     ir_value integer NOT NULL,
-    __ydb_stub_id BIGSERIAL PRIMARY KEY
+    __ydb_stub_id SERIAL PRIMARY KEY
 );
 
 
@@ -311,7 +311,7 @@ CREATE TABLE iwlinks (
     iwl_from integer DEFAULT 0 NOT NULL,
     iwl_prefix text DEFAULT '' NOT NULL,
     iwl_title text DEFAULT '' NOT NULL,
-    __ydb_stub_id BIGSERIAL PRIMARY KEY
+    __ydb_stub_id SERIAL PRIMARY KEY
 );
 
 
@@ -343,7 +343,7 @@ CREATE TABLE l10n_cache (
     lc_lang text NOT NULL,
     lc_key text NOT NULL,
     lc_value text NOT NULL,
-    __ydb_stub_id BIGSERIAL PRIMARY KEY
+    __ydb_stub_id SERIAL PRIMARY KEY
 );
 
 
@@ -355,7 +355,7 @@ CREATE TABLE langlinks (
     ll_from integer DEFAULT 0 NOT NULL,
     ll_lang text DEFAULT '' NOT NULL,
     ll_title text DEFAULT '' NOT NULL,
-    __ydb_stub_id BIGSERIAL PRIMARY KEY
+    __ydb_stub_id SERIAL PRIMARY KEY
 );
 
 
@@ -364,7 +364,7 @@ CREATE TABLE langlinks (
 --
 
 CREATE TABLE linktarget (
-    lt_id BIGSERIAL NOT NULL,
+    lt_id SERIAL NOT NULL,
     lt_namespace integer NOT NULL,
     lt_title text NOT NULL,
     PRIMARY KEY(lt_id)
@@ -379,7 +379,7 @@ CREATE TABLE log_search (
     ls_field text NOT NULL,
     ls_value text NOT NULL,
     ls_log_id integer DEFAULT 0 NOT NULL,
-    __ydb_stub_id BIGSERIAL PRIMARY KEY
+    __ydb_stub_id SERIAL PRIMARY KEY
 );
 
 
@@ -411,7 +411,7 @@ CREATE TABLE module_deps (
     md_module text NOT NULL,
     md_skin text NOT NULL,
     md_deps text NOT NULL,
-    __ydb_stub_id BIGSERIAL PRIMARY KEY
+    __ydb_stub_id SERIAL PRIMARY KEY
 );
 
 
@@ -449,7 +449,7 @@ CREATE TABLE oldimage (
     oi_minor_mime text DEFAULT 'unknown'::text NOT NULL,
     oi_deleted integer DEFAULT 0 NOT NULL,
     oi_sha1 text DEFAULT '' NOT NULL,
-    __ydb_stub_id BIGSERIAL PRIMARY KEY
+    __ydb_stub_id SERIAL PRIMARY KEY
 );
 
 
@@ -483,7 +483,7 @@ CREATE TABLE page_props (
     pp_propname text NOT NULL,
     pp_value text NOT NULL,
     pp_sortkey double precision,
-    __ydb_stub_id BIGSERIAL PRIMARY KEY
+    __ydb_stub_id SERIAL PRIMARY KEY
 );
 
 
@@ -510,8 +510,8 @@ CREATE TABLE pagelinks (
     pl_namespace integer DEFAULT 0 NOT NULL,
     pl_title text DEFAULT '' NOT NULL,
     pl_from_namespace integer DEFAULT 0 NOT NULL,
-    pl_target_id bigint,
-    __ydb_stub_id BIGSERIAL PRIMARY KEY
+    pl_target_id integer,
+    __ydb_stub_id SERIAL PRIMARY KEY
 );
 
 
@@ -527,7 +527,7 @@ CREATE TABLE protected_titles (
     pt_timestamp timestamp with time zone NOT NULL,
     pt_expiry timestamp with time zone NOT NULL,
     pt_create_perm text NOT NULL,
-    __ydb_stub_id BIGSERIAL PRIMARY KEY
+    __ydb_stub_id SERIAL PRIMARY KEY
 );
 
 
@@ -540,7 +540,7 @@ CREATE TABLE querycache (
     qc_value integer DEFAULT 0 NOT NULL,
     qc_namespace integer DEFAULT 0 NOT NULL,
     qc_title text DEFAULT '' NOT NULL,
-    __ydb_stub_id BIGSERIAL PRIMARY KEY
+    __ydb_stub_id SERIAL PRIMARY KEY
 );
 
 
@@ -566,7 +566,7 @@ CREATE TABLE querycachetwo (
     qcc_title text DEFAULT '' NOT NULL,
     qcc_namespacetwo integer DEFAULT 0 NOT NULL,
     qcc_titletwo text DEFAULT '' NOT NULL,
-    __ydb_stub_id BIGSERIAL PRIMARY KEY
+    __ydb_stub_id SERIAL PRIMARY KEY
 );
 
 
@@ -643,7 +643,7 @@ CREATE TABLE searchindex (
     si_page integer NOT NULL,
     si_title text DEFAULT '' NOT NULL,
     si_text text NOT NULL,
-    __ydb_stub_id BIGSERIAL PRIMARY KEY
+    __ydb_stub_id SERIAL PRIMARY KEY
 );
 
 
@@ -655,7 +655,7 @@ CREATE TABLE site_identifiers (
     si_type text NOT NULL,
     si_key text NOT NULL,
     si_site integer NOT NULL,
-    __ydb_stub_id BIGSERIAL PRIMARY KEY
+    __ydb_stub_id SERIAL PRIMARY KEY
 );
 
 
@@ -665,12 +665,12 @@ CREATE TABLE site_identifiers (
 
 CREATE TABLE site_stats (
     ss_row_id integer NOT NULL,
-    ss_total_edits bigint,
-    ss_good_articles bigint,
-    ss_total_pages bigint,
-    ss_users bigint,
-    ss_active_users bigint,
-    ss_images bigint,
+    ss_total_edits integer,
+    ss_good_articles integer,
+    ss_total_pages integer,
+    ss_users integer,
+    ss_active_users integer,
+    ss_images integer,
     PRIMARY KEY(ss_row_id)
 );
 
@@ -715,7 +715,7 @@ CREATE TABLE slots (
     slot_role_id integer NOT NULL,
     slot_content_id integer NOT NULL,
     slot_origin integer NOT NULL,
-    __ydb_stub_id BIGSERIAL PRIMARY KEY
+    __ydb_stub_id SERIAL PRIMARY KEY
 );
 
 
@@ -727,7 +727,7 @@ CREATE TABLE templatelinks (
     tl_from integer DEFAULT 0 NOT NULL,
     tl_target_id integer NOT NULL,
     tl_from_namespace integer DEFAULT 0 NOT NULL,
-    __ydb_stub_id BIGSERIAL PRIMARY KEY
+    __ydb_stub_id SERIAL PRIMARY KEY
 );
 
 
@@ -823,7 +823,7 @@ CREATE TABLE user_autocreate_serial (
 CREATE TABLE user_former_groups (
     ufg_user integer DEFAULT 0 NOT NULL,
     ufg_group text DEFAULT '' NOT NULL,
-    __ydb_stub_id BIGSERIAL PRIMARY KEY
+    __ydb_stub_id SERIAL PRIMARY KEY
 );
 
 
@@ -835,7 +835,7 @@ CREATE TABLE user_groups (
     ug_user integer DEFAULT 0 NOT NULL,
     ug_group text DEFAULT '' NOT NULL,
     ug_expiry timestamp with time zone,
-    __ydb_stub_id BIGSERIAL PRIMARY KEY
+    __ydb_stub_id SERIAL PRIMARY KEY
 );
 
 
@@ -847,7 +847,7 @@ CREATE TABLE user_newtalk (
     user_id integer DEFAULT 0 NOT NULL,
     user_ip text DEFAULT '' NOT NULL,
     user_last_timestamp timestamp with time zone,
-    __ydb_stub_id BIGSERIAL PRIMARY KEY
+    __ydb_stub_id SERIAL PRIMARY KEY
 );
 
 
@@ -859,7 +859,7 @@ CREATE TABLE user_properties (
     up_user integer NOT NULL,
     up_property text NOT NULL,
     up_value text,
-    __ydb_stub_id BIGSERIAL PRIMARY KEY
+    __ydb_stub_id SERIAL PRIMARY KEY
 );
 
 
