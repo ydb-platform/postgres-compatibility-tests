@@ -1,0 +1,20 @@
+services:
+  grafana:
+    image: grafana/grafana:10.4.2-ubuntu
+    container_name: grafana
+    # restart: unless-stopped
+    restart: no
+    network_mode: host
+    environment:
+      - TERM=linux
+      - GF_DATABASE_TYPE=postgres
+      - GF_DATABASE_HOST=localhost:5432
+      - GF_DATABASE_NAME=local
+      - GF_DATABASE_USER=root
+      - GF_DATABASE_PASSWORD=1234
+    # ports:
+    #   - '3000:3000'
+#     volumes:
+#       - 'grafana_storage:/var/lib/grafana'
+# volumes:
+#   grafana_storage: {}
