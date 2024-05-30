@@ -8,7 +8,7 @@ services:
     environment:
       - TERM=linux
       - GF_DATABASE_TYPE=postgres
-      - GF_DATABASE_HOST=localhost:5433
+      - GF_DATABASE_HOST=localhost:5432
       - GF_DATABASE_NAME=local
       - GF_DATABASE_USER=root
       - GF_DATABASE_PASSWORD=1234
