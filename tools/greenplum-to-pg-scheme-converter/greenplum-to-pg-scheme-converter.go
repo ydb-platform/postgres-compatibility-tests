@@ -143,7 +143,10 @@ func (c *Converter) processLineEmpty(line string) {
 
 		// schema workaround
 		line = replaceSchemaAndName(line, c.currentSchema, c.currentName)
-		c.currentText = []string{line}
+		c.currentText = []string{
+			line,
+			"__stub_primary_key SERIAL PRIMARY KEY,",
+		}
 
 	case strings.HasPrefix(line, "CREATE VIEW "):
 		c.parseMode = CreateView
