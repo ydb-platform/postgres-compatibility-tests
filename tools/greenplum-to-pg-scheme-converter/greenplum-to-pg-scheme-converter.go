@@ -2,11 +2,14 @@ package main
 
 import (
 	"bufio"
+	"crypto/md5"
+	"encoding/hex"
 	"flag"
 	"fmt"
 	"io"
 	"log"
 	"os"
+	"sort"
 	"strings"
 )
 
@@ -30,7 +33,7 @@ func main() {
 		Output:          bufio.NewWriter(writer),
 		CommentExcluded: cfg.CommentExcludedLines,
 
-		schemas: make(map[string]bool),
+		creations: make(map[string]map[objectType]map[string]string),
 	}
 
 	c.Convert()
@@ -75,9 +78,16 @@ type Converter struct {
 	Input           *bufio.Scanner
 	Output          *bufio.Writer
 	CommentExcluded bool
+	ConvertSchema   bool
 
 	parseMode converterParseMode
-	schemas   map[string]bool
+
+	creations map[string]map[objectType]map[string]string // map[scheme name][object type][name][creation sql]
+
+	currentSchema     string
+	currentName       string
+	currentText       []string
+	currentObjectType objectType
 }
 
 type converterParseMode int
@@ -89,103 +99,218 @@ const (
 	CreateView
 )
 
+type objectType int
+
+const (
+	ObjectTypeNone objectType = iota
+	ObjectTypeTable
+	ObjectTypeView
+)
+
 func (c *Converter) Convert() {
+	c.parseInput()
+	c.formatOutPut()
+}
+
+func (c *Converter) parseInput() {
 	for c.Input.Scan() {
 		line := c.Input.Text()
-		result := c.processLine(line)
-		if result != "" && !strings.HasSuffix(result, "\n") {
-			result += "\n"
-		}
-		_, err := c.Output.WriteString(result)
-		if err != nil {
-			log.Fatalf("Failed to write line %q: %+v", result, err)
-		}
+		c.parseLine(line)
 	}
 }
 
-func (c *Converter) processLine(line string) string {
+func (c *Converter) parseLine(line string) {
 	switch c.parseMode {
 	case Empty:
-		return c.processLineEmpty(line)
+		c.processLineEmpty(line)
 	case CreateTable:
-		return c.processLineCreateTable(line)
+		c.processLineCreateTable(line)
 	case CreateTableExcludeSuffix:
-		return c.processLineCreateTableExcludeSuffix(line)
+		c.processLineCreateTableExcludeSuffix(line)
 	case CreateView:
-		return c.processLineCreateView(line)
+		c.processLineCreateView(line)
 	default:
 		panic(fmt.Sprintf("Unexpected parseMode for converted process line: %v", c.parseMode))
 	}
 }
 
-func (c *Converter) processLineEmpty(line string) string {
+func (c *Converter) processLineEmpty(line string) {
 	switch {
-	case strings.HasPrefix(line, "CREATE SCHEMA "):
-
-		schemaName := strings.TrimPrefix(line, "CREATE SCHEMA ")
-		schemaName = strings.TrimSuffix(schemaName, ";")
-
-		return c.createSchema(schemaName)
 	case strings.HasPrefix(line, "CREATE TABLE "):
 		c.parseMode = CreateTable
+		c.currentObjectType = ObjectTypeTable
+		c.currentSchema, c.currentName = extractNames(line)
 
-		schemaName := strings.TrimPrefix(line, "CREATE TABLE ")
-		schemaName, _, _ = strings.Cut(schemaName, ".")
+		// schema workaround
+		line = replaceSchemaAndName(line, c.currentSchema, c.currentName)
+		c.currentText = []string{line}
 
-		if !c.schemas[schemaName] {
-			line = c.createSchema(schemaName) + line
-		}
-
-		return line
 	case strings.HasPrefix(line, "CREATE VIEW "):
 		c.parseMode = CreateView
+		c.currentObjectType = ObjectTypeView
+		c.currentSchema, c.currentName = extractNames(line)
+		c.currentText = nil
 
-		schemaName := strings.TrimPrefix(line, "CREATE VIEW ")
-		schemaName, _, _ = strings.Cut(schemaName, ".")
-
-		if !c.schemas[schemaName] {
-			line = c.createSchema(schemaName) + line
-		}
-
-		return line
+		// schema workaround
+		line = replaceSchemaAndName(line, c.currentSchema, c.currentName)
+		c.currentText = []string{line}
 	default:
-		return ""
+		return
 	}
 }
 
-func (c *Converter) processLineCreateTable(line string) string {
-	if line == ")" {
-		c.parseMode = CreateTableExcludeSuffix
-		return ")"
-	}
-
+func (c *Converter) processLineCreateTable(line string) {
 	line, hasComma := strings.CutSuffix(line, ",")
 	line, _, _ = strings.Cut(line, " ENCODING ")
 	if hasComma {
 		line += ","
 	}
-	return line
+
+	c.currentText = append(c.currentText, line)
+
+	if line == ")" {
+		c.parseMode = CreateTableExcludeSuffix
+	}
 }
 
-func (c *Converter) processLineCreateTableExcludeSuffix(line string) string {
-	if strings.TrimSpace(line) == ";" {
-		c.parseMode = Empty
-		return ";\n\n"
+func (c *Converter) processLineCreateTableExcludeSuffix(line string) {
+	if strings.TrimSpace(line) != ";" {
+		return
 	}
 
-	return ""
+	c.currentText = append(c.currentText, ";")
+	c.saveObject()
+
+	c.parseMode = Empty
 }
 
-func (c *Converter) processLineCreateView(line string) string {
+func (c *Converter) processLineCreateView(line string) {
+	c.currentText = append(c.currentText, line)
 	if strings.HasSuffix(line, ";") {
+		c.saveObject()
 		c.parseMode = Empty
-		line += "\n\n"
 	}
-
-	return line
 }
 
-func (c *Converter) createSchema(schemaName string) string {
-	c.schemas[schemaName] = true
-	return "CREATE SCHEMA " + schemaName + ";\n"
+func (c *Converter) saveObject() {
+	if c.creations[c.currentSchema] == nil {
+		c.creations[c.currentSchema] = make(map[objectType]map[string]string)
+	}
+
+	if c.creations[c.currentSchema][c.currentObjectType] == nil {
+		c.creations[c.currentSchema][c.currentObjectType] = make(map[string]string)
+	}
+
+	if c.creations[c.currentSchema][c.currentObjectType][c.currentName] != "" {
+		log.Printf(
+			"WARNING already exists, second save skipped: %v.%v.%v",
+			c.currentSchema,
+			c.currentObjectType,
+			c.currentName,
+		)
+		return
+	}
+
+	content := strings.Join(c.currentText, "\n")
+	c.creations[c.currentSchema][c.currentObjectType][c.currentName] = content
+
+	c.currentObjectType = ObjectTypeNone
+	c.currentText = nil
+	c.currentSchema = ""
+	c.currentName = ""
+}
+
+func (c *Converter) formatOutPut() {
+	//c.formatSchemas()
+	//c.ensureWriteString("\n")
+	c.formatObjects(ObjectTypeTable)
+	//c.formatObjects(ObjectTypeView)
+}
+
+func (c *Converter) formatSchemas() {
+	schemas := extractKeys(c.creations)
+
+	sort.Strings(schemas)
+
+	for _, name := range schemas {
+		c.ensureWriteString("CREATE SCHEMA ")
+		c.ensureWriteString(name)
+		c.ensureWriteString(";\n")
+	}
+}
+
+func (c *Converter) formatObjects(t objectType) {
+	var objectTexts []string
+
+	schemas := extractKeys(c.creations)
+	for _, scheme := range schemas {
+		names := extractKeys(c.creations[scheme][t])
+		for _, name := range names {
+			objectTexts = append(objectTexts, c.creations[scheme][t][name])
+		}
+	}
+
+	outputString := strings.Join(objectTexts, "\n\n")
+	c.ensureWriteString(outputString)
+	c.ensureWriteString("\n")
+}
+
+func (c *Converter) ensureWriteString(s string) {
+	_, err := c.Output.WriteString(s)
+	if err != nil {
+		const maxLineLen = 50
+		if len(s) > maxLineLen {
+			s = s[:maxLineLen] + "..."
+		}
+		log.Fatalf("Failed to write string %q: %+v", err)
+	}
+}
+
+func extractNames(line string) (schemaName, tableName string) {
+	words := strings.SplitN(line, " ", 4)
+	names := words[2]
+	schemaName, tableName, hasDot := strings.Cut(names, ".")
+	if !hasDot {
+		log.Fatalf("line has no dot for split name to schema and table: %q", line)
+	}
+
+	tableName, _, _ = strings.Cut(tableName, " ")
+	return schemaName, tableName
+}
+
+func replaceSchemaAndName(text, schemaName, name string) string {
+	from := schemaName + "." + name
+
+	unquotedName := strings.Trim(name, "\"")
+	to := schemaName + "___" + unquotedName
+
+	const maxPgNameLen = 63
+	const hashLen = 8
+	const origNameLen = maxPgNameLen - hashLen
+
+	if len(to) > maxPgNameLen {
+		hash := md5.Sum([]byte(to))
+		hashString := hex.EncodeToString(hash[:])
+		to = to[:origNameLen] + hashString[:hashLen]
+	}
+
+	res := strings.Replace(text, from, to, -1)
+
+	return res
+}
+
+func extractKeys[K ordered, V any](m map[K]V) []K {
+	keys := make([]K, 0, len(m))
+	for k := range m {
+		keys = append(keys, k)
+	}
+	sort.Slice(keys, func(i, j int) bool {
+		return keys[i] < keys[j]
+	})
+
+	return keys
+}
+
+type ordered interface {
+	string | ~int
 }
