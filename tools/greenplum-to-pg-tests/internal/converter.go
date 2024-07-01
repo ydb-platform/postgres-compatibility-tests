@@ -1,82 +1,17 @@
-package main
+package internal
 
 import (
 	"bufio"
 	"crypto/md5"
 	"encoding/hex"
-	"flag"
 	"fmt"
 	"io"
 	"log"
-	"os"
 	"sort"
 	"strings"
 )
 
-type Config struct {
-	InputFilePath        string
-	OutputFilePath       string
-	CommentExcludedLines bool
-}
-
-func main() {
-	cfg := initConfig()
-
-	reader := openReader(cfg.InputFilePath)
-	defer func() { _ = reader.Close() }()
-
-	writer := openWriter(cfg.OutputFilePath)
-	defer func() { _ = writer.Close() }()
-
-	c := Converter{
-		Input:           bufio.NewScanner(reader),
-		Output:          bufio.NewWriter(writer),
-		CommentExcluded: cfg.CommentExcludedLines,
-
-		creations: make(map[string]map[objectType]map[string]string),
-	}
-
-	c.Convert()
-}
-
-func initConfig() Config {
-	var cfg Config
-	flag.StringVar(&cfg.InputFilePath, "input-file", "", "Path to input sql file with schema. Read from stdin by default.")
-	flag.StringVar(&cfg.OutputFilePath, "output-file", "", "Path to result of convertation. Stdout by default.")
-	flag.BoolVar(&cfg.CommentExcludedLines, "comment-excluded", false, "Comment excluded lines instead of remove it")
-	flag.Parse()
-
-	return cfg
-}
-
-func openReader(path string) io.ReadCloser {
-	if path == "" {
-		return io.NopCloser(os.Stdin)
-	}
-	return must(os.Open(path))
-}
-
-func openWriter(path string) io.WriteCloser {
-	if path == "" {
-		return os.Stdout
-	}
-	return must(os.Create(path))
-}
-
-func must0(err error) {
-	if err != nil {
-		panic(err)
-	}
-}
-
-func must[R any](res R, err error) R {
-	must0(err)
-	return res
-}
-
-type Converter struct {
-	Input           *bufio.Scanner
-	Output          *bufio.Writer
+type PgSchema struct {
 	CommentExcluded bool
 	ConvertSchema   bool
 
@@ -84,10 +19,18 @@ type Converter struct {
 
 	creations map[string]map[objectType]map[string]string // map[scheme name][object type][name][creation sql]
 
+	input             *bufio.Scanner
+	output            *bufio.Writer
 	currentSchema     string
 	currentName       string
 	currentText       []string
 	currentObjectType objectType
+}
+
+func NewPgSchema() *PgSchema {
+	return &PgSchema{
+		creations: make(map[string]map[objectType]map[string]string),
+	}
 }
 
 type converterParseMode int
@@ -107,19 +50,25 @@ const (
 	ObjectTypeView
 )
 
-func (c *Converter) Convert() {
+func (c *PgSchema) Read(reader io.Reader) {
+	c.input = bufio.NewScanner(reader)
 	c.parseInput()
-	c.formatOutPut()
 }
 
-func (c *Converter) parseInput() {
-	for c.Input.Scan() {
-		line := c.Input.Text()
+func (c *PgSchema) Write(writer io.Writer) error {
+	c.output = bufio.NewWriter(writer)
+	c.formatOutPut()
+	return c.output.Flush()
+}
+
+func (c *PgSchema) parseInput() {
+	for c.input.Scan() {
+		line := c.input.Text()
 		c.parseLine(line)
 	}
 }
 
-func (c *Converter) parseLine(line string) {
+func (c *PgSchema) parseLine(line string) {
 	switch c.parseMode {
 	case Empty:
 		c.processLineEmpty(line)
@@ -134,7 +83,7 @@ func (c *Converter) parseLine(line string) {
 	}
 }
 
-func (c *Converter) processLineEmpty(line string) {
+func (c *PgSchema) processLineEmpty(line string) {
 	switch {
 	case strings.HasPrefix(line, "CREATE TABLE "):
 		c.parseMode = CreateTable
@@ -162,7 +111,7 @@ func (c *Converter) processLineEmpty(line string) {
 	}
 }
 
-func (c *Converter) processLineCreateTable(line string) {
+func (c *PgSchema) processLineCreateTable(line string) {
 	line, hasComma := strings.CutSuffix(line, ",")
 	line, _, _ = strings.Cut(line, " ENCODING ")
 	if hasComma {
@@ -176,7 +125,7 @@ func (c *Converter) processLineCreateTable(line string) {
 	}
 }
 
-func (c *Converter) processLineCreateTableExcludeSuffix(line string) {
+func (c *PgSchema) processLineCreateTableExcludeSuffix(line string) {
 	if strings.TrimSpace(line) != ";" {
 		return
 	}
@@ -187,7 +136,7 @@ func (c *Converter) processLineCreateTableExcludeSuffix(line string) {
 	c.parseMode = Empty
 }
 
-func (c *Converter) processLineCreateView(line string) {
+func (c *PgSchema) processLineCreateView(line string) {
 	c.currentText = append(c.currentText, line)
 	if strings.HasSuffix(line, ";") {
 		c.saveObject()
@@ -195,7 +144,7 @@ func (c *Converter) processLineCreateView(line string) {
 	}
 }
 
-func (c *Converter) saveObject() {
+func (c *PgSchema) saveObject() {
 	if c.creations[c.currentSchema] == nil {
 		c.creations[c.currentSchema] = make(map[objectType]map[string]string)
 	}
@@ -223,14 +172,14 @@ func (c *Converter) saveObject() {
 	c.currentName = ""
 }
 
-func (c *Converter) formatOutPut() {
+func (c *PgSchema) formatOutPut() {
 	//c.formatSchemas()
 	//c.ensureWriteString("\n")
 	c.formatObjects(ObjectTypeTable)
 	//c.formatObjects(ObjectTypeView)
 }
 
-func (c *Converter) formatSchemas() {
+func (c *PgSchema) formatSchemas() {
 	schemas := extractKeys(c.creations)
 
 	sort.Strings(schemas)
@@ -242,7 +191,7 @@ func (c *Converter) formatSchemas() {
 	}
 }
 
-func (c *Converter) formatObjects(t objectType) {
+func (c *PgSchema) formatObjects(t objectType) {
 	var objectTexts []string
 
 	schemas := extractKeys(c.creations)
@@ -258,8 +207,8 @@ func (c *Converter) formatObjects(t objectType) {
 	c.ensureWriteString("\n")
 }
 
-func (c *Converter) ensureWriteString(s string) {
-	_, err := c.Output.WriteString(s)
+func (c *PgSchema) ensureWriteString(s string) {
+	_, err := c.output.WriteString(s)
 	if err != nil {
 		const maxLineLen = 50
 		if len(s) > maxLineLen {
