@@ -1,10 +1,13 @@
 issues:
   - name: Skip unknown tables
     issue_regexp: Cannot find table
+    tag: skip
   - name: Rollback in query service (OK)
     issue_regexp: ROLLBACK not supported inside YDB query
+    tag: skip
   - name: Commit in query service (OK)
     issue_regexp: COMMIT not supported inside YDB query
+    tag: skip
   - name: Parser unimmplemented
     issue_regexp: "RawStmt: alternative is not implemented yet : "
   - name: Call function from own schema
@@ -31,4 +34,4 @@ issues:
     tag: greenplum
     issue_regexp:
       - "ERROR:  syntax error at or near \"RANDOMLY\""
-    query_regexp: "distributed.*RANDOMLY"
+    query_regexp: "distributed\\s+RANDOMLY"

@@ -13,6 +13,7 @@ import (
 	"math"
 	"os"
 	"regexp"
+	"strings"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -45,7 +46,7 @@ func init() {
 	extractSessionsCmd.PersistentFlags().IntVar(&extractSessionsConfig.limitRequests, "requests-limit", 1000, "Limit number of parse requests, 0 mean unlimited")
 	extractSessionsCmd.PersistentFlags().StringVar(&extractSessionsConfig.rulesFile, "rules-file", "issues.yaml", "Rules for detect issue. Set empty for skip read rules.")
 	extractSessionsCmd.PersistentFlags().BoolVar(&extractSessionsConfig.printKnownIssues, "print-known-issues", false, "Print issues, which exists in rules file")
-	extractSessionsCmd.PersistentFlags().IntVar(&extractSessionsConfig.errorLimit, "print-errors-limit", 10, "Limit of printed errors. 0 mean infinite")
+	extractSessionsCmd.PersistentFlags().IntVar(&extractSessionsConfig.errorLimit, "print-errors-limit", 1, "Limit of printed errors. 0 mean infinite")
 }
 
 // extraxtSessionsCmd represents the extraxtSessions command
@@ -225,7 +226,9 @@ const (
 )
 
 func checkQuery(rules Rules, db *ydb.Driver, queryText string) (reason string, checkResult checkResultType) {
+	queryText = strings.TrimSpace(queryText)
 	queryText = fixSchemaNames(queryText)
+	queryText = fixCreateTable(queryText)
 
 	ctx := context.Background()
 	res, err := db.Query().Execute(
@@ -261,9 +264,20 @@ type ReplacePair struct {
 	To   string
 }
 
-var schemaTableRegexp = regexp.MustCompile(`(?i)(FROM|JOIN|UPDATE)\s+"?([^\s.]+)"?\."?([^\s.]+)"?`)
+var schemaTableRegexp = regexp.MustCompile(`(?i)(CREATE TABLE|FROM|JOIN|UPDATE)\s+"?([^\s.]+)"?\."?([^\s.]+)"?`)
 
 func fixSchemaNames(queryText string) string {
 	queryText = schemaTableRegexp.ReplaceAllString(queryText, "${1} ${2}___${3}")
+	return queryText
+}
+
+var createTableRegexp = regexp.MustCompile(`^(?i)(CREATE TABLE.*\()`)
+
+func fixCreateTable(queryText string) string {
+	if !strings.Contains(queryText, "CREATE TABLE") {
+		return queryText
+	}
+
+	queryText = createTableRegexp.ReplaceAllString(queryText, "$1 __stub_primary_key SERIAL PRIMARY KEY,")
 	return queryText
 }
