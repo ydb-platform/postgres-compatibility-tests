@@ -1,0 +1,34 @@
+issues:
+  - name: Skip unknown tables
+    issue_regexp: Cannot find table
+  - name: Rollback in query service (OK)
+    issue_regexp: ROLLBACK not supported inside YDB query
+  - name: Commit in query service (OK)
+    issue_regexp: COMMIT not supported inside YDB query
+  - name: Parser unimmplemented
+    issue_regexp: "RawStmt: alternative is not implemented yet : "
+  - name: Call function from own schema
+    issue_regexp: "FuncCall: expected pg_catalog, but got: "
+  - name: Partial request
+    issue_regexp: "ERROR:  syntax error at end of input"
+  - name: "YQL: Expected type cast node as is_local arg, but got node with tag"
+    issue_regexp: "Expected type cast node as is_local arg, but got node with tag"
+  - name: "PG: unrecognized configuration parameter"
+    issue_regexp: unrecognized configuration parameter
+  - name: "PG: InsertStmt: not supported onConflictClause"
+    issue_regexp: "InsertStmt: not supported onConflictClause"
+  - name: "PG: RangeFunction: unsupported coldeflist"
+    issue_regexp: "RangeFunction: unsupported coldeflist"
+  - name: "PG: Support NOT DISTINCT"
+    issue_regexp: "A_Expr_Kind unsupported value: 4"
+  - name: drop external table
+    tag: greenplum
+    issue_regexp: "ERROR:  syntax error at or near \"external\""
+    query_regexp: "drop external table"
+  - name: Stored procedures
+    issue_regexp: "No such proc: "
+  - name: "Distributed randomly"
+    tag: greenplum
+    issue_regexp:
+      - "ERROR:  syntax error at or near \"RANDOMLY\""
+    query_regexp: "distributed.*RANDOMLY"

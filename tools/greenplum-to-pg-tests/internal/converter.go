@@ -33,6 +33,11 @@ func NewPgSchema() *PgSchema {
 	}
 }
 
+func (c *PgSchema) GetSchemas() []string {
+	schemas := GetSortedKeys(c.creations)
+	return schemas
+}
+
 type converterParseMode int
 
 const (

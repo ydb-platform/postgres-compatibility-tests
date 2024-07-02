@@ -10,9 +10,9 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"math"
 	"os"
 	"regexp"
-	"strings"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -23,21 +23,29 @@ import (
 )
 
 var extractSessionsConfig struct {
+	schemeDumpFile      string
 	sessionsLog         string
 	includeFailed       bool
 	ydbConnectionString string
 	limitRequests       int
+	rulesFile           string
+	printKnownIssues    bool
+	errorLimit          int
 }
 
 func init() {
 	rootCmd.AddCommand(extractSessionsCmd)
 
-	extractSessionsCmd.PersistentFlags().StringVar(&extractSessionsConfig.sessionsLog, "input-file", "", "Set path to input sessions log")
-	must0(extractSessionsCmd.MarkPersistentFlagRequired("input-file"))
+	extractSessionsCmd.PersistentFlags().StringVar(&extractSessionsConfig.schemeDumpFile, "schemedump-file", "", "Path to dump of db schema. Set empty for skip read schema.")
+	extractSessionsCmd.PersistentFlags().StringVar(&extractSessionsConfig.sessionsLog, "query-log", "", "Set path to input sessions log")
+	must0(extractSessionsCmd.MarkPersistentFlagRequired("query-log"))
 
 	extractSessionsCmd.PersistentFlags().BoolVar(&extractSessionsConfig.includeFailed, "include-failed", false, "Extract sessions with failed transactions")
 	extractSessionsCmd.PersistentFlags().StringVar(&extractSessionsConfig.ydbConnectionString, "ydb-connection", "grpc://localhost:2136/local", "Connection string to ydb server for check queries")
 	extractSessionsCmd.PersistentFlags().IntVar(&extractSessionsConfig.limitRequests, "requests-limit", 1000, "Limit number of parse requests, 0 mean unlimited")
+	extractSessionsCmd.PersistentFlags().StringVar(&extractSessionsConfig.rulesFile, "rules-file", "issues.yaml", "Rules for detect issue. Set empty for skip read rules.")
+	extractSessionsCmd.PersistentFlags().BoolVar(&extractSessionsConfig.printKnownIssues, "print-known-issues", false, "Print issues, which exists in rules file")
+	extractSessionsCmd.PersistentFlags().IntVar(&extractSessionsConfig.errorLimit, "print-errors-limit", 10, "Limit of printed errors. 0 mean infinite")
 }
 
 // extraxtSessionsCmd represents the extraxtSessions command
@@ -46,6 +54,30 @@ var extractSessionsCmd = &cobra.Command{
 	Short: "Read session queryies log end extract sessions to files",
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx := context.Background()
+
+		var rules Rules
+		if extractSessionsConfig.rulesFile == "" {
+			log.Println("Skip read rules file.")
+		} else {
+			log.Printf("Reading rules file %q...", extractSessionsConfig.rulesFile)
+			if err := rules.LoadFromFile(extractSessionsConfig.rulesFile); err != nil {
+				log.Fatalf("Failed to read rules file: %v", err)
+			}
+		}
+
+		schema := internal.NewPgSchema()
+		if extractSessionsConfig.schemeDumpFile == "" {
+			log.Println("Skip read session")
+		} else {
+			log.Println("Reading schema.. ")
+			schemaFile, err := os.Open(extractSessionsConfig.schemeDumpFile)
+			if err != nil {
+				log.Fatalf("Failed to open scheme file")
+			}
+
+			schema.Read(schemaFile)
+			_ = schemaFile.Close()
+		}
 
 		log.Println("Connecting to ydb...")
 		connectCtx, cancel := context.WithTimeout(ctx, time.Second*10)
@@ -56,7 +88,7 @@ var extractSessionsCmd = &cobra.Command{
 		cancel()
 
 		sessions := readSessions()
-		checkQueries(db, sessions)
+		checkQueries(rules, schema, db, sessions)
 	},
 }
 
@@ -120,20 +152,20 @@ readLoop:
 
 	var res []internal.Session
 
-	pids := getSortedKeys(sortedLogs)
+	pids := internal.GetSortedKeys(sortedLogs)
 	for _, pid := range pids {
-		sessionIDs := getSortedKeys(sortedLogs[pid])
+		sessionIDs := internal.GetSortedKeys(sortedLogs[pid])
 		for _, sessionID := range sessionIDs {
 			var session internal.Session
 			session.ID = fmt.Sprintf("%v-%v", pid, sessionID)
 
-			transactionNums := getSortedKeys(sortedLogs[pid][sessionID])
+			transactionNums := internal.GetSortedKeys(sortedLogs[pid][sessionID])
 			for _, transactionNum := range transactionNums {
 				transaction := internal.Transaction{
 					Number: transactionNum,
 				}
 
-				queryIDs := getSortedKeys(sortedLogs[pid][sessionID][transactionNum])
+				queryIDs := internal.GetSortedKeys(sortedLogs[pid][sessionID][transactionNum])
 				for _, queryID := range queryIDs {
 					entry := sortedLogs[pid][sessionID][transactionNum][queryID]
 					transaction.Queries = append(transaction.Queries, internal.Query{
@@ -154,8 +186,13 @@ readLoop:
 	return res
 }
 
-func checkQueries(db *ydb.Driver, sessions []internal.Session) {
+func checkQueries(rules Rules, pgSchema *internal.PgSchema, db *ydb.Driver, sessions []internal.Session) {
 	checked := map[string]bool{}
+
+	limit := extractSessionsConfig.errorLimit
+	if limit == 0 {
+		limit = math.MaxInt
+	}
 
 	for _, session := range sessions {
 		for _, transaction := range session.Transactions {
@@ -163,20 +200,33 @@ func checkQueries(db *ydb.Driver, sessions []internal.Session) {
 				if checked[pgQuery.Text] {
 					continue
 				}
-				reason, ok := checkQuery(db, pgQuery.Text)
-
-				if !ok {
-					log.Println(reason)
-				}
-
 				checked[pgQuery.Text] = true
+
+				reason, checkResult := checkQuery(rules, db, pgQuery.Text)
+				if checkResult == checkResultErrUnknown || checkResult == checkResultErrKnown && extractSessionsConfig.printKnownIssues {
+					log.Printf("Reason: %v\nQuery:%v\n\n", reason, pgQuery.Text)
+					limit--
+					if limit == 0 {
+						log.Println("Print error limit reached:", extractSessionsConfig.errorLimit)
+						return
+					}
+				}
 			}
 		}
 	}
 }
 
-func checkQuery(db *ydb.Driver, queryText string) (reason string, ok bool) {
-	//queryText = "--!syntax_pg\n" + queryText
+type checkResultType int
+
+const (
+	checkResultOK checkResultType = iota
+	checkResultErrKnown
+	checkResultErrUnknown
+)
+
+func checkQuery(rules Rules, db *ydb.Driver, queryText string) (reason string, checkResult checkResultType) {
+	queryText = fixSchemaNames(queryText)
+
 	ctx := context.Background()
 	res, err := db.Query().Execute(
 		ctx,
@@ -189,100 +239,31 @@ func checkQuery(db *ydb.Driver, queryText string) (reason string, ok bool) {
 	}
 
 	if err == nil {
-		return "", true
+		return "", checkResultOK
 	}
+
+	var ydbErr ydb.Error
+	errors.As(err, &ydbErr)
 
 	issues := internal.ExtractIssues(err)
 
-	reason = detectProblem(queryText, issues)
+	if reason = rules.FindKnownIssue(queryText, issues); reason != "" {
+		return reason, checkResultErrKnown
+	}
 
-	return reason, false
+	reason = fmt.Sprintf("%v (%v): %#v", ydbErr.Name(), ydbErr.Code(), issues)
+
+	return reason, checkResultErrUnknown
 }
 
-func detectProblem(query string, issues []internal.YdbIssue) string {
-	query = strings.ToUpper(query)
-	for _, issue := range issues {
-		if reason, known := isKnownProblem(query, issue); known {
-			return reason
-		}
-	}
-
-	reason := fmt.Sprint(issues)
-	return reason
+type ReplacePair struct {
+	From string
+	To   string
 }
 
-func isKnownProblem(q string, issue internal.YdbIssue) (reason string, known bool) {
-	if reason, known = isGreenplumError(q, issue); known {
-		return reason, known
-	}
+var schemaTableRegexp = regexp.MustCompile(`(?i)(FROM|JOIN|UPDATE)\s+"?([^\s.]+)"?\."?([^\s.]+)"?`)
 
-	if strings.HasPrefix(issue.Message, "Unknown cluster: ") {
-		return "Unknown scheme", true
-	}
-
-	if issue.Message == "ROLLBACK not supported inside YDB query" {
-		return "ROLLBACK not supported", true
-	}
-	if issue.Message == "COMMIT not supported inside YDB query" {
-		return "COMMIT not supported", true
-	}
-
-	if strings.HasPrefix(issue.Message, "RawStmt: alternative is not implemented yet : ") {
-		return "YQL:" + issue.Message, true
-	}
-
-	if strings.HasPrefix(issue.Message, "FuncCall: expected pg_catalog, but got: ") {
-		return "Call function from own schema", true
-	}
-
-	if issue.Message == "ERROR:  syntax error at end of input" {
-		return "Partial request", true
-	}
-
-	if issue.Message == "Expected type cast node as is_local arg, but got node with tag" {
-		return "YQL: Expected type cast node as is_local arg, but got node with tag", true
-	}
-
-	if strings.HasPrefix(issue.Message, "unrecognized configuration parameter ") {
-		return "PG: unrecognized configuration parameter", true
-	}
-
-	if strings.HasPrefix(issue.Message, "InsertStmt: not supported onConflictClause") {
-		return "PG: InsertStmt: not supported onConflictClause", true
-	}
-
-	if strings.HasPrefix(issue.Message, "RangeFunction: unsupported coldeflist") {
-		return "PG: RangeFunction: unsupported coldeflist", true
-	}
-
-	if issue.Message == "A_Expr_Kind unsupported value: 4" {
-		return "PG: Support NOT DISTINCT", true
-	}
-
-	return "", false
+func fixSchemaNames(queryText string) string {
+	queryText = schemaTableRegexp.ReplaceAllString(queryText, "${1} ${2}___${3}")
+	return queryText
 }
-
-func isGreenplumError(q string, issue internal.YdbIssue) (reason string, known bool) {
-	if strings.HasPrefix(issue.Message, "VariableSetStmt, not supported name: gp_") {
-		return "Greenplum: unsupported VariableSetStmt", true
-	}
-
-	if strings.HasPrefix(issue.Message, "No such column: sess_id") && strings.Contains(q, "PG_STAT_ACTIVITY") {
-		return "Greenplum: column pg_stat_activity.sess_id", true
-	}
-
-	if issue.Message == "ERROR:  syntax error at or near \"external\"" && strings.HasPrefix(q, "DROP EXTERNAL TABLE ") {
-		return "Greenplum DDL: DROP EXTERNAL TABLE", true
-	}
-
-	if (issue.Message == `ERROR:  syntax error at or near "RANDOMLY"` ||
-		issue.Message == `ERROR:  syntax error at or near "DISTRIBUTED"`) && reDistributedRandomly.MatchString(q) {
-		return "Greenplum DDL: DISTRIBUTED RANDOMLY", true
-	}
-
-	return "", false
-}
-
-var (
-	reDistributedRandomly = regexp.MustCompile(`DISTRIBUTED\s+RANDOMLY`)
-)
