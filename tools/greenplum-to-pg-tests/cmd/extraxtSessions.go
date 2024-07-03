@@ -204,13 +204,17 @@ func checkQueries(rules Rules, pgSchema *internal.PgSchema, db *ydb.Driver, sess
 				checked[pgQuery.Text] = true
 
 				reason, checkResult := checkQuery(rules, db, pgQuery.Text)
-				if checkResult == checkResultErrUnknown && !extractSessionsConfig.printKnownIssues || checkResult == checkResultErrKnown && extractSessionsConfig.printKnownIssues {
+				if !extractSessionsConfig.printKnownIssues && checkResult == checkResultErrUnknown {
 					log.Printf("Reason: %v\nQuery:%v\n\n", reason, pgQuery.Text)
 					limit--
-					if limit == 0 {
-						log.Println("Print error limit reached:", extractSessionsConfig.errorLimit)
-						return
-					}
+				}
+				if extractSessionsConfig.printKnownIssues && checkResult == checkResultErrKnown {
+					log.Printf("Reason: %v", reason)
+					limit--
+				}
+				if limit == 0 {
+					log.Println("Print error limit reached:", extractSessionsConfig.errorLimit)
+					return
 				}
 			}
 		}
