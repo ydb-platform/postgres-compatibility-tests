@@ -8,12 +8,21 @@ issues:
   - name: Commit in query service (OK)
     issue_regexp: COMMIT not supported inside YDB query
     tag: skip
-  - name: Parser unimmplemented
-    issue_regexp: "RawStmt: alternative is not implemented yet : "
+  - name: Create table as
+    issue_regexp: "^RawStmt: alternative is not implemented yet : 277$"
+    tag: YQLParser
+    example: create table t as select 1
+  - name: Unimplemented Discard
+    issue_regexp: "^RawStmt: alternative is not implemented yet : 282$"
+    example: DISCARD ALL
+  - name: Generator functions in SELECT
+    issue_regexp: "^Generator functions are not allowed in: SELECT$"
+    example: SELECT UNNEST($1)
   - name: Call function from own schema
     issue_regexp: "FuncCall: expected pg_catalog, but got: "
   - name: Partial request
     issue_regexp: "ERROR:  syntax error at end of input"
+    tag: skip
   - name: "YQL: Expected type cast node as is_local arg, but got node with tag"
     issue_regexp: "Expected type cast node as is_local arg, but got node with tag"
   - name: "PG: unrecognized configuration parameter"
@@ -34,4 +43,8 @@ issues:
     tag: greenplum
     issue_regexp:
       - "ERROR:  syntax error at or near \"RANDOMLY\""
-    query_regexp: "distributed\\s+RANDOMLY"
+      - "ERROR:  syntax error at or near \"DISTRIBUTED\""
+    query_regexp: "(?i)DISTRIBUTED\\s+RANDOMLY"
+  - name: Not supported set greenplum var
+    issue_regexp: "VariableSetStmt, not supported name: gp_"
+    query_regexp: ^SET gp_

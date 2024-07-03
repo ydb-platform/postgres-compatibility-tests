@@ -45,8 +45,8 @@ func init() {
 	extractSessionsCmd.PersistentFlags().StringVar(&extractSessionsConfig.ydbConnectionString, "ydb-connection", "grpc://localhost:2136/local", "Connection string to ydb server for check queries")
 	extractSessionsCmd.PersistentFlags().IntVar(&extractSessionsConfig.limitRequests, "requests-limit", 1000, "Limit number of parse requests, 0 mean unlimited")
 	extractSessionsCmd.PersistentFlags().StringVar(&extractSessionsConfig.rulesFile, "rules-file", "issues.yaml", "Rules for detect issue. Set empty for skip read rules.")
-	extractSessionsCmd.PersistentFlags().BoolVar(&extractSessionsConfig.printKnownIssues, "print-known-issues", false, "Print issues, which exists in rules file")
-	extractSessionsCmd.PersistentFlags().IntVar(&extractSessionsConfig.errorLimit, "print-errors-limit", 1, "Limit of printed errors. 0 mean infinite")
+	extractSessionsCmd.PersistentFlags().BoolVar(&extractSessionsConfig.printKnownIssues, "print-known-issues", false, "Print known issues instead of unknown")
+	extractSessionsCmd.PersistentFlags().IntVar(&extractSessionsConfig.errorLimit, "print-errors-limit", 0, "Limit of printed errors. 0 mean infinite")
 }
 
 // extraxtSessionsCmd represents the extraxtSessions command
@@ -204,7 +204,7 @@ func checkQueries(rules Rules, pgSchema *internal.PgSchema, db *ydb.Driver, sess
 				checked[pgQuery.Text] = true
 
 				reason, checkResult := checkQuery(rules, db, pgQuery.Text)
-				if checkResult == checkResultErrUnknown || checkResult == checkResultErrKnown && extractSessionsConfig.printKnownIssues {
+				if checkResult == checkResultErrUnknown && !extractSessionsConfig.printKnownIssues || checkResult == checkResultErrKnown && extractSessionsConfig.printKnownIssues {
 					log.Printf("Reason: %v\nQuery:%v\n\n", reason, pgQuery.Text)
 					limit--
 					if limit == 0 {
@@ -264,7 +264,7 @@ type ReplacePair struct {
 	To   string
 }
 
-var schemaTableRegexp = regexp.MustCompile(`(?i)(CREATE TABLE|FROM|JOIN|UPDATE)\s+"?([^\s.]+)"?\."?([^\s.]+)"?`)
+var schemaTableRegexp = regexp.MustCompile(`(?i)(CREATE TABLE|FROM|INSERT INTO|JOIN|UPDATE)\s+"?([^\s.]+)"?\."?([^\s.]+)"?`)
 
 func fixSchemaNames(queryText string) string {
 	queryText = schemaTableRegexp.ReplaceAllString(queryText, "${1} ${2}___${3}")
