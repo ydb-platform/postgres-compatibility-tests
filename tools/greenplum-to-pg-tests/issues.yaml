@@ -1,50 +1,97 @@
+stat:
+  total_checked_queries: 23
+  total_ok: 15
+  ok_percent: 65.21739130434783
 issues:
   - name: Skip unknown tables
-    issue_regexp: Cannot find table
-    tag: skip
-  - name: Rollback in query service (OK)
-    issue_regexp: ROLLBACK not supported inside YDB query
-    tag: skip
-  - name: Commit in query service (OK)
-    issue_regexp: COMMIT not supported inside YDB query
-    tag: skip
-  - name: Create table as
-    issue_regexp: "^RawStmt: alternative is not implemented yet : 277$"
-    tag: YQLParser
-    example: create table t as select 1
-  - name: Unimplemented Discard
-    issue_regexp: "^RawStmt: alternative is not implemented yet : 282$"
-    example: DISCARD ALL
-  - name: Generator functions in SELECT
-    issue_regexp: "^Generator functions are not allowed in: SELECT$"
-    example: SELECT UNNEST($1)
-  - name: Call function from own schema
-    issue_regexp: "FuncCall: expected pg_catalog, but got: "
-  - name: Partial request
-    issue_regexp: "ERROR:  syntax error at end of input"
-    tag: skip
-  - name: "YQL: Expected type cast node as is_local arg, but got node with tag"
-    issue_regexp: "Expected type cast node as is_local arg, but got node with tag"
-  - name: "PG: unrecognized configuration parameter"
-    issue_regexp: unrecognized configuration parameter
-  - name: "PG: InsertStmt: not supported onConflictClause"
-    issue_regexp: "InsertStmt: not supported onConflictClause"
-  - name: "PG: RangeFunction: unsupported coldeflist"
-    issue_regexp: "RangeFunction: unsupported coldeflist"
-  - name: "PG: Support NOT DISTINCT"
-    issue_regexp: "A_Expr_Kind unsupported value: 4"
-  - name: drop external table
-    tag: greenplum
-    issue_regexp: "ERROR:  syntax error at or near \"external\""
-    query_regexp: "drop external table"
-  - name: Stored procedures
-    issue_regexp: "No such proc: "
-  - name: "Distributed randomly"
-    tag: greenplum
+    count: 11
+    tag:
+      - skip
     issue_regexp:
-      - "ERROR:  syntax error at or near \"RANDOMLY\""
-      - "ERROR:  syntax error at or near \"DISTRIBUTED\""
-    query_regexp: "(?i)DISTRIBUTED\\s+RANDOMLY"
+      - Cannot find table
+  - name: drop external table
+    count: 2
+    tag:
+      - greenplum
+    issue_regexp:
+      - 'ERROR:  syntax error at or near "external"'
+    query_regexp:
+      - drop external table
+  - name: Create table as
+    count: 2
+    tag:
+      - YQLParser
+    issue_regexp:
+      - '^RawStmt: alternative is not implemented yet : 277$'
+    example: create table t as select 1
+  - name: Distributed randomly
+    count: 2
+    tag:
+      - greenplum
+    issue_regexp:
+      - 'ERROR:  syntax error at or near "RANDOMLY"'
+      - 'ERROR:  syntax error at or near "DISTRIBUTED"'
+    query_regexp:
+      - (?i)DISTRIBUTED\s+RANDOMLY
+  - name: Stored procedures
+    count: 2
+    issue_regexp:
+      - 'No such proc: '
+  - name: Rollback in query service (OK)
+    count: 1
+    tag:
+      - skip
+    issue_regexp:
+      - ROLLBACK not supported inside YDB query
+  - name: Commit in query service (OK)
+    count: 1
+    tag:
+      - skip
+    issue_regexp:
+      - COMMIT not supported inside YDB query
   - name: Not supported set greenplum var
-    issue_regexp: "VariableSetStmt, not supported name: gp_"
-    query_regexp: ^SET gp_
+    count: 1
+    issue_regexp:
+      - 'VariableSetStmt, not supported name: gp_'
+    query_regexp:
+      - ^SET gp_
+  - name: Partial request
+    count: 1
+    tag:
+      - skip
+    issue_regexp:
+      - 'ERROR:  syntax error at end of input'
+  - name: 'YQL: Expected type cast node as is_local arg, but got node with tag'
+    count: 0
+    issue_regexp:
+      - Expected type cast node as is_local arg, but got node with tag
+  - name: 'PG: InsertStmt: not supported onConflictClause'
+    count: 0
+    issue_regexp:
+      - 'InsertStmt: not supported onConflictClause'
+  - name: 'PG: RangeFunction: unsupported coldeflist'
+    count: 0
+    issue_regexp:
+      - 'RangeFunction: unsupported coldeflist'
+  - name: 'PG: Support NOT DISTINCT'
+    count: 0
+    issue_regexp:
+      - 'A_Expr_Kind unsupported value: 4'
+  - name: 'PG: unrecognized configuration parameter'
+    count: 0
+    issue_regexp:
+      - unrecognized configuration parameter
+  - name: Call function from own schema
+    count: 0
+    issue_regexp:
+      - 'FuncCall: expected pg_catalog, but got: '
+  - name: Generator functions in SELECT
+    count: 0
+    issue_regexp:
+      - '^Generator functions are not allowed in: SELECT$'
+    example: SELECT UNNEST($1)
+  - name: Unimplemented Discard
+    count: 0
+    issue_regexp:
+      - '^RawStmt: alternative is not implemented yet : 282$'
+    example: DISCARD ALL

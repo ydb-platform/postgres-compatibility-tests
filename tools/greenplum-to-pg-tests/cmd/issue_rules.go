@@ -1,10 +1,13 @@
 package cmd
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
+	"math"
 	"os"
 	"regexp"
+	"slices"
 
 	"gopkg.in/yaml.v3"
 
@@ -12,8 +15,13 @@ import (
 )
 
 type Rules struct {
-	StatTotalCount int `yaml:"stat_total_count"`
-	Issues         []PgIssueRules
+	TotalStat struct {
+		TotalCount int     `yaml:"total_checked_queries,omitempty"`
+		TotalOk    int     `yaml:"total_ok,omitempty"`
+		OkPercent  float64 `yaml:"ok_percent,omitempty"`
+	} `yaml:"stat"`
+
+	Issues []PgIssueRules
 }
 
 func (r *Rules) LoadFromFile(path string) error {
@@ -51,6 +59,21 @@ func (r *Rules) LoadFromFile(path string) error {
 	return nil
 }
 
+func (r *Rules) WriteToFile(path string) error {
+	buf := &bytes.Buffer{}
+	encoder := yaml.NewEncoder(buf)
+	err := encoder.Encode(r)
+	if err != nil {
+		return fmt.Errorf("failed to encode rules: %w", err)
+	}
+
+	err = os.WriteFile(path, buf.Bytes(), 0666)
+	if err != nil {
+		return fmt.Errorf("failed write file to update rules")
+	}
+	return nil
+}
+
 func (r *Rules) FindKnownIssue(queryText string, ydbIssues []internal.YdbIssue) string {
 	for _, ydbIssue := range ydbIssues {
 		for _, item := range r.Issues {
@@ -63,15 +86,36 @@ func (r *Rules) FindKnownIssue(queryText string, ydbIssues []internal.YdbIssue) 
 	return ""
 }
 
+func (r *Rules) UpdateFromStats(stats SessionStats, sortByCount bool) {
+	r.TotalStat.TotalCount = stats.TotalCount
+	r.TotalStat.TotalOk = stats.OkCount
+	r.TotalStat.OkPercent = math.Round(stats.GetOkPercent()*100) / 100
+
+	okStats := stats.GetTopKnown(math.MaxInt)
+	for _, stat := range okStats {
+		for issueIndex, issue := range r.Issues {
+			if issue.Name == stat.ID {
+				r.Issues[issueIndex].Count = stat.Count
+			}
+		}
+	}
+
+	if sortByCount {
+		slices.SortFunc(r.Issues, func(a, b PgIssueRules) int {
+			return b.Count - a.Count
+		})
+	}
+}
+
 type PgIssueRules struct {
 	Name        string           `yaml:"name"`
-	Tag         OneOrSliceString `yaml:"tag"`
-	IssueLink   string           `yaml:"issue_link"`
-	IssueRegexp OneOrSliceString `yaml:"issue_regexp"`
-	QueryRegexp OneOrSliceString `yaml:"query_regexp"`
-	Example     string           `yaml:"example"`
-	Comment     string           `yaml:"comment"`
 	Count       int              `yaml:"count"`
+	Tag         OneOrSliceString `yaml:"tag,omitempty"`
+	IssueLink   string           `yaml:"issue_link,omitempty"`
+	IssueRegexp OneOrSliceString `yaml:"issue_regexp,omitempty"`
+	QueryRegexp OneOrSliceString `yaml:"query_regexp,omitempty"`
+	Example     string           `yaml:"example,omitempty"`
+	Comment     string           `yaml:"comment,omitempty"`
 
 	issuesRegexpCompiled []*regexp.Regexp
 	queryRegexpCompiled  []*regexp.Regexp

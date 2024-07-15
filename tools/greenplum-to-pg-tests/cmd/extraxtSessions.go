@@ -32,6 +32,8 @@ var extractSessionsConfig struct {
 	ydbConnectionString       string
 	limitRequests             int
 	rulesFile                 string
+	writeRulesWithStat        string
+	sortRulesByCount          bool
 	printKnownIssues          bool
 	printQueryForKnownIssue   bool
 	filterReason              string
@@ -53,6 +55,8 @@ func init() {
 	extractSessionsCmd.PersistentFlags().StringVar(&extractSessionsConfig.ydbConnectionString, "ydb-connection", "grpc://localhost:2136/local", "Connection string to ydb server for check queries")
 	extractSessionsCmd.PersistentFlags().IntVar(&extractSessionsConfig.limitRequests, "requests-limit", 100, "Limit number of parse requests, 0 mean unlimited")
 	extractSessionsCmd.PersistentFlags().StringVar(&extractSessionsConfig.rulesFile, "rules-file", "issues.yaml", "Rules for detect issue. Set empty for skip read rules.")
+	extractSessionsCmd.PersistentFlags().StringVar(&extractSessionsConfig.writeRulesWithStat, "write-updated-rules", "", "Write rules with updated stats, may be same or other file as for rules-file")
+	extractSessionsCmd.PersistentFlags().BoolVar(&extractSessionsConfig.sortRulesByCount, "sort-updates-rules-by-count", true, "")
 	extractSessionsCmd.PersistentFlags().BoolVar(&extractSessionsConfig.printKnownIssues, "print-known-issues", false, "Print known issues instead of unknown")
 	extractSessionsCmd.PersistentFlags().BoolVar(&extractSessionsConfig.printQueryForKnownIssue, "print-query-for-known-issues", true, "Print query for known issues")
 	extractSessionsCmd.PersistentFlags().IntVar(&extractSessionsConfig.errorLimit, "print-errors-limit", 0, "Limit of printed errors. 0 mean infinite")
@@ -105,8 +109,15 @@ var extractSessionsCmd = &cobra.Command{
 		sessions := readSessions()
 
 		log.Println("Start check queries")
-		checkQueries(rules, schema, db, sessions)
+		var stats SessionStats
+		checkQueries(rules, &stats, schema, db, sessions)
 
+		if extractSessionsConfig.writeRulesWithStat != "" {
+			rules.UpdateFromStats(stats, extractSessionsConfig.sortRulesByCount)
+			if err := rules.WriteToFile(extractSessionsConfig.writeRulesWithStat); err != nil {
+				log.Printf("Failed to update rules stat: %v", err)
+			}
+		}
 	},
 }
 
@@ -204,7 +215,7 @@ readLoop:
 	return res
 }
 
-func checkQueries(rules Rules, pgSchema *internal.PgSchema, db *ydb.Driver, sessions []internal.Session) {
+func checkQueries(rules Rules, stats *SessionStats, pgSchema *internal.PgSchema, db *ydb.Driver, sessions []internal.Session) {
 	reasonFilter := regexp.MustCompile(extractSessionsConfig.filterReason)
 	checked := map[string]bool{}
 
@@ -222,7 +233,6 @@ func checkQueries(rules Rules, pgSchema *internal.PgSchema, db *ydb.Driver, sess
 
 	queryIndex := 0
 
-	var stats SessionStats
 	for _, session := range sessions {
 		for _, transaction := range session.Transactions {
 			for _, pgQuery := range transaction.Queries {
@@ -235,7 +245,7 @@ func checkQueries(rules Rules, pgSchema *internal.PgSchema, db *ydb.Driver, sess
 				}
 				checked[pgQuery.Text] = true
 
-				reason, checkResult := checkQuery(&stats, rules, db, pgQuery.Text)
+				reason, checkResult := checkQuery(stats, rules, db, pgQuery.Text)
 				if !reasonFilter.MatchString(reason) {
 					continue
 				}
@@ -297,7 +307,7 @@ func checkQuery(stat *SessionStats, rules Rules, db *ydb.Driver, queryText strin
 	}
 
 	if err == nil {
-		stat.CountOK()
+		stat.CountASOK(queryText)
 		return "", checkResultOK
 	}
 
@@ -307,13 +317,13 @@ func checkQuery(stat *SessionStats, rules Rules, db *ydb.Driver, queryText strin
 	issues := internal.ExtractIssues(err)
 
 	if reason = rules.FindKnownIssue(queryText, issues); reason != "" {
-		stat.CountKnown(reason, queryText)
+		stat.CountAsKnown(reason, queryText)
 		return reason, checkResultErrKnown
 	}
 
 	reason = fmt.Sprintf("%v (%v): %#v", ydbErr.Name(), ydbErr.Code(), issues)
 
-	stat.CountUnknown(issues, queryText)
+	stat.CountAsUnknown(issues, queryText)
 	return reason, checkResultErrUnknown
 }
 
@@ -348,11 +358,15 @@ type SessionStats struct {
 	UnknownProblems map[internal.YdbIssue]*CounterWithExample[internal.YdbIssue]
 }
 
-func (s *SessionStats) CountOK() {
+func (s *SessionStats) GetOkPercent() float64 {
+	return float64(s.OkCount) / float64(s.TotalCount) * 100
+}
+
+func (s *SessionStats) CountASOK(query string) {
 	s.OkCount++
 }
 
-func (s *SessionStats) CountKnown(ruleName string, query string) {
+func (s *SessionStats) CountAsKnown(ruleName string, query string) {
 	s.TotalCount++
 	if s.MatchToRules == nil {
 		s.MatchToRules = make(map[string]*CounterWithExample[string])
@@ -371,7 +385,7 @@ func (s *SessionStats) CountKnown(ruleName string, query string) {
 	stat.Count++
 }
 
-func (s *SessionStats) CountUnknown(issues []internal.YdbIssue, query string) {
+func (s *SessionStats) CountAsUnknown(issues []internal.YdbIssue, query string) {
 	s.TotalCount++
 	if s.UnknownProblems == nil {
 		s.UnknownProblems = make(map[internal.YdbIssue]*CounterWithExample[internal.YdbIssue])
@@ -456,7 +470,7 @@ func (s *SessionStats) SaveToFile(path string) error {
 
 	statFile.TotalCount = s.TotalCount
 	statFile.OkCount = s.OkCount
-	statFile.OkPercent = float64(s.OkCount) / float64(s.TotalCount) * 100
+	statFile.OkPercent = s.GetOkPercent()
 	statFile.UnknownIssues = s.GetTopUnknown(math.MaxInt)
 	statFile.KnownIssues = s.GetTopKnown(math.MaxInt)
 
