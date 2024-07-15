@@ -86,7 +86,7 @@ func (r *Rules) FindKnownIssue(queryText string, ydbIssues []internal.YdbIssue) 
 	return ""
 }
 
-func (r *Rules) UpdateFromStats(stats SessionStats, sortByCount bool) {
+func (r *Rules) UpdateFromStats(stats QueryStats, sortByCount bool) {
 	r.TotalStat.TotalCount = stats.TotalCount
 	r.TotalStat.TotalOk = stats.OkCount
 	r.TotalStat.OkPercent = math.Round(stats.GetOkPercent()*100) / 100

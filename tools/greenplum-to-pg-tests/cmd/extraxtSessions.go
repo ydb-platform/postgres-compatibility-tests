@@ -109,7 +109,7 @@ var extractSessionsCmd = &cobra.Command{
 		sessions := readSessions()
 
 		log.Println("Start check queries")
-		var stats SessionStats
+		var stats QueryStats
 		checkQueries(rules, &stats, schema, db, sessions)
 
 		if extractSessionsConfig.writeRulesWithStat != "" {
@@ -215,9 +215,9 @@ readLoop:
 	return res
 }
 
-func checkQueries(rules Rules, stats *SessionStats, pgSchema *internal.PgSchema, db *ydb.Driver, sessions []internal.Session) {
+func checkQueries(rules Rules, stats *QueryStats, pgSchema *internal.PgSchema, db *ydb.Driver, sessions []internal.Session) {
 	reasonFilter := regexp.MustCompile(extractSessionsConfig.filterReason)
-	checked := map[string]bool{}
+	//checked := map[string]bool{}
 
 	errorLimit := extractSessionsConfig.errorLimit
 	if errorLimit == 0 {
@@ -240,10 +240,10 @@ func checkQueries(rules Rules, stats *SessionStats, pgSchema *internal.PgSchema,
 				if queryIndex%extractSessionsConfig.printProgressEveryQueries == 0 {
 					log.Printf("Checking query %8d/%v", queryIndex, totalQueries)
 				}
-				if checked[pgQuery.Text] {
-					continue
-				}
-				checked[pgQuery.Text] = true
+				//if checked[pgQuery.Text] {
+				//	continue
+				//}
+				//checked[pgQuery.Text] = true
 
 				reason, checkResult := checkQuery(stats, rules, db, pgQuery.Text)
 				if !reasonFilter.MatchString(reason) {
@@ -290,7 +290,7 @@ const (
 	checkResultErrUnknown
 )
 
-func checkQuery(stat *SessionStats, rules Rules, db *ydb.Driver, queryText string) (reason string, checkResult checkResultType) {
+func checkQuery(stat *QueryStats, rules Rules, db *ydb.Driver, queryText string) (reason string, checkResult checkResultType) {
 	queryText = strings.TrimSpace(queryText)
 	queryText = fixSchemaNames(queryText)
 	queryText = fixCreateTable(queryText)
@@ -350,7 +350,7 @@ func fixCreateTable(queryText string) string {
 	return queryText
 }
 
-type SessionStats struct {
+type QueryStats struct {
 	OkCount    int
 	TotalCount int
 
@@ -358,15 +358,16 @@ type SessionStats struct {
 	UnknownProblems map[internal.YdbIssue]*CounterWithExample[internal.YdbIssue]
 }
 
-func (s *SessionStats) GetOkPercent() float64 {
+func (s *QueryStats) GetOkPercent() float64 {
 	return float64(s.OkCount) / float64(s.TotalCount) * 100
 }
 
-func (s *SessionStats) CountASOK(query string) {
+func (s *QueryStats) CountASOK(query string) {
+	s.TotalCount++
 	s.OkCount++
 }
 
-func (s *SessionStats) CountAsKnown(ruleName string, query string) {
+func (s *QueryStats) CountAsKnown(ruleName string, query string) {
 	s.TotalCount++
 	if s.MatchToRules == nil {
 		s.MatchToRules = make(map[string]*CounterWithExample[string])
@@ -383,9 +384,12 @@ func (s *SessionStats) CountAsKnown(ruleName string, query string) {
 	}
 
 	stat.Count++
+	if len(query) < len(stat.Example) {
+		stat.Example = query
+	}
 }
 
-func (s *SessionStats) CountAsUnknown(issues []internal.YdbIssue, query string) {
+func (s *QueryStats) CountAsUnknown(issues []internal.YdbIssue, query string) {
 	s.TotalCount++
 	if s.UnknownProblems == nil {
 		s.UnknownProblems = make(map[internal.YdbIssue]*CounterWithExample[internal.YdbIssue])
@@ -402,18 +406,21 @@ func (s *SessionStats) CountAsUnknown(issues []internal.YdbIssue, query string) 
 			s.UnknownProblems[issue] = stat
 		}
 		stat.Count++
+		if len(query) < len(stat.Example) {
+			stat.Example = query
+		}
 	}
 }
 
-func (s *SessionStats) GetTopKnown(count int) []CounterWithExample[string] {
+func (s *QueryStats) GetTopKnown(count int) []CounterWithExample[string] {
 	return getTopCounter(s.MatchToRules, count)
 }
 
-func (s *SessionStats) GetTopUnknown(count int) []CounterWithExample[internal.YdbIssue] {
+func (s *QueryStats) GetTopUnknown(count int) []CounterWithExample[internal.YdbIssue] {
 	return getTopCounter(s.UnknownProblems, count)
 }
 
-func (s *SessionStats) PrintStats() {
+func (s *QueryStats) PrintStats() {
 	fmt.Println("Queries stat.")
 	fmt.Println("Ok Count:", s.OkCount)
 	fmt.Println()
@@ -459,7 +466,7 @@ func getTopCounter[K comparable](m map[K]*CounterWithExample[K], count int) []Co
 	return res[:count]
 }
 
-func (s *SessionStats) SaveToFile(path string) error {
+func (s *QueryStats) SaveToFile(path string) error {
 	var statFile struct {
 		TotalCount    int                                     `yaml:"total_count"`
 		OkCount       int                                     `yaml:"ok_count"`
