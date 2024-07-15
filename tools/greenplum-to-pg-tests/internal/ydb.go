@@ -12,9 +12,9 @@ import (
 )
 
 type YdbIssue struct {
-	Message  string
-	Code     Ydb.StatusIds_StatusCode
-	Severity uint32
+	Message  string                   `yaml:"message"`
+	Code     Ydb.StatusIds_StatusCode `yaml:"code"`
+	Severity uint32                   `yaml:"severity"`
 }
 
 func ExtractIssues(err error) []YdbIssue {

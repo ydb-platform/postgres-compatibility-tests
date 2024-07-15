@@ -13,25 +13,33 @@ import (
 	"math"
 	"os"
 	"regexp"
+	"slices"
 	"strings"
 	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/ydb-platform/ydb-go-sdk/v3"
 	"github.com/ydb-platform/ydb-go-sdk/v3/query"
+	"gopkg.in/yaml.v3"
 
 	"github.com/ydb-platform/postgres-compatibility-tests/tools/greenplum-to-pg-tests/internal"
 )
 
 var extractSessionsConfig struct {
-	schemeDumpFile      string
-	sessionsLog         string
-	includeFailed       bool
-	ydbConnectionString string
-	limitRequests       int
-	rulesFile           string
-	printKnownIssues    bool
-	errorLimit          int
+	schemeDumpFile            string
+	sessionsLog               string
+	includeFailed             bool
+	ydbConnectionString       string
+	limitRequests             int
+	rulesFile                 string
+	printKnownIssues          bool
+	printQueryForKnownIssue   bool
+	filterReason              string
+	errorLimit                int
+	printErrorsInProgress     bool
+	printStats                bool
+	printProgressEveryQueries int
+	writeStatPath             string
 }
 
 func init() {
@@ -43,10 +51,16 @@ func init() {
 
 	extractSessionsCmd.PersistentFlags().BoolVar(&extractSessionsConfig.includeFailed, "include-failed", false, "Extract sessions with failed transactions")
 	extractSessionsCmd.PersistentFlags().StringVar(&extractSessionsConfig.ydbConnectionString, "ydb-connection", "grpc://localhost:2136/local", "Connection string to ydb server for check queries")
-	extractSessionsCmd.PersistentFlags().IntVar(&extractSessionsConfig.limitRequests, "requests-limit", 1000, "Limit number of parse requests, 0 mean unlimited")
+	extractSessionsCmd.PersistentFlags().IntVar(&extractSessionsConfig.limitRequests, "requests-limit", 100, "Limit number of parse requests, 0 mean unlimited")
 	extractSessionsCmd.PersistentFlags().StringVar(&extractSessionsConfig.rulesFile, "rules-file", "issues.yaml", "Rules for detect issue. Set empty for skip read rules.")
 	extractSessionsCmd.PersistentFlags().BoolVar(&extractSessionsConfig.printKnownIssues, "print-known-issues", false, "Print known issues instead of unknown")
+	extractSessionsCmd.PersistentFlags().BoolVar(&extractSessionsConfig.printQueryForKnownIssue, "print-query-for-known-issues", true, "Print query for known issues")
 	extractSessionsCmd.PersistentFlags().IntVar(&extractSessionsConfig.errorLimit, "print-errors-limit", 0, "Limit of printed errors. 0 mean infinite")
+	extractSessionsCmd.PersistentFlags().StringVar(&extractSessionsConfig.filterReason, "reason-filter", "", "Filter printer queries and reasons by regexp")
+	extractSessionsCmd.PersistentFlags().BoolVar(&extractSessionsConfig.printErrorsInProgress, "print-progress", false, "Print queries in progress")
+	extractSessionsCmd.PersistentFlags().BoolVar(&extractSessionsConfig.printStats, "print-stats", true, "Print queries in progress")
+	extractSessionsCmd.PersistentFlags().IntVar(&extractSessionsConfig.printProgressEveryQueries, "print-progress-every-queries", 10, "Periodically print progress")
+	extractSessionsCmd.PersistentFlags().StringVar(&extractSessionsConfig.writeStatPath, "write-stat-file", "", "Path to write full stat file if need. Will write example of queries")
 }
 
 // extraxtSessionsCmd represents the extraxtSessions command
@@ -89,7 +103,10 @@ var extractSessionsCmd = &cobra.Command{
 		cancel()
 
 		sessions := readSessions()
+
+		log.Println("Start check queries")
 		checkQueries(rules, schema, db, sessions)
+
 	},
 }
 
@@ -108,7 +125,7 @@ func readSessions() []internal.Session {
 	log.Println("Start reading file...")
 readLoop:
 	for {
-		if limitCount > 0 && counter > limitCount {
+		if limitCount > 0 && counter >= limitCount {
 			log.Println("Reached limit for parse request count:", limitCount)
 			break
 		}
@@ -188,35 +205,69 @@ readLoop:
 }
 
 func checkQueries(rules Rules, pgSchema *internal.PgSchema, db *ydb.Driver, sessions []internal.Session) {
+	reasonFilter := regexp.MustCompile(extractSessionsConfig.filterReason)
 	checked := map[string]bool{}
 
-	limit := extractSessionsConfig.errorLimit
-	if limit == 0 {
-		limit = math.MaxInt
+	errorLimit := extractSessionsConfig.errorLimit
+	if errorLimit == 0 {
+		errorLimit = math.MaxInt
 	}
 
+	totalQueries := 0
+	for _, session := range sessions {
+		for _, transaction := range session.Transactions {
+			totalQueries += len(transaction.Queries)
+		}
+	}
+
+	queryIndex := 0
+
+	var stats SessionStats
 	for _, session := range sessions {
 		for _, transaction := range session.Transactions {
 			for _, pgQuery := range transaction.Queries {
+				queryIndex++
+				if queryIndex%extractSessionsConfig.printProgressEveryQueries == 0 {
+					log.Printf("Checking query %8d/%v", queryIndex, totalQueries)
+				}
 				if checked[pgQuery.Text] {
 					continue
 				}
 				checked[pgQuery.Text] = true
 
-				reason, checkResult := checkQuery(rules, db, pgQuery.Text)
+				reason, checkResult := checkQuery(&stats, rules, db, pgQuery.Text)
+				if !reasonFilter.MatchString(reason) {
+					continue
+				}
 				if !extractSessionsConfig.printKnownIssues && checkResult == checkResultErrUnknown {
-					log.Printf("Reason: %v\nQuery:%v\n\n", reason, pgQuery.Text)
-					limit--
+					if extractSessionsConfig.printErrorsInProgress {
+						log.Printf("Reason: %v\nQuery:%v\n\n", reason, pgQuery.Text)
+					}
+					errorLimit--
 				}
 				if extractSessionsConfig.printKnownIssues && checkResult == checkResultErrKnown {
-					log.Printf("Reason: %v", reason)
-					limit--
+					if extractSessionsConfig.printErrorsInProgress {
+						log.Printf("Reason: %v", reason)
+						if extractSessionsConfig.printQueryForKnownIssue {
+							log.Printf("Query:\n%v\n\n", pgQuery.Text)
+						}
+					}
+					errorLimit--
 				}
-				if limit == 0 {
-					log.Println("Print error limit reached:", extractSessionsConfig.errorLimit)
+				if errorLimit == 0 {
+					log.Println("Error limit reached:", extractSessionsConfig.errorLimit)
 					return
 				}
 			}
+		}
+	}
+
+	if extractSessionsConfig.printStats {
+		stats.PrintStats()
+	}
+	if extractSessionsConfig.writeStatPath != "" {
+		if err := stats.SaveToFile(extractSessionsConfig.writeStatPath); err != nil {
+			log.Printf("Failed to write stat: %+v", err)
 		}
 	}
 }
@@ -229,7 +280,7 @@ const (
 	checkResultErrUnknown
 )
 
-func checkQuery(rules Rules, db *ydb.Driver, queryText string) (reason string, checkResult checkResultType) {
+func checkQuery(stat *SessionStats, rules Rules, db *ydb.Driver, queryText string) (reason string, checkResult checkResultType) {
 	queryText = strings.TrimSpace(queryText)
 	queryText = fixSchemaNames(queryText)
 	queryText = fixCreateTable(queryText)
@@ -246,6 +297,7 @@ func checkQuery(rules Rules, db *ydb.Driver, queryText string) (reason string, c
 	}
 
 	if err == nil {
+		stat.CountOK()
 		return "", checkResultOK
 	}
 
@@ -255,11 +307,13 @@ func checkQuery(rules Rules, db *ydb.Driver, queryText string) (reason string, c
 	issues := internal.ExtractIssues(err)
 
 	if reason = rules.FindKnownIssue(queryText, issues); reason != "" {
+		stat.CountKnown(reason, queryText)
 		return reason, checkResultErrKnown
 	}
 
 	reason = fmt.Sprintf("%v (%v): %#v", ydbErr.Name(), ydbErr.Code(), issues)
 
+	stat.CountUnknown(issues, queryText)
 	return reason, checkResultErrUnknown
 }
 
@@ -284,4 +338,183 @@ func fixCreateTable(queryText string) string {
 
 	queryText = createTableRegexp.ReplaceAllString(queryText, "$1 __stub_primary_key SERIAL PRIMARY KEY,")
 	return queryText
+}
+
+type SessionStats struct {
+	OkCount    int
+	TotalCount int
+
+	MatchToRules    map[string]*CounterWithExample[string] // [rule name] query example
+	UnknownProblems map[internal.YdbIssue]*CounterWithExample[internal.YdbIssue]
+}
+
+func (s *SessionStats) CountOK() {
+	s.OkCount++
+}
+
+func (s *SessionStats) CountKnown(ruleName string, query string) {
+	s.TotalCount++
+	if s.MatchToRules == nil {
+		s.MatchToRules = make(map[string]*CounterWithExample[string])
+	}
+
+	var stat *CounterWithExample[string]
+	var ok bool
+	if stat, ok = s.MatchToRules[ruleName]; !ok {
+		stat = &CounterWithExample[string]{
+			ID:      ruleName,
+			Example: query,
+		}
+		s.MatchToRules[ruleName] = stat
+	}
+
+	stat.Count++
+}
+
+func (s *SessionStats) CountUnknown(issues []internal.YdbIssue, query string) {
+	s.TotalCount++
+	if s.UnknownProblems == nil {
+		s.UnknownProblems = make(map[internal.YdbIssue]*CounterWithExample[internal.YdbIssue])
+	}
+
+	for _, issue := range issues {
+		var stat *CounterWithExample[internal.YdbIssue]
+		var ok bool
+		if stat, ok = s.UnknownProblems[issue]; !ok {
+			stat = &CounterWithExample[internal.YdbIssue]{
+				ID:      issue,
+				Example: query,
+			}
+			s.UnknownProblems[issue] = stat
+		}
+		stat.Count++
+	}
+}
+
+func (s *SessionStats) GetTopKnown(count int) []CounterWithExample[string] {
+	return getTopCounter(s.MatchToRules, count)
+}
+
+func (s *SessionStats) GetTopUnknown(count int) []CounterWithExample[internal.YdbIssue] {
+	return getTopCounter(s.UnknownProblems, count)
+}
+
+func (s *SessionStats) PrintStats() {
+	fmt.Println("Queries stat.")
+	fmt.Println("Ok Count:", s.OkCount)
+	fmt.Println()
+	fmt.Println("Known issues")
+	SessionStats_printExampleCounter(getTopCounter(s.MatchToRules, 10))
+
+	fmt.Println("New issues")
+	SessionStats_printExampleCounter(getTopCounter(s.UnknownProblems, 10))
+}
+
+func SessionStats_printExampleCounter[K comparable](examples []CounterWithExample[K]) {
+	for _, example := range examples {
+		fmt.Printf(`
+Problem: %v
+Count: %v
+Example: %v
+
+`, example.ID, example.Count, example.Example)
+	}
+}
+
+type CounterWithExample[K comparable] struct {
+	ID      K      `yaml:"id"`
+	Count   int    `yaml:"count"`
+	Example string `yaml:"example"`
+}
+
+func getTopCounter[K comparable](m map[K]*CounterWithExample[K], count int) []CounterWithExample[K] {
+	res := make([]CounterWithExample[K], 0, len(m))
+	for _, stat := range m {
+		res = append(res, *stat)
+	}
+
+	// Max counts
+	slices.SortFunc(res, func(a, b CounterWithExample[K]) int {
+		return b.Count - a.Count
+	})
+
+	if count >= len(res) {
+		return res
+	}
+
+	return res[:count]
+}
+
+func (s *SessionStats) SaveToFile(path string) error {
+	var statFile struct {
+		TotalCount    int                                     `yaml:"total_count"`
+		OkCount       int                                     `yaml:"ok_count"`
+		OkPercent     float64                                 `yaml:"ok_percent"`
+		UnknownIssues []CounterWithExample[internal.YdbIssue] `yaml:"unknown_issues"`
+		KnownIssues   []CounterWithExample[string]            `yaml:"known_issues"`
+	}
+
+	statFile.TotalCount = s.TotalCount
+	statFile.OkCount = s.OkCount
+	statFile.OkPercent = float64(s.OkCount) / float64(s.TotalCount) * 100
+	statFile.UnknownIssues = s.GetTopUnknown(math.MaxInt)
+	statFile.KnownIssues = s.GetTopKnown(math.MaxInt)
+
+	for i := range statFile.UnknownIssues {
+		statFile.UnknownIssues[i].Example = cleanStringForLiteralYaml(statFile.UnknownIssues[i].Example)
+	}
+	for i := range statFile.KnownIssues {
+		statFile.KnownIssues[i].Example = cleanStringForLiteralYaml(statFile.KnownIssues[i].Example)
+	}
+
+	f, err := os.Create(path)
+	if err != nil {
+		return fmt.Errorf("failed to create file for write stat: %w", err)
+	}
+	defer f.Close()
+	encoder := yaml.NewEncoder(f)
+	if err = encoder.Encode(&statFile); err != nil {
+		return fmt.Errorf("failed to write stat: %w", err)
+	}
+	return nil
+}
+
+func cleanStringForLiteralYaml(s string) string {
+	lines := strings.Split(s, "\n")
+	for i, line := range lines {
+		// trim ending space
+		for strings.HasSuffix(line, " ") {
+			line = strings.TrimSuffix(line, " ")
+		}
+		lines[i] = line
+	}
+
+	s = strings.Join(lines, "\n")
+
+	sBytes := []byte(s)
+	buf := &strings.Builder{}
+
+	// range over runes
+	for i, r := range s {
+		if isYamlPrintable(sBytes, i) {
+			buf.WriteRune(r)
+		} else {
+			buf.WriteByte('X')
+		}
+	}
+
+	return buf.String()
+}
+
+func isYamlPrintable(b []byte, i int) bool {
+	// copy of yaml.is_printable
+	return ((b[i] == 0x0A) || // . == #x0A
+		(b[i] >= 0x20 && b[i] <= 0x7E) || // #x20 <= . <= #x7E
+		(b[i] == 0xC2 && b[i+1] >= 0xA0) || // #0xA0 <= . <= #xD7FF
+		(b[i] > 0xC2 && b[i] < 0xED) ||
+		(b[i] == 0xED && b[i+1] < 0xA0) ||
+		(b[i] == 0xEE) ||
+		(b[i] == 0xEF && // #xE000 <= . <= #xFFFD
+			!(b[i+1] == 0xBB && b[i+2] == 0xBF) && // && . != #xFEFF
+			!(b[i+1] == 0xBF && (b[i+2] == 0xBE || b[i+2] == 0xBF))))
 }

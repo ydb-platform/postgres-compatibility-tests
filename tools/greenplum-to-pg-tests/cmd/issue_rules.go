@@ -12,7 +12,8 @@ import (
 )
 
 type Rules struct {
-	Issues []PgIssueRules
+	StatTotalCount int `yaml:"stat_total_count"`
+	Issues         []PgIssueRules
 }
 
 func (r *Rules) LoadFromFile(path string) error {
@@ -70,6 +71,7 @@ type PgIssueRules struct {
 	QueryRegexp OneOrSliceString `yaml:"query_regexp"`
 	Example     string           `yaml:"example"`
 	Comment     string           `yaml:"comment"`
+	Count       int              `yaml:"count"`
 
 	issuesRegexpCompiled []*regexp.Regexp
 	queryRegexpCompiled  []*regexp.Regexp
