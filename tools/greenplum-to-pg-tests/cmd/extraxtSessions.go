@@ -53,7 +53,7 @@ func init() {
 
 	extractSessionsCmd.PersistentFlags().BoolVar(&extractSessionsConfig.includeFailed, "include-failed", false, "Extract sessions with failed transactions")
 	extractSessionsCmd.PersistentFlags().StringVar(&extractSessionsConfig.ydbConnectionString, "ydb-connection", "grpc://localhost:2136/local", "Connection string to ydb server for check queries")
-	extractSessionsCmd.PersistentFlags().IntVar(&extractSessionsConfig.limitRequests, "requests-limit", 100, "Limit number of parse requests, 0 mean unlimited")
+	extractSessionsCmd.PersistentFlags().IntVar(&extractSessionsConfig.limitRequests, "requests-limit", 1000, "Limit number of parse requests, 0 mean unlimited")
 	extractSessionsCmd.PersistentFlags().StringVar(&extractSessionsConfig.rulesFile, "rules-file", "issues.yaml", "Rules for detect issue. Set empty for skip read rules.")
 	extractSessionsCmd.PersistentFlags().StringVar(&extractSessionsConfig.writeRulesWithStat, "write-updated-rules", "", "Write rules with updated stats, may be same or other file as for rules-file")
 	extractSessionsCmd.PersistentFlags().BoolVar(&extractSessionsConfig.sortRulesByCount, "sort-updates-rules-by-count", true, "")
@@ -238,7 +238,8 @@ func checkQueries(rules Rules, stats *QueryStats, pgSchema *internal.PgSchema, d
 			for _, pgQuery := range transaction.Queries {
 				queryIndex++
 				if queryIndex%extractSessionsConfig.printProgressEveryQueries == 0 {
-					log.Printf("Checking query %8d/%v", queryIndex, totalQueries)
+					percent := float64(queryIndex) / float64(totalQueries) * 100
+					log.Printf("Checking query %8d/%v (%v)", queryIndex, totalQueries, percent)
 				}
 				//if checked[pgQuery.Text] {
 				//	continue
@@ -332,7 +333,7 @@ type ReplacePair struct {
 	To   string
 }
 
-var schemaTableRegexp = regexp.MustCompile(`(?i)(CREATE TABLE|FROM|INSERT INTO|JOIN|UPDATE)\s+"?([^\s.]+)"?\."?([^\s.]+)"?`)
+var schemaTableRegexp = regexp.MustCompile(`(?i)(CREATE TABLE|FROM|INSERT INTO|JOIN|UPDATE)\s+"?([^\s."]+)"?\."?([^\s."]+)"?`)
 
 func fixSchemaNames(queryText string) string {
 	queryText = schemaTableRegexp.ReplaceAllString(queryText, "${1} ${2}___${3}")
