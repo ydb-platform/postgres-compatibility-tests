@@ -74,16 +74,19 @@ func (r *Rules) WriteToFile(path string) error {
 	return nil
 }
 
-func (r *Rules) FindKnownIssue(queryText string, ydbIssues []internal.YdbIssue) string {
+func (r *Rules) FindKnownIssue(queryText string, ydbIssues []internal.YdbIssue) (_ PgIssueRules, ok bool) {
 	for _, ydbIssue := range ydbIssues {
 		for _, item := range r.Issues {
 			if item.IsMatched(queryText, ydbIssue) {
-				return item.Name
+				if item.Skip {
+					continue
+				}
+				return item, true
 			}
 		}
 	}
 
-	return ""
+	return PgIssueRules{}, false
 }
 
 func (r *Rules) UpdateFromStats(stats QueryStats, sortByCount bool) {
@@ -116,6 +119,7 @@ type PgIssueRules struct {
 	QueryRegexp OneOrSliceString `yaml:"query_regexp,omitempty"`
 	Example     string           `yaml:"example,omitempty"`
 	Comment     string           `yaml:"comment,omitempty"`
+	Skip        bool             `yaml:"skip"` // skip the issue on check query step
 
 	issuesRegexpCompiled []*regexp.Regexp
 	queryRegexpCompiled  []*regexp.Regexp

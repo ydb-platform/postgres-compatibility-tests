@@ -241,10 +241,6 @@ func checkQueries(rules Rules, stats *QueryStats, pgSchema *internal.PgSchema, d
 					percent := float64(queryIndex) / float64(totalQueries) * 100
 					log.Printf("Checking query %8d/%v (%v)", queryIndex, totalQueries, percent)
 				}
-				//if checked[pgQuery.Text] {
-				//	continue
-				//}
-				//checked[pgQuery.Text] = true
 
 				reason, checkResult := checkQuery(stats, rules, db, pgQuery.Text)
 				if !reasonFilter.MatchString(reason) {
@@ -317,13 +313,15 @@ func checkQuery(stat *QueryStats, rules Rules, db *ydb.Driver, queryText string)
 
 	issues := internal.ExtractIssues(err)
 
-	if reason = rules.FindKnownIssue(queryText, issues); reason != "" {
+	if issueReason, ok := rules.FindKnownIssue(queryText, issues); ok {
 		stat.CountAsKnown(reason, queryText)
-		return reason, checkResultErrKnown
+		return issueReason.Name, checkResultErrKnown
 	}
 
 	reason = fmt.Sprintf("%v (%v): %#v", ydbErr.Name(), ydbErr.Code(), issues)
+	if len(issues) == 0 {
 
+	}
 	stat.CountAsUnknown(issues, queryText)
 	return reason, checkResultErrUnknown
 }

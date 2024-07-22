@@ -3,12 +3,10 @@ stat:
   total_ok: 15
   ok_percent: 65.21739130434783
 issues:
-  - name: Skip unknown tables
-    count: 11
-    tag:
-      - skip
+  - name: general parsing errors
     issue_regexp:
-      - Cannot find table
+      - "^Error while parsing query.$"
+    skip: true
   - name: drop external table
     count: 2
     tag:
@@ -39,14 +37,12 @@ issues:
       - 'No such proc: '
   - name: Rollback in query service (OK)
     count: 1
-    tag:
-      - skip
+    skip: true
     issue_regexp:
       - ROLLBACK not supported inside YDB query
   - name: Commit in query service (OK)
     count: 1
-    tag:
-      - skip
+    skip: true
     issue_regexp:
       - COMMIT not supported inside YDB query
   - name: Not supported set greenplum var
@@ -57,8 +53,7 @@ issues:
       - ^SET gp_
   - name: Partial request
     count: 1
-    tag:
-      - skip
+    skip: true
     issue_regexp:
       - 'ERROR:  syntax error at end of input'
   - name: 'YQL: Expected type cast node as is_local arg, but got node with tag'
