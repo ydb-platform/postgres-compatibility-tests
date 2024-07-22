@@ -122,7 +122,7 @@ type PgIssueRules struct {
 	QueryRegexp OneOrSliceString `yaml:"query_regexp,omitempty"`
 	Example     string           `yaml:"example,omitempty"`
 	Comment     string           `yaml:"comment,omitempty"`
-	Skip        bool             `yaml:"skip"` // skip the issue on check query step
+	Skip        bool             `yaml:"skip,omitempty"` // skip the issue on check query step
 
 	issuesRegexpCompiled []*regexp.Regexp
 	queryRegexpCompiled  []*regexp.Regexp

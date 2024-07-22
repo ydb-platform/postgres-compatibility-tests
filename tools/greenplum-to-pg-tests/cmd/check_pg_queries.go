@@ -233,12 +233,18 @@ func extractQueries(sessions []internal.Session) <-chan string {
 		}
 
 		queryIndex := 0
+		needRemoveLine := false
 		for _, session := range sessions {
 			for _, transaction := range session.Transactions {
 				for _, pgQuery := range transaction.Queries {
 					queryIndex++
 					if queryIndex%checkPgQueriesConfig.printProgressEveryQueries == 0 {
 						percent := float64(queryIndex) / float64(totalQueries) * 100
+						if needRemoveLine {
+							fmt.Printf("\033[1A\033[K")
+						} else {
+							needRemoveLine = true
+						}
 						log.Printf("Checking query %8d/%v (%0.2f)", queryIndex, totalQueries, percent)
 					}
 					queries <- pgQuery.Text
@@ -314,7 +320,7 @@ func checkQuery(stat *QueryStats, rules Rules, db *ydb.Driver, queryText string)
 	}
 
 	reason = fmt.Sprintf("%v (%v): %#v", ydbErr.Name(), ydbErr.Code(), unknownIssues)
-	stat.CountAsUnknown(unknownIssues, queryText)
+	stat.CountAsUnknown(reason, queryText)
 	return reason, checkResultErrUnknown
 }
 
@@ -342,16 +348,16 @@ func fixCreateTable(queryText string) string {
 }
 
 func cutGreenplumSpecific(q string) string {
-	q = createAndDistributedByWithBrackets.ReplaceAllString(q, "$1;")
+	q = createAndDistributedByWithBrackets.ReplaceAllString(q, "$1")
 	q = createTableAsSelect.ReplaceAllLiteralString(q, "")
-	q = distributedBy.ReplaceAllLiteralString(q, ";")
+	q = distributedBy.ReplaceAllLiteralString(q, "")
 	return q
 }
 
 var (
-	createAndDistributedByWithBrackets = regexp.MustCompile(`(?is)CREATE\s+.*\sTABLE\s+.*\s+AS\s+\(\s*(.*)\s*\)\s+DISTRIBUTED\s+BY\s\(.*\);`)
+	createAndDistributedByWithBrackets = regexp.MustCompile(`(?is)CREATE\s+.*\sTABLE\s+.*\s+AS\s+\(\s*(.*)\s*\)\s+DISTRIBUTED\s+BY\s\(.*\)`)
 	createTableAsSelect                = regexp.MustCompile(`(?i)create\s+(temporary\s+)?table .* as`)
-	distributedBy                      = regexp.MustCompile(`(?i)DISTRIBUTED BY ([^\)]+);`)
+	distributedBy                      = regexp.MustCompile(`(?i)DISTRIBUTED BY \(.*\)`)
 )
 
 type QueryStats struct {
@@ -360,7 +366,7 @@ type QueryStats struct {
 	TotalCount int
 
 	MatchToRules    map[string]*CounterWithExample[string] // [rule name] query example
-	UnknownProblems map[internal.YdbIssue]*CounterWithExample[internal.YdbIssue]
+	UnknownProblems map[string]*CounterWithExample[string]
 }
 
 func (s *QueryStats) GetOkPercent() float64 {
@@ -403,29 +409,27 @@ func (s *QueryStats) CountAsKnown(ruleName string, query string) {
 	}
 }
 
-func (s *QueryStats) CountAsUnknown(issues []internal.YdbIssue, query string) {
+func (s *QueryStats) CountAsUnknown(reason string, query string) {
 	s.m.Lock()
 	defer s.m.Unlock()
 
 	s.TotalCount++
 	if s.UnknownProblems == nil {
-		s.UnknownProblems = make(map[internal.YdbIssue]*CounterWithExample[internal.YdbIssue])
+		s.UnknownProblems = make(map[string]*CounterWithExample[string])
 	}
 
-	for _, issue := range issues {
-		var stat *CounterWithExample[internal.YdbIssue]
-		var ok bool
-		if stat, ok = s.UnknownProblems[issue]; !ok {
-			stat = &CounterWithExample[internal.YdbIssue]{
-				ID:      issue,
-				Example: query,
-			}
-			s.UnknownProblems[issue] = stat
+	var stat *CounterWithExample[string]
+	var ok bool
+	if stat, ok = s.UnknownProblems[reason]; !ok {
+		stat = &CounterWithExample[string]{
+			ID:      reason,
+			Example: query,
 		}
-		stat.Count++
-		if len(query) < len(stat.Example) {
-			stat.Example = query
-		}
+		s.UnknownProblems[reason] = stat
+	}
+	stat.Count++
+	if len(query) < len(stat.Example) {
+		stat.Example = query
 	}
 }
 
@@ -436,7 +440,7 @@ func (s *QueryStats) GetTopKnown(count int) []CounterWithExample[string] {
 	return getTopCounter(s.MatchToRules, count)
 }
 
-func (s *QueryStats) GetTopUnknown(count int) []CounterWithExample[internal.YdbIssue] {
+func (s *QueryStats) GetTopUnknown(count int) []CounterWithExample[string] {
 	s.m.Lock()
 	defer s.m.Unlock()
 
@@ -494,11 +498,11 @@ func getTopCounter[K comparable](m map[K]*CounterWithExample[K], count int) []Co
 
 func (s *QueryStats) SaveToFile(path string) error {
 	var statFile struct {
-		TotalCount    int                                     `yaml:"total_count"`
-		OkCount       int                                     `yaml:"ok_count"`
-		OkPercent     float64                                 `yaml:"ok_percent"`
-		UnknownIssues []CounterWithExample[internal.YdbIssue] `yaml:"unknown_issues"`
-		KnownIssues   []CounterWithExample[string]            `yaml:"known_issues"`
+		TotalCount    int                          `yaml:"total_count"`
+		OkCount       int                          `yaml:"ok_count"`
+		OkPercent     float64                      `yaml:"ok_percent"`
+		UnknownIssues []CounterWithExample[string] `yaml:"unknown_issues"`
+		KnownIssues   []CounterWithExample[string] `yaml:"known_issues"`
 	}
 
 	statFile.TotalCount = s.TotalCount

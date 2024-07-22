@@ -7,6 +7,16 @@ issues:
     issue_regexp:
       - "Error while parsing query."
     skip: true
+  - name: Select from pg_tables
+    query_regexp:
+      - (?is)SELECT.*FROM\s+pg_
+  - name: Transaction control (OK)
+    count: 1
+    query_regexp:
+      - "(?i)^\\s*COMMIT\\s*;?\\s*$"
+      - "(?i)^\\s*ROLLBACK\\s*;?\\s*$"
+  - name: Set variables
+    issue_regexp: "VariableSetStmt, not supported name"
   - name: drop external table
     count: 2
     tag:
@@ -35,14 +45,6 @@ issues:
     count: 2
     issue_regexp:
       - 'No such proc: '
-  - name: Rollback in query service (OK)
-    count: 1
-    skip: true
-    query_regexp: ROLLBACK
-  - name: Commit in query service (OK)
-    count: 1
-    skip: true
-    query_regexp: COMMIT
   - name: Not supported set greenplum var
     count: 1
     issue_regexp:
