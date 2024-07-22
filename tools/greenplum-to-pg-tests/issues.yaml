@@ -5,7 +5,7 @@ stat:
 issues:
   - name: general parsing errors
     issue_regexp:
-      - "^Error while parsing query.$"
+      - "Error while parsing query."
     skip: true
   - name: drop external table
     count: 2
@@ -38,13 +38,11 @@ issues:
   - name: Rollback in query service (OK)
     count: 1
     skip: true
-    issue_regexp:
-      - ROLLBACK not supported inside YDB query
+    query_regexp: ROLLBACK
   - name: Commit in query service (OK)
     count: 1
     skip: true
-    issue_regexp:
-      - COMMIT not supported inside YDB query
+    query_regexp: COMMIT
   - name: Not supported set greenplum var
     count: 1
     issue_regexp:

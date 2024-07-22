@@ -15,6 +15,7 @@ import (
 	"regexp"
 	"slices"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -25,7 +26,7 @@ import (
 	"github.com/ydb-platform/postgres-compatibility-tests/tools/greenplum-to-pg-tests/internal"
 )
 
-var extractSessionsConfig struct {
+var checkPgQueriesConfig struct {
 	schemeDumpFile            string
 	sessionsLog               string
 	includeFailed             bool
@@ -36,60 +37,58 @@ var extractSessionsConfig struct {
 	sortRulesByCount          bool
 	printKnownIssues          bool
 	printQueryForKnownIssue   bool
-	filterReason              string
-	errorLimit                int
 	printErrorsInProgress     bool
 	printStats                bool
 	printProgressEveryQueries int
 	writeStatPath             string
+	checkersCount             int
 }
 
 func init() {
-	rootCmd.AddCommand(extractSessionsCmd)
+	rootCmd.AddCommand(checkPgQueriesCmd)
 
-	extractSessionsCmd.PersistentFlags().StringVar(&extractSessionsConfig.schemeDumpFile, "schemedump-file", "", "Path to dump of db schema. Set empty for skip read schema.")
-	extractSessionsCmd.PersistentFlags().StringVar(&extractSessionsConfig.sessionsLog, "query-log", "", "Set path to input sessions log")
-	must0(extractSessionsCmd.MarkPersistentFlagRequired("query-log"))
+	checkPgQueriesCmd.PersistentFlags().StringVar(&checkPgQueriesConfig.schemeDumpFile, "schemedump-file", "", "Path to dump of db schema. Set empty for skip read schema.")
+	checkPgQueriesCmd.PersistentFlags().StringVar(&checkPgQueriesConfig.sessionsLog, "query-log", "", "Set path to input sessions log")
+	must0(checkPgQueriesCmd.MarkPersistentFlagRequired("query-log"))
 
-	extractSessionsCmd.PersistentFlags().BoolVar(&extractSessionsConfig.includeFailed, "include-failed", false, "Extract sessions with failed transactions")
-	extractSessionsCmd.PersistentFlags().StringVar(&extractSessionsConfig.ydbConnectionString, "ydb-connection", "grpc://localhost:2136/local", "Connection string to ydb server for check queries")
-	extractSessionsCmd.PersistentFlags().IntVar(&extractSessionsConfig.limitRequests, "requests-limit", 1000, "Limit number of parse requests, 0 mean unlimited")
-	extractSessionsCmd.PersistentFlags().StringVar(&extractSessionsConfig.rulesFile, "rules-file", "issues.yaml", "Rules for detect issue. Set empty for skip read rules.")
-	extractSessionsCmd.PersistentFlags().StringVar(&extractSessionsConfig.writeRulesWithStat, "write-updated-rules", "", "Write rules with updated stats, may be same or other file as for rules-file")
-	extractSessionsCmd.PersistentFlags().BoolVar(&extractSessionsConfig.sortRulesByCount, "sort-updates-rules-by-count", true, "")
-	extractSessionsCmd.PersistentFlags().BoolVar(&extractSessionsConfig.printKnownIssues, "print-known-issues", false, "Print known issues instead of unknown")
-	extractSessionsCmd.PersistentFlags().BoolVar(&extractSessionsConfig.printQueryForKnownIssue, "print-query-for-known-issues", true, "Print query for known issues")
-	extractSessionsCmd.PersistentFlags().IntVar(&extractSessionsConfig.errorLimit, "print-errors-limit", 0, "Limit of printed errors. 0 mean infinite")
-	extractSessionsCmd.PersistentFlags().StringVar(&extractSessionsConfig.filterReason, "reason-filter", "", "Filter printer queries and reasons by regexp")
-	extractSessionsCmd.PersistentFlags().BoolVar(&extractSessionsConfig.printErrorsInProgress, "print-progress", false, "Print queries in progress")
-	extractSessionsCmd.PersistentFlags().BoolVar(&extractSessionsConfig.printStats, "print-stats", true, "Print queries in progress")
-	extractSessionsCmd.PersistentFlags().IntVar(&extractSessionsConfig.printProgressEveryQueries, "print-progress-every-queries", 10, "Periodically print progress")
-	extractSessionsCmd.PersistentFlags().StringVar(&extractSessionsConfig.writeStatPath, "write-stat-file", "", "Path to write full stat file if need. Will write example of queries")
+	checkPgQueriesCmd.PersistentFlags().BoolVar(&checkPgQueriesConfig.includeFailed, "include-failed", false, "Extract sessions with failed transactions")
+	checkPgQueriesCmd.PersistentFlags().StringVar(&checkPgQueriesConfig.ydbConnectionString, "ydb-connection", "grpc://localhost:2136/local", "Connection string to ydb server for check queries")
+	checkPgQueriesCmd.PersistentFlags().IntVar(&checkPgQueriesConfig.limitRequests, "requests-limit", 0, "Limit number of parse requests, 0 mean unlimited")
+	checkPgQueriesCmd.PersistentFlags().StringVar(&checkPgQueriesConfig.rulesFile, "rules-file", "issues.yaml", "Rules for detect issue. Set empty for skip read rules.")
+	checkPgQueriesCmd.PersistentFlags().StringVar(&checkPgQueriesConfig.writeRulesWithStat, "write-updated-rules", "issues_stat.yaml", "Write rules with updated stats, may be same or other file as for rules-file")
+	checkPgQueriesCmd.PersistentFlags().BoolVar(&checkPgQueriesConfig.sortRulesByCount, "sort-updates-rules-by-count", true, "")
+	checkPgQueriesCmd.PersistentFlags().BoolVar(&checkPgQueriesConfig.printKnownIssues, "print-known-issues", false, "Print known issues instead of unknown")
+	checkPgQueriesCmd.PersistentFlags().BoolVar(&checkPgQueriesConfig.printQueryForKnownIssue, "print-query-for-known-issues", true, "Print query for known issues")
+	checkPgQueriesCmd.PersistentFlags().BoolVar(&checkPgQueriesConfig.printErrorsInProgress, "print-progress", false, "Print queries in progress")
+	checkPgQueriesCmd.PersistentFlags().BoolVar(&checkPgQueriesConfig.printStats, "print-stats", true, "Print queries in progress")
+	checkPgQueriesCmd.PersistentFlags().IntVar(&checkPgQueriesConfig.printProgressEveryQueries, "print-progress-every-queries", 10, "Periodically print progress")
+	checkPgQueriesCmd.PersistentFlags().StringVar(&checkPgQueriesConfig.writeStatPath, "write-stat-file", "", "Path to write full stat file if need. Will write example of queries")
+	checkPgQueriesCmd.PersistentFlags().IntVar(&checkPgQueriesConfig.checkersCount, "check-queries-parallel", 5, "How many queries may be checked in parallel")
 }
 
 // extraxtSessionsCmd represents the extraxtSessions command
-var extractSessionsCmd = &cobra.Command{
-	Use:   "extract-sessions",
+var checkPgQueriesCmd = &cobra.Command{
+	Use:   "check-pg-queries",
 	Short: "Read session queryies log end extract sessions to files",
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx := context.Background()
 
 		var rules Rules
-		if extractSessionsConfig.rulesFile == "" {
+		if checkPgQueriesConfig.rulesFile == "" {
 			log.Println("Skip read rules file.")
 		} else {
-			log.Printf("Reading rules file %q...", extractSessionsConfig.rulesFile)
-			if err := rules.LoadFromFile(extractSessionsConfig.rulesFile); err != nil {
+			log.Printf("Reading rules file %q...", checkPgQueriesConfig.rulesFile)
+			if err := rules.LoadFromFile(checkPgQueriesConfig.rulesFile); err != nil {
 				log.Fatalf("Failed to read rules file: %v", err)
 			}
 		}
 
 		schema := internal.NewPgSchema()
-		if extractSessionsConfig.schemeDumpFile == "" {
+		if checkPgQueriesConfig.schemeDumpFile == "" {
 			log.Println("Skip read session")
 		} else {
 			log.Println("Reading schema.. ")
-			schemaFile, err := os.Open(extractSessionsConfig.schemeDumpFile)
+			schemaFile, err := os.Open(checkPgQueriesConfig.schemeDumpFile)
 			if err != nil {
 				log.Fatalf("Failed to open scheme file")
 			}
@@ -101,35 +100,42 @@ var extractSessionsCmd = &cobra.Command{
 		log.Println("Connecting to ydb...")
 		connectCtx, cancel := context.WithTimeout(ctx, time.Second*10)
 		db := must(ydb.Open(
-			connectCtx, extractSessionsConfig.ydbConnectionString,
+			connectCtx, checkPgQueriesConfig.ydbConnectionString,
 			internal.GetYdbCredentials(),
 		))
 		cancel()
 
 		sessions := readSessions()
+		queries := extractQueries(sessions)
 
 		log.Println("Start check queries")
 		var stats QueryStats
-		checkQueries(rules, &stats, schema, db, sessions)
+		checkQueries(rules, &stats, db, queries)
 
-		if extractSessionsConfig.writeRulesWithStat != "" {
-			rules.UpdateFromStats(stats, extractSessionsConfig.sortRulesByCount)
-			if err := rules.WriteToFile(extractSessionsConfig.writeRulesWithStat); err != nil {
+		if checkPgQueriesConfig.writeRulesWithStat != "" {
+			rules.UpdateFromStats(stats, checkPgQueriesConfig.sortRulesByCount)
+			if err := rules.WriteToFile(checkPgQueriesConfig.writeRulesWithStat); err != nil {
 				log.Printf("Failed to update rules stat: %v", err)
+			}
+		}
+
+		if checkPgQueriesConfig.writeStatPath != "" {
+			if err := stats.SaveToFile(checkPgQueriesConfig.writeStatPath); err != nil {
+				log.Printf("Failed to save stat file %q: %v", checkPgQueriesConfig.writeStatPath, err)
 			}
 		}
 	},
 }
 
 func readSessions() []internal.Session {
-	reader := must(os.Open(extractSessionsConfig.sessionsLog))
+	reader := must(os.Open(checkPgQueriesConfig.sessionsLog))
 	defer reader.Close()
 
 	decoder := json.NewDecoder(reader)
 
 	sortedLogs := map[int]map[int]map[int]map[int]internal.SessionLogRecord{} // pid/session/transaction/query
 
-	limitCount := extractSessionsConfig.limitRequests
+	limitCount := checkPgQueriesConfig.limitRequests
 
 	counter := 0
 
@@ -215,67 +221,53 @@ readLoop:
 	return res
 }
 
-func checkQueries(rules Rules, stats *QueryStats, pgSchema *internal.PgSchema, db *ydb.Driver, sessions []internal.Session) {
-	reasonFilter := regexp.MustCompile(extractSessionsConfig.filterReason)
+func extractQueries(sessions []internal.Session) <-chan string {
+	queries := make(chan string)
 
-	errorLimit := extractSessionsConfig.errorLimit
-	if errorLimit == 0 {
-		errorLimit = math.MaxInt
-	}
-
-	totalQueries := 0
-	for _, session := range sessions {
-		for _, transaction := range session.Transactions {
-			totalQueries += len(transaction.Queries)
+	go func() {
+		totalQueries := 0
+		for _, session := range sessions {
+			for _, transaction := range session.Transactions {
+				totalQueries += len(transaction.Queries)
+			}
 		}
-	}
 
-	queryIndex := 0
-
-	for _, session := range sessions {
-		for _, transaction := range session.Transactions {
-			for _, pgQuery := range transaction.Queries {
-				queryIndex++
-				if queryIndex%extractSessionsConfig.printProgressEveryQueries == 0 {
-					percent := float64(queryIndex) / float64(totalQueries) * 100
-					log.Printf("Checking query %8d/%v (%v)", queryIndex, totalQueries, percent)
-				}
-
-				reason, checkResult := checkQuery(stats, rules, db, pgQuery.Text)
-				if !reasonFilter.MatchString(reason) {
-					continue
-				}
-				if !extractSessionsConfig.printKnownIssues && checkResult == checkResultErrUnknown {
-					if extractSessionsConfig.printErrorsInProgress {
-						log.Printf("Reason: %v\nQuery:%v\n\n", reason, pgQuery.Text)
+		queryIndex := 0
+		for _, session := range sessions {
+			for _, transaction := range session.Transactions {
+				for _, pgQuery := range transaction.Queries {
+					queryIndex++
+					if queryIndex%checkPgQueriesConfig.printProgressEveryQueries == 0 {
+						percent := float64(queryIndex) / float64(totalQueries) * 100
+						log.Printf("Checking query %8d/%v (%0.2f)", queryIndex, totalQueries, percent)
 					}
-					errorLimit--
-				}
-				if extractSessionsConfig.printKnownIssues && checkResult == checkResultErrKnown {
-					if extractSessionsConfig.printErrorsInProgress {
-						log.Printf("Reason: %v", reason)
-						if extractSessionsConfig.printQueryForKnownIssue {
-							log.Printf("Query:\n%v\n\n", pgQuery.Text)
-						}
-					}
-					errorLimit--
-				}
-				if errorLimit == 0 {
-					log.Println("Error limit reached:", extractSessionsConfig.errorLimit)
-					return
+					queries <- pgQuery.Text
 				}
 			}
 		}
+
+		close(queries)
+	}()
+
+	return queries
+}
+
+func checkQueries(rules Rules, stats *QueryStats, db *ydb.Driver, queries <-chan string) {
+	if checkPgQueriesConfig.checkersCount < 1 {
+		log.Fatalf("can't start less then 1 checker, got: %v", checkPgQueriesConfig.checkersCount)
 	}
 
-	if extractSessionsConfig.printStats {
-		stats.PrintStats()
+	var wg sync.WaitGroup
+	for range checkPgQueriesConfig.checkersCount {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			for q := range queries {
+				checkQuery(stats, rules, db, q)
+			}
+		}()
 	}
-	if extractSessionsConfig.writeStatPath != "" {
-		if err := stats.SaveToFile(extractSessionsConfig.writeStatPath); err != nil {
-			log.Printf("Failed to write stat: %+v", err)
-		}
-	}
+	wg.Wait()
 }
 
 type checkResultType int
@@ -313,16 +305,16 @@ func checkQuery(stat *QueryStats, rules Rules, db *ydb.Driver, queryText string)
 
 	issues := internal.ExtractIssues(err)
 
-	if issueReason, ok := rules.FindKnownIssue(queryText, issues); ok {
-		stat.CountAsKnown(reason, queryText)
-		return issueReason.Name, checkResultErrKnown
+	knownIssues, unknownIssues := rules.MatchToKnownIssues(queryText, issues)
+	for _, knownIssue := range knownIssues {
+		if knownIssue.Name != "" && !knownIssue.Skip {
+			stat.CountAsKnown(knownIssue.Name, queryText)
+			return knownIssue.Name, checkResultErrKnown
+		}
 	}
 
-	reason = fmt.Sprintf("%v (%v): %#v", ydbErr.Name(), ydbErr.Code(), issues)
-	if len(issues) == 0 {
-
-	}
-	stat.CountAsUnknown(issues, queryText)
+	reason = fmt.Sprintf("%v (%v): %#v", ydbErr.Name(), ydbErr.Code(), unknownIssues)
+	stat.CountAsUnknown(unknownIssues, queryText)
 	return reason, checkResultErrUnknown
 }
 
@@ -363,6 +355,7 @@ var (
 )
 
 type QueryStats struct {
+	m          sync.Mutex
 	OkCount    int
 	TotalCount int
 
@@ -371,15 +364,24 @@ type QueryStats struct {
 }
 
 func (s *QueryStats) GetOkPercent() float64 {
+	s.m.Lock()
+	defer s.m.Unlock()
+
 	return float64(s.OkCount) / float64(s.TotalCount) * 100
 }
 
 func (s *QueryStats) CountASOK(query string) {
+	s.m.Lock()
+	defer s.m.Unlock()
+
 	s.TotalCount++
 	s.OkCount++
 }
 
 func (s *QueryStats) CountAsKnown(ruleName string, query string) {
+	s.m.Lock()
+	defer s.m.Unlock()
+
 	s.TotalCount++
 	if s.MatchToRules == nil {
 		s.MatchToRules = make(map[string]*CounterWithExample[string])
@@ -402,6 +404,9 @@ func (s *QueryStats) CountAsKnown(ruleName string, query string) {
 }
 
 func (s *QueryStats) CountAsUnknown(issues []internal.YdbIssue, query string) {
+	s.m.Lock()
+	defer s.m.Unlock()
+
 	s.TotalCount++
 	if s.UnknownProblems == nil {
 		s.UnknownProblems = make(map[internal.YdbIssue]*CounterWithExample[internal.YdbIssue])
@@ -425,14 +430,23 @@ func (s *QueryStats) CountAsUnknown(issues []internal.YdbIssue, query string) {
 }
 
 func (s *QueryStats) GetTopKnown(count int) []CounterWithExample[string] {
+	s.m.Lock()
+	defer s.m.Unlock()
+
 	return getTopCounter(s.MatchToRules, count)
 }
 
 func (s *QueryStats) GetTopUnknown(count int) []CounterWithExample[internal.YdbIssue] {
+	s.m.Lock()
+	defer s.m.Unlock()
+
 	return getTopCounter(s.UnknownProblems, count)
 }
 
 func (s *QueryStats) PrintStats() {
+	s.m.Lock()
+	defer s.m.Unlock()
+
 	fmt.Println("Queries stat.")
 	fmt.Println("Ok Count:", s.OkCount)
 	fmt.Println()

@@ -74,19 +74,22 @@ func (r *Rules) WriteToFile(path string) error {
 	return nil
 }
 
-func (r *Rules) FindKnownIssue(queryText string, ydbIssues []internal.YdbIssue) (_ PgIssueRules, ok bool) {
+func (r *Rules) MatchToKnownIssues(queryText string, ydbIssues []internal.YdbIssue) ([]PgIssueRules, []internal.YdbIssue) {
+	var res []PgIssueRules
+	var restYdbIssues []internal.YdbIssue
+
+ydbIssue:
 	for _, ydbIssue := range ydbIssues {
 		for _, item := range r.Issues {
 			if item.IsMatched(queryText, ydbIssue) {
-				if item.Skip {
-					continue
-				}
-				return item, true
+				res = append(res, item)
+				continue ydbIssue
 			}
 		}
+		restYdbIssues = append(restYdbIssues, ydbIssue)
 	}
 
-	return PgIssueRules{}, false
+	return res, restYdbIssues
 }
 
 func (r *Rules) UpdateFromStats(stats QueryStats, sortByCount bool) {
