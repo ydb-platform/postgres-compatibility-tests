@@ -217,7 +217,6 @@ readLoop:
 
 func checkQueries(rules Rules, stats *QueryStats, pgSchema *internal.PgSchema, db *ydb.Driver, sessions []internal.Session) {
 	reasonFilter := regexp.MustCompile(extractSessionsConfig.filterReason)
-	//checked := map[string]bool{}
 
 	errorLimit := extractSessionsConfig.errorLimit
 	if errorLimit == 0 {
@@ -291,6 +290,7 @@ func checkQuery(stat *QueryStats, rules Rules, db *ydb.Driver, queryText string)
 	queryText = strings.TrimSpace(queryText)
 	queryText = fixSchemaNames(queryText)
 	queryText = fixCreateTable(queryText)
+	queryText = cutGreenplumSpecific(queryText)
 
 	ctx := context.Background()
 	res, err := db.Query().Execute(
@@ -348,6 +348,19 @@ func fixCreateTable(queryText string) string {
 	queryText = createTableRegexp.ReplaceAllString(queryText, "$1 __stub_primary_key SERIAL PRIMARY KEY,")
 	return queryText
 }
+
+func cutGreenplumSpecific(q string) string {
+	q = createAndDistributedByWithBrackets.ReplaceAllString(q, "$1;")
+	q = createTableAsSelect.ReplaceAllLiteralString(q, "")
+	q = distributedBy.ReplaceAllLiteralString(q, ";")
+	return q
+}
+
+var (
+	createAndDistributedByWithBrackets = regexp.MustCompile(`(?is)CREATE\s+.*\sTABLE\s+.*\s+AS\s+\(\s*(.*)\s*\)\s+DISTRIBUTED\s+BY\s\(.*\);`)
+	createTableAsSelect                = regexp.MustCompile(`(?i)create\s+(temporary\s+)?table .* as`)
+	distributedBy                      = regexp.MustCompile(`(?i)DISTRIBUTED BY ([^\)]+);`)
+)
 
 type QueryStats struct {
 	OkCount    int
