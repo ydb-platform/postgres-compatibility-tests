@@ -27,6 +27,11 @@ issues:
       SELECT
           max(time) FILTER (WHERE code = 'example')
       FROM mytable
+  - name: Execute prepared statement
+    count: 8317
+    issue_link:
+    issue_regexp: "^RawStmt: alternative is not implemented yet : 234$"
+    example: EXECUTE dumpAgg('123')
   - name: general parsing errors
     issue_regexp:
       - "Error while parsing query."
