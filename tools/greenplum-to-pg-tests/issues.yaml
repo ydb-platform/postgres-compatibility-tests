@@ -3,6 +3,36 @@ stat:
   total_ok: 15
   ok_percent: 65.21739130434783
 issues:
+  - name: Transaction control (OK)
+    count: 21661922
+    query_regexp:
+      - "(?i)^\\s*COMMIT\\s*;?\\s*$"
+      - "(?i)^\\s*ROLLBACK\\s*;?\\s*$"
+  - name: table not found
+    count: 8256783
+    issue_regexp: Cannot find table
+    print_issue_to_log: True
+  - name: Select from pg_tables
+    count: 3930760
+    query_regexp:
+      - (?is)SELECT.*FROM\s+pg_
+  - name: Set variables
+    count: 1553568
+    issue_regexp: "VariableSetStmt, not supported name"
+  - name: 'PG: InsertStmt: not supported onConflictClause'
+    count: 1482133
+    issue_link: https://github.com/ydb-platform/ydb/issues/7194
+    issue_regexp:
+      - 'InsertStmt: not supported onConflictClause'
+    example: |
+      INSERT INTO table (hostname, updated, max_connections) VALUES ($1, NOW(), $2) 
+        ON CONFLICT (hostname) DO UPDATE SET updated = NOW(), max_connections = $2
+  - name: Generator functions in SELECT
+    count: 317436
+    issue_link: https://github.com/ydb-platform/ydb/issues/7195
+    issue_regexp:
+      - '^Generator functions are not allowed in: SELECT$'
+    example: SELECT UNNEST($1)
   - name: is distinct
     count: 185361
     issue_link: https://github.com/ydb-platform/ydb/issues/7182
@@ -13,6 +43,20 @@ issues:
     issue_link: https://github.com/ydb-platform/ydb/issues/7184
     issue_regexp: "^alternative is not implemented yet : 37$"
     example: select least(1,2)
+  - name: Distributed randomly
+    count: 147099
+    tag:
+      - greenplum
+    issue_regexp:
+      - 'ERROR:  syntax error at or near "RANDOMLY"'
+      - 'ERROR:  syntax error at or near "DISTRIBUTED"'
+    query_regexp:
+      - (?i)DISTRIBUTED\s+RANDOMLY
+    example: |
+      (
+        SELECT * FROM table
+      )
+      DISTRIBUTED RANDOMLY;
   - name: Support table alias in update
     count: 29307
     issue_link: https://github.com/ydb-platform/ydb/issues/7187
@@ -36,18 +80,6 @@ issues:
     issue_regexp:
       - "Error while parsing query."
     skip: true
-  - name: Select from pg_tables
-    count: 3930760
-    query_regexp:
-      - (?is)SELECT.*FROM\s+pg_
-  - name: Transaction control (OK)
-    count: 21661922
-    query_regexp:
-      - "(?i)^\\s*COMMIT\\s*;?\\s*$"
-      - "(?i)^\\s*ROLLBACK\\s*;?\\s*$"
-  - name: Set variables
-    count: 1553568
-    issue_regexp: "VariableSetStmt, not supported name"
   - name: drop external table
     count: 2
     tag:
@@ -63,20 +95,6 @@ issues:
     issue_regexp:
       - '^RawStmt: alternative is not implemented yet : 277$'
     example: create table t as select 1
-  - name: Distributed randomly
-    count: 147099
-    tag:
-      - greenplum
-    issue_regexp:
-      - 'ERROR:  syntax error at or near "RANDOMLY"'
-      - 'ERROR:  syntax error at or near "DISTRIBUTED"'
-    query_regexp:
-      - (?i)DISTRIBUTED\s+RANDOMLY
-    example: |
-      (
-        SELECT * FROM table
-      )
-      DISTRIBUTED RANDOMLY;
   - name: Stored procedures
     count: 607374
     issue_regexp:
@@ -96,14 +114,6 @@ issues:
     count: 0
     issue_regexp:
       - Expected type cast node as is_local arg, but got node with tag
-  - name: 'PG: InsertStmt: not supported onConflictClause'
-    count: 1482133
-    issue_link: https://github.com/ydb-platform/ydb/issues/7194
-    issue_regexp:
-      - 'InsertStmt: not supported onConflictClause'
-    example: |
-      INSERT INTO table (hostname, updated, max_connections) VALUES ($1, NOW(), $2) 
-        ON CONFLICT (hostname) DO UPDATE SET updated = NOW(), max_connections = $2
   - name: 'PG: Support NOT DISTINCT'
     count: 11
     issue_regexp:
@@ -117,12 +127,6 @@ issues:
     count: 480183
     issue_regexp:
       - 'FuncCall: expected pg_catalog, but got: '
-  - name: Generator functions in SELECT
-    count: 317436
-    issue_link: https://github.com/ydb-platform/ydb/issues/7195
-    issue_regexp:
-      - '^Generator functions are not allowed in: SELECT$'
-    example: SELECT UNNEST($1)
   - name: Unimplemented Discard
     count: 0
     issue_regexp:
@@ -145,7 +149,3 @@ issues:
   - name: Lock table
     issue_regexp: "^RawStmt: alternative is not implemented yet : 289$"
     example: LOCK TABLE asd IN EXCLUSIVE MODE
-  - name: table not found
-    count: 8256783
-    issue_regexp: Cannot find table
-    print_issue_to_log: True
