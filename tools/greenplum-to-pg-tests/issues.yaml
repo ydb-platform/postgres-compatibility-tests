@@ -59,7 +59,7 @@ issues:
       - '^RawStmt: alternative is not implemented yet : 277$'
     example: create table t as select 1
   - name: Distributed randomly
-    count: 2
+    count: 147099
     tag:
       - greenplum
     issue_regexp:
@@ -67,6 +67,11 @@ issues:
       - 'ERROR:  syntax error at or near "DISTRIBUTED"'
     query_regexp:
       - (?i)DISTRIBUTED\s+RANDOMLY
+    example: |
+      (
+        SELECT * FROM table
+      )
+      DISTRIBUTED RANDOMLY;
   - name: Stored procedures
     count: 607374
     issue_regexp:
@@ -91,13 +96,14 @@ issues:
     issue_regexp:
       - 'InsertStmt: not supported onConflictClause'
   - name: 'PG: RangeFunction: unsupported coldeflist'
-    count: 0
+    count: 1
     issue_regexp:
       - 'RangeFunction: unsupported coldeflist'
   - name: 'PG: Support NOT DISTINCT'
-    count: 0
+    count: 11
     issue_regexp:
       - 'A_Expr_Kind unsupported value: 4'
+    example: SELECT 1 IS NOT DISTINCT FROM 2
   - name: 'PG: unrecognized configuration parameter'
     count: 1621022
     issue_regexp:
@@ -107,7 +113,7 @@ issues:
     issue_regexp:
       - 'FuncCall: expected pg_catalog, but got: '
   - name: Generator functions in SELECT
-    count: 0
+    count: 317436
     issue_regexp:
       - '^Generator functions are not allowed in: SELECT$'
     example: SELECT UNNEST($1)
@@ -129,5 +135,6 @@ issues:
     issue_regexp: "^RawStmt: alternative is not implemented yet : 289$"
     example: LOCK TABLE asd IN EXCLUSIVE MODE
   - name: table not found
+    count: 8256783
     issue_regexp: Cannot find table
     print_issue_to_log: True

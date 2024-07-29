@@ -350,14 +350,14 @@ func fixCreateTable(queryText string) string {
 func cutGreenplumSpecific(q string) string {
 	q = createAndDistributedByWithBrackets.ReplaceAllString(q, "$1")
 	q = createTableAsSelect.ReplaceAllLiteralString(q, "")
-	q = distributedBy.ReplaceAllLiteralString(q, "")
+	q = distributedTemplate.ReplaceAllLiteralString(q, "")
 	return q
 }
 
 var (
 	createAndDistributedByWithBrackets = regexp.MustCompile(`(?is)CREATE\s+.*\sTABLE\s+.*\s+AS\s+\(\s*(.*)\s*\)\s+DISTRIBUTED\s+BY\s\(.*\)`)
 	createTableAsSelect                = regexp.MustCompile(`(?i)create\s+(temporary\s+)?table .* as`)
-	distributedBy                      = regexp.MustCompile(`(?i)DISTRIBUTED BY \(.*\)`)
+	distributedTemplate                = regexp.MustCompile(`(?i)DISTRIBUTED (BY \(.*\)|RANDOMLY)`)
 )
 
 type QueryStats struct {
