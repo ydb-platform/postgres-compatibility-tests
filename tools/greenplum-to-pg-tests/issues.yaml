@@ -3,19 +3,45 @@ stat:
   total_ok: 15
   ok_percent: 65.21739130434783
 issues:
+  - name: is distinct
+    count: 185361
+    issue_link: https://github.com/ydb-platform/ydb/issues/7182
+    issue_regexp: "^A_Expr_Kind unsupported value: 3$"
+    example: SELECT 1 IS DISTINCT FROM 2
+  - name: least
+    count: 181588
+    issue_link: https://github.com/ydb-platform/ydb/issues/7184
+    issue_regexp: "^alternative is not implemented yet : 37$"
+    example: select least(1,2)
+  - name: Support table alias in update
+    count: 29307
+    issue_link: https://github.com/ydb-platform/ydb/issues/7187
+    issue_regexp: "alias is not supported"
+    query_regexp: "(?is)UPDATE .* AS"
+    example: UPDATE table AS t SET val=1;
+  - name: unsupported agg_filter
+    count: 9713
+    issue_regexp: "FuncCall: unsupported agg_filter"
+    issue_link: https://github.com/ydb-platform/ydb/issues/7181
+    example: |-
+      SELECT
+          max(time) FILTER (WHERE code = 'example')
+      FROM mytable
   - name: general parsing errors
     issue_regexp:
       - "Error while parsing query."
     skip: true
   - name: Select from pg_tables
+    count: 3930760
     query_regexp:
       - (?is)SELECT.*FROM\s+pg_
   - name: Transaction control (OK)
-    count: 1
+    count: 21661922
     query_regexp:
       - "(?i)^\\s*COMMIT\\s*;?\\s*$"
       - "(?i)^\\s*ROLLBACK\\s*;?\\s*$"
   - name: Set variables
+    count: 1553568
     issue_regexp: "VariableSetStmt, not supported name"
   - name: drop external table
     count: 2
@@ -42,7 +68,7 @@ issues:
     query_regexp:
       - (?i)DISTRIBUTED\s+RANDOMLY
   - name: Stored procedures
-    count: 2
+    count: 607374
     issue_regexp:
       - 'No such proc: '
   - name: Not supported set greenplum var
@@ -61,7 +87,7 @@ issues:
     issue_regexp:
       - Expected type cast node as is_local arg, but got node with tag
   - name: 'PG: InsertStmt: not supported onConflictClause'
-    count: 0
+    count: 1482133
     issue_regexp:
       - 'InsertStmt: not supported onConflictClause'
   - name: 'PG: RangeFunction: unsupported coldeflist'
@@ -73,11 +99,11 @@ issues:
     issue_regexp:
       - 'A_Expr_Kind unsupported value: 4'
   - name: 'PG: unrecognized configuration parameter'
-    count: 0
+    count: 1621022
     issue_regexp:
       - unrecognized configuration parameter
   - name: Call function from own schema
-    count: 0
+    count: 480183
     issue_regexp:
       - 'FuncCall: expected pg_catalog, but got: '
   - name: Generator functions in SELECT
