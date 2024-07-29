@@ -29,7 +29,7 @@ issues:
       FROM mytable
   - name: Execute prepared statement
     count: 8317
-    issue_link:
+    issue_link: https://github.com/ydb-platform/ydb/issues/7191
     issue_regexp: "^RawStmt: alternative is not implemented yet : 234$"
     example: EXECUTE dumpAgg('123')
   - name: general parsing errors
@@ -98,12 +98,12 @@ issues:
       - Expected type cast node as is_local arg, but got node with tag
   - name: 'PG: InsertStmt: not supported onConflictClause'
     count: 1482133
+    issue_link: https://github.com/ydb-platform/ydb/issues/7194
     issue_regexp:
       - 'InsertStmt: not supported onConflictClause'
-  - name: 'PG: RangeFunction: unsupported coldeflist'
-    count: 1
-    issue_regexp:
-      - 'RangeFunction: unsupported coldeflist'
+    example: |
+      INSERT INTO table (hostname, updated, max_connections) VALUES ($1, NOW(), $2) 
+        ON CONFLICT (hostname) DO UPDATE SET updated = NOW(), max_connections = $2
   - name: 'PG: Support NOT DISTINCT'
     count: 11
     issue_regexp:
@@ -119,6 +119,7 @@ issues:
       - 'FuncCall: expected pg_catalog, but got: '
   - name: Generator functions in SELECT
     count: 317436
+    issue_link: https://github.com/ydb-platform/ydb/issues/7195
     issue_regexp:
       - '^Generator functions are not allowed in: SELECT$'
     example: SELECT UNNEST($1)
@@ -128,8 +129,13 @@ issues:
       - '^RawStmt: alternative is not implemented yet : 282$'
     example: DISCARD ALL
   - name: ANALYZE
-    issue_regexp: "RawStmt: alternative is not implemented yet : 276"
-    example: ANALYZE lc;
+    count: 15071109
+    issue_regexp:
+      - "^RawStmt: alternative is not implemented yet : 220$"
+      - "^RawStmt: alternative is not implemented yet : 276$"
+    example: |
+      ANALYZE lc;
+      analyse q;
   - name: RESET var
     issue_regexp: "^VariableSetStmt, not supported kind: 4$"
     query_regexp: RESET ROLE
