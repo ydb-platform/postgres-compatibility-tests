@@ -16,9 +16,6 @@ issues:
     count: 3930760
     query_regexp:
       - (?is)SELECT.*FROM\s+pg_
-  - name: Set variables
-    count: 1553568
-    issue_regexp: "VariableSetStmt, not supported name"
   - name: 'PG: InsertStmt: not supported onConflictClause'
     count: 1482133
     issue_link: https://github.com/ydb-platform/ydb/issues/7194
