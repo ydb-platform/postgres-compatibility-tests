@@ -409,7 +409,7 @@ func checkQuery(stat *QueryStats, rules Rules, db *ydb.Driver, queryText string)
 	queryText = strings.TrimSpace(queryText)
 	queryText = fixSchemaNames(queryText)
 	queryText = fixCreateTable(queryText)
-	queryText = cutGreenplumSpecific(queryText)
+	queryText = cutUnsupportedConstructions(queryText)
 
 	ctx := context.Background()
 	res, err := db.Query().Execute(
@@ -468,17 +468,19 @@ func fixCreateTable(queryText string) string {
 	return queryText
 }
 
-func cutGreenplumSpecific(q string) string {
-	q = createAndDistributedByWithBrackets.ReplaceAllString(q, "$1")
-	q = createTableAsSelect.ReplaceAllLiteralString(q, "")
+func cutUnsupportedConstructions(q string) string {
+	q = createAS.ReplaceAllString(q, "$1")
+	q = createTableAsSelect.ReplaceAllLiteralString(q, "SELECT")
 	q = distributedBy.ReplaceAllLiteralString(q, "")
+	q = distributedWord.ReplaceAllLiteralString(q, "")
 	return q
 }
 
 var (
-	createAndDistributedByWithBrackets = regexp.MustCompile(`(?is)CREATE\s+.*\sTABLE\s+.*\s+AS\s+\(\s*(.*)\s*\)\s+DISTRIBUTED\s+BY\s\(.*\)`)
-	createTableAsSelect                = regexp.MustCompile(`(?is)create\s+(temporary\s+)?table .* as`)
-	distributedBy                      = regexp.MustCompile(`(?i)DISTRIBUTED BY \(.*\)`)
+	createAS            = regexp.MustCompile(`(?is)CREATE\s+.*\sTABLE\s+.*\s+AS\s+\(\s*(.*)\s*\)\s`)
+	createTableAsSelect = regexp.MustCompile(`(?is)CREATE\s+(TEMPORARY\s+)?TABLE .* AS\s+SELECT`)
+	distributedBy       = regexp.MustCompile(`(?is)DISTRIBUTED BY \(.*\)`)
+	distributedWord     = regexp.MustCompile(`(?is)DISTRIBUTED \w+`)
 )
 
 type QueryStats struct {

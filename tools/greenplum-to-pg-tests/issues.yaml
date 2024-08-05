@@ -15,8 +15,6 @@ issues:
     query_regexp:
       - "(?i)^\\s*COMMIT\\s*;?\\s*$"
       - "(?i)^\\s*ROLLBACK\\s*;?\\s*$"
-  - name: Set variables
-    issue_regexp: "VariableSetStmt, not supported name"
   - name: drop external table
     count: 2
     tag:

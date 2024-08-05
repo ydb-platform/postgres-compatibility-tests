@@ -44,8 +44,7 @@ func TestCutGreenplumSpecific(t *testing.T) {
         select *
         from bbb;
 `,
-			to: `
-        select *
+			to: `SELECT *
         from bbb;
 `,
 		},
@@ -56,8 +55,7 @@ func TestCutGreenplumSpecific(t *testing.T) {
             SELECT DISTINCT b AS ticket_id
             FROM t2 --comment
             WHERE mytime BETWEEN ''2024-04-10 00:00:00''::timestamp AND ''2024-04-30 23:59:59''::timestamp
-        )
-            DISTRIBUTED BY (ticket_id);
+        ) DISTRIBUTED BY (ticket_id);
 `,
 			to: `        SELECT DISTINCT b AS ticket_id
             FROM t2 --comment
@@ -65,10 +63,27 @@ func TestCutGreenplumSpecific(t *testing.T) {
         ;
 `,
 		},
+		{
+			name: "CreateAndDistributedSomething",
+			from: `        CREATE TEMPORARY TABLE result_table
+            ON COMMIT DROP AS
+        SELECT dt AS utc_dt
+            , diff_a
+            , diff_b
+        FROM t
+        DISTRIBUTED REPLICATED;
+`,
+			to: `        SELECT dt AS utc_dt
+            , diff_a
+            , diff_b
+        FROM t
+        ;
+`,
+		},
 	}
 	for _, test := range table {
 		t.Run(test.name, func(t *testing.T) {
-			res := cutGreenplumSpecific(test.from)
+			res := cutUnsupportedConstructions(test.from)
 			require.Equal(t, test.to, res)
 		})
 	}
