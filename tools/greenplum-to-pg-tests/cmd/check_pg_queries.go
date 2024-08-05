@@ -522,7 +522,7 @@ func (s *QueryStats) GetTotalCount() int {
 
 func (s *QueryStats) GetOkCount() int {
 	s.m.Lock()
-	defer s.m.Lock()
+	defer s.m.Unlock()
 
 	return s.okCount
 }
