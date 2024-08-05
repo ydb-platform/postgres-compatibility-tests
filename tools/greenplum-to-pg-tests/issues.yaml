@@ -90,3 +90,18 @@ issues:
     issue_regexp:
       - '^RawStmt: alternative is not implemented yet : 282$'
     example: DISCARD ALL
+  - name: ANALYZE
+    issue_regexp: "RawStmt: alternative is not implemented yet : 276"
+    example: ANALYZE lc;
+  - name: RESET var
+    issue_regexp: "^VariableSetStmt, not supported kind: 4$"
+    query_regexp: RESET ROLE
+  - name: SELECT setconfig as
+    issue_regexp: "^Expected AConst node as is_local arg, but got node with tag: 357$"
+    example: SELECT set_config($1, $2, $3) as myvar
+  - name: Lock table
+    issue_regexp: "^RawStmt: alternative is not implemented yet : 289$"
+    example: LOCK TABLE asd IN EXCLUSIVE MODE
+  - name: table not found
+    issue_regexp: Cannot find table
+    print_issue_to_log: True
