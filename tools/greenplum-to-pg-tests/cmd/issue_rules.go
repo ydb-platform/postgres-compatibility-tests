@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"log"
 	"math"
 	"os"
 	"regexp"
@@ -83,6 +84,9 @@ ydbIssue:
 		for _, item := range r.Issues {
 			if item.IsMatched(queryText, ydbIssue) {
 				res = append(res, item)
+				if item.PrintIssueToLog {
+					log.Printf("Print ydb issue: %v", ydbIssue.Message)
+				}
 				continue ydbIssue
 			}
 		}
@@ -114,15 +118,16 @@ func (r *Rules) UpdateFromStats(stats QueryStats, sortByCount bool) {
 }
 
 type PgIssueRules struct {
-	Name        string           `yaml:"name"`
-	Count       int              `yaml:"count"`
-	Tag         OneOrSliceString `yaml:"tag,omitempty"`
-	IssueLink   string           `yaml:"issue_link,omitempty"`
-	IssueRegexp OneOrSliceString `yaml:"issue_regexp,omitempty"`
-	QueryRegexp OneOrSliceString `yaml:"query_regexp,omitempty"`
-	Example     string           `yaml:"example,omitempty"`
-	Comment     string           `yaml:"comment,omitempty"`
-	Skip        bool             `yaml:"skip,omitempty"` // skip the issue on check query step
+	Name            string           `yaml:"name"`
+	Count           int              `yaml:"count"`
+	Tag             OneOrSliceString `yaml:"tag,omitempty"`
+	IssueLink       string           `yaml:"issue_link,omitempty"`
+	IssueRegexp     OneOrSliceString `yaml:"issue_regexp,omitempty"`
+	QueryRegexp     OneOrSliceString `yaml:"query_regexp,omitempty"`
+	Example         string           `yaml:"example,omitempty"`
+	Comment         string           `yaml:"comment,omitempty"`
+	Skip            bool             `yaml:"skip,omitempty"` // skip the issue on check query step
+	PrintIssueToLog bool             `yaml:"print_issue_to_log,omitempty"`
 
 	issuesRegexpCompiled []*regexp.Regexp
 	queryRegexpCompiled  []*regexp.Regexp

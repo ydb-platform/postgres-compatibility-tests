@@ -14,12 +14,12 @@ func TestFixSchemaName(t *testing.T) {
 	}{
 		{
 			from: `DELETE
-FROM "eda_dds_partner"."a__item__item_name__h2" t
-USING "for_delete_extend" AS base
+FROM "asd"."sss" t
+USING "kkk" AS base
 WHERE`,
 			result: `DELETE
-FROM eda_dds_partner___a__item__item_name__h2 t
-USING "for_delete_extend" AS base
+FROM asd___sss t
+USING "kkk" AS base
 WHERE`,
 		},
 	}
@@ -40,28 +40,28 @@ func TestCutGreenplumSpecific(t *testing.T) {
 	}{
 		{
 			name: "CreateAs",
-			from: `create table snb_eagle___hex_lavka_orders as
+			from: `create table aaa as
         select *
-        from snb_geo_lavka___hex_lavka_orders;
+        from bbb;
 `,
 			to: `
         select *
-        from snb_geo_lavka___hex_lavka_orders;
+        from bbb;
 `,
 		},
 		{
 			name: "CreateAndDistributedBy",
-			from: `        CREATE TEMPORARY TABLE updated_tickets
+			from: `        CREATE TEMPORARY TABLE t
         AS (
-            SELECT DISTINCT chatterbox_ticket_id AS ticket_id
-            FROM taxi_cdm_contactcenter___fct_chatterbox_ticket_event --fct_chatterbox_ticket_event
-            WHERE utc_event_dttm BETWEEN ''2024-04-10 00:00:00''::timestamp AND ''2024-04-30 23:59:59''::timestamp
+            SELECT DISTINCT b AS ticket_id
+            FROM t2 --comment
+            WHERE mytime BETWEEN ''2024-04-10 00:00:00''::timestamp AND ''2024-04-30 23:59:59''::timestamp
         )
             DISTRIBUTED BY (ticket_id);
 `,
-			to: `        SELECT DISTINCT chatterbox_ticket_id AS ticket_id
-            FROM taxi_cdm_contactcenter___fct_chatterbox_ticket_event --fct_chatterbox_ticket_event
-            WHERE utc_event_dttm BETWEEN ''2024-04-10 00:00:00''::timestamp AND ''2024-04-30 23:59:59''::timestamp
+			to: `        SELECT DISTINCT b AS ticket_id
+            FROM t2 --comment
+            WHERE mytime BETWEEN ''2024-04-10 00:00:00''::timestamp AND ''2024-04-30 23:59:59''::timestamp
         ;
 `,
 		},

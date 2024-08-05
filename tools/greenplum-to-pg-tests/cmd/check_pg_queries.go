@@ -4,6 +4,7 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"compress/gzip"
 	"context"
 	"encoding/json"
 	"errors"
@@ -16,6 +17,7 @@ import (
 	"slices"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -29,6 +31,7 @@ import (
 var checkPgQueriesConfig struct {
 	schemeDumpFile            string
 	sessionsLog               string
+	sessionsLogNeedSort       bool
 	includeFailed             bool
 	ydbConnectionString       string
 	limitRequests             int
@@ -41,6 +44,7 @@ var checkPgQueriesConfig struct {
 	printStats                bool
 	printProgressEveryQueries int
 	writeStatPath             string
+	writeStatEveryItems       int
 	checkersCount             int
 }
 
@@ -49,6 +53,7 @@ func init() {
 
 	checkPgQueriesCmd.PersistentFlags().StringVar(&checkPgQueriesConfig.schemeDumpFile, "schemedump-file", "", "Path to dump of db schema. Set empty for skip read schema.")
 	checkPgQueriesCmd.PersistentFlags().StringVar(&checkPgQueriesConfig.sessionsLog, "query-log", "", "Set path to input sessions log")
+	checkPgQueriesCmd.PersistentFlags().BoolVar(&checkPgQueriesConfig.sessionsLogNeedSort, "query-log-need-sort", false, "Sort query log in memory before start")
 	must0(checkPgQueriesCmd.MarkPersistentFlagRequired("query-log"))
 
 	checkPgQueriesCmd.PersistentFlags().BoolVar(&checkPgQueriesConfig.includeFailed, "include-failed", false, "Extract sessions with failed transactions")
@@ -61,8 +66,10 @@ func init() {
 	checkPgQueriesCmd.PersistentFlags().BoolVar(&checkPgQueriesConfig.printQueryForKnownIssue, "print-query-for-known-issues", true, "Print query for known issues")
 	checkPgQueriesCmd.PersistentFlags().BoolVar(&checkPgQueriesConfig.printErrorsInProgress, "print-progress", false, "Print queries in progress")
 	checkPgQueriesCmd.PersistentFlags().BoolVar(&checkPgQueriesConfig.printStats, "print-stats", true, "Print queries in progress")
-	checkPgQueriesCmd.PersistentFlags().IntVar(&checkPgQueriesConfig.printProgressEveryQueries, "print-progress-every-queries", 10, "Periodically print progress")
+	checkPgQueriesCmd.PersistentFlags().IntVar(&checkPgQueriesConfig.printProgressEveryQueries, "print-progress-every-queries", 100, "Periodically print progress")
 	checkPgQueriesCmd.PersistentFlags().StringVar(&checkPgQueriesConfig.writeStatPath, "write-stat-file", "", "Path to write full stat file if need. Will write example of queries")
+	checkPgQueriesCmd.PersistentFlags().IntVar(&checkPgQueriesConfig.writeStatEveryItems, "write-stat-every-items", 10000, "Interval for write current stat")
+
 	checkPgQueriesCmd.PersistentFlags().IntVar(&checkPgQueriesConfig.checkersCount, "check-queries-parallel", 5, "How many queries may be checked in parallel")
 }
 
@@ -105,8 +112,13 @@ var checkPgQueriesCmd = &cobra.Command{
 		))
 		cancel()
 
-		sessions := readSessions()
-		queries := extractQueries(sessions)
+		var queries <-chan string
+		fileReader := openFileReader()
+		if checkPgQueriesConfig.sessionsLogNeedSort {
+			queries = generateQueriesFromUnsortedSessions(fileReader)
+		} else {
+			queries = readSortedQueries(fileReader)
+		}
 
 		log.Println("Start check queries")
 		var stats QueryStats
@@ -127,8 +139,105 @@ var checkPgQueriesCmd = &cobra.Command{
 	},
 }
 
-func readSessions() []internal.Session {
-	reader := must(os.Open(checkPgQueriesConfig.sessionsLog))
+func openFileReader() io.ReadCloser {
+	filepath := checkPgQueriesConfig.sessionsLog
+	fileReader, err := os.Open(filepath)
+	if err != nil {
+		log.Fatalf("Failed to open file %q: %v", filepath, err)
+	}
+
+	if strings.HasSuffix(strings.ToLower(filepath), ".gz") {
+		gzipReader, err := gzip.NewReader(fileReader)
+		if err != nil {
+			log.Fatalf("Failed to start gzip reader for %q: %v", filepath, err)
+		}
+		return gzipReaderClose{
+			gzipReader: gzipReader,
+			fileReader: fileReader,
+		}
+	}
+
+	return fileReader
+}
+
+type gzipReaderClose struct {
+	gzipReader *gzip.Reader
+	fileReader *os.File
+}
+
+func (g gzipReaderClose) Read(p []byte) (n int, err error) {
+	return g.gzipReader.Read(p)
+}
+
+func (g gzipReaderClose) Close() error {
+	gzipCloseErr := g.gzipReader.Close()
+	fileCloseErr := g.fileReader.Close()
+
+	if gzipCloseErr != nil {
+		return gzipCloseErr
+	}
+
+	return fileCloseErr
+}
+
+func readSortedQueries(reader io.ReadCloser) <-chan string {
+	queries := make(chan string)
+	go func() {
+		defer reader.Close()
+		defer close(queries)
+
+		decoder := json.NewDecoder(reader)
+		limitCount := checkPgQueriesConfig.limitRequests
+		counter := 0
+
+		needDeleteLine := false
+		for {
+			if limitCount > 0 && counter >= limitCount {
+				log.Println("Count limit reached")
+				return
+			}
+
+			var item internal.SessionLogRecord
+			if err := decoder.Decode(&item); err != nil {
+				switch {
+				case errors.Is(err, io.EOF):
+					log.Printf("Read file completed, read items: %v", counter)
+					return
+				case err != nil:
+					log.Printf("Failed to decode item %v: %v", counter, err)
+					return
+				default:
+					// pass
+				}
+			}
+
+			queries <- item.Query
+			counter++
+			if counter%checkPgQueriesConfig.printProgressEveryQueries == 0 {
+				if needDeleteLine {
+					printDeleteLine()
+				} else {
+					needDeleteLine = true
+				}
+
+				var percent float64
+				if limitCount > 0 {
+					percent = float64(counter) / float64(limitCount) * 100
+				}
+				log.Printf("Read items %v/%v (%0.2f)", counter, limitCount, percent)
+			}
+		}
+	}()
+
+	return queries
+}
+
+func generateQueriesFromUnsortedSessions(reader io.ReadCloser) <-chan string {
+	sessions := readSessions(reader)
+	return extractQueries(sessions)
+}
+
+func readSessions(reader io.ReadCloser) []internal.Session {
 	defer reader.Close()
 
 	decoder := json.NewDecoder(reader)
@@ -241,7 +350,7 @@ func extractQueries(sessions []internal.Session) <-chan string {
 					if queryIndex%checkPgQueriesConfig.printProgressEveryQueries == 0 {
 						percent := float64(queryIndex) / float64(totalQueries) * 100
 						if needRemoveLine {
-							fmt.Printf("\033[1A\033[K")
+							printDeleteLine()
 						} else {
 							needRemoveLine = true
 						}
@@ -258,11 +367,17 @@ func extractQueries(sessions []internal.Session) <-chan string {
 	return queries
 }
 
+func printDeleteLine() {
+	fmt.Printf("\033[1A\033[K")
+}
+
 func checkQueries(rules Rules, stats *QueryStats, db *ydb.Driver, queries <-chan string) {
 	if checkPgQueriesConfig.checkersCount < 1 {
 		log.Fatalf("can't start less then 1 checker, got: %v", checkPgQueriesConfig.checkersCount)
 	}
 
+	var itemsCounter atomic.Int64
+	writeStatEveryItems := int64(checkPgQueriesConfig.writeStatEveryItems)
 	var wg sync.WaitGroup
 	for range checkPgQueriesConfig.checkersCount {
 		wg.Add(1)
@@ -270,6 +385,12 @@ func checkQueries(rules Rules, stats *QueryStats, db *ydb.Driver, queries <-chan
 			defer wg.Done()
 			for q := range queries {
 				checkQuery(stats, rules, db, q)
+				counter := itemsCounter.Add(1)
+				if counter%writeStatEveryItems == 0 && checkPgQueriesConfig.writeStatPath != "" {
+					if err := stats.SaveToFile(checkPgQueriesConfig.writeStatPath); err != nil {
+						log.Printf("Stat file written failed %q: %v", checkPgQueriesConfig.writeStatPath, err)
+					}
+				}
 			}
 		}()
 	}
@@ -356,12 +477,14 @@ func cutGreenplumSpecific(q string) string {
 
 var (
 	createAndDistributedByWithBrackets = regexp.MustCompile(`(?is)CREATE\s+.*\sTABLE\s+.*\s+AS\s+\(\s*(.*)\s*\)\s+DISTRIBUTED\s+BY\s\(.*\)`)
-	createTableAsSelect                = regexp.MustCompile(`(?i)create\s+(temporary\s+)?table .* as`)
+	createTableAsSelect                = regexp.MustCompile(`(?is)create\s+(temporary\s+)?table .* as`)
 	distributedBy                      = regexp.MustCompile(`(?i)DISTRIBUTED BY \(.*\)`)
 )
 
 type QueryStats struct {
-	m          sync.Mutex
+	m              sync.RWMutex
+	writeStatMutex sync.Mutex
+
 	OkCount    int
 	TotalCount int
 
@@ -370,9 +493,13 @@ type QueryStats struct {
 }
 
 func (s *QueryStats) GetOkPercent() float64 {
-	s.m.Lock()
-	defer s.m.Unlock()
+	s.m.RLock()
+	defer s.m.RUnlock()
 
+	return s.getOkPercentNeedLock()
+}
+
+func (s *QueryStats) getOkPercentNeedLock() float64 {
 	return float64(s.OkCount) / float64(s.TotalCount) * 100
 }
 
@@ -434,16 +561,24 @@ func (s *QueryStats) CountAsUnknown(reason string, query string) {
 }
 
 func (s *QueryStats) GetTopKnown(count int) []CounterWithExample[string] {
-	s.m.Lock()
-	defer s.m.Unlock()
+	s.m.RLock()
+	defer s.m.RUnlock()
 
+	return s.getTopKnownNeedLock(count)
+}
+
+func (s *QueryStats) getTopKnownNeedLock(count int) []CounterWithExample[string] {
 	return getTopCounter(s.MatchToRules, count)
 }
 
 func (s *QueryStats) GetTopUnknown(count int) []CounterWithExample[string] {
-	s.m.Lock()
-	defer s.m.Unlock()
+	s.m.RLock()
+	defer s.m.RUnlock()
 
+	return s.getTopUnknownNeedLock(count)
+}
+
+func (s *QueryStats) getTopUnknownNeedLock(count int) []CounterWithExample[string] {
 	return getTopCounter(s.UnknownProblems, count)
 }
 
@@ -497,6 +632,12 @@ func getTopCounter[K comparable](m map[K]*CounterWithExample[K], count int) []Co
 }
 
 func (s *QueryStats) SaveToFile(path string) error {
+	s.writeStatMutex.Lock()
+	defer s.writeStatMutex.Unlock()
+
+	s.m.RLock()
+	defer s.m.RUnlock()
+
 	var statFile struct {
 		TotalCount    int                          `yaml:"total_count"`
 		OkCount       int                          `yaml:"ok_count"`
@@ -507,9 +648,9 @@ func (s *QueryStats) SaveToFile(path string) error {
 
 	statFile.TotalCount = s.TotalCount
 	statFile.OkCount = s.OkCount
-	statFile.OkPercent = s.GetOkPercent()
-	statFile.UnknownIssues = s.GetTopUnknown(math.MaxInt)
-	statFile.KnownIssues = s.GetTopKnown(math.MaxInt)
+	statFile.OkPercent = s.getOkPercentNeedLock()
+	statFile.UnknownIssues = s.getTopUnknownNeedLock(math.MaxInt)
+	statFile.KnownIssues = s.getTopKnownNeedLock(math.MaxInt)
 
 	for i := range statFile.UnknownIssues {
 		statFile.UnknownIssues[i].Example = cleanStringForLiteralYaml(statFile.UnknownIssues[i].Example)
