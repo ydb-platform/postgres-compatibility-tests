@@ -56,7 +56,7 @@ func init() {
 	checkPgQueriesCmd.PersistentFlags().BoolVar(&checkPgQueriesConfig.sessionsLogNeedSort, "query-log-need-sort", false, "Sort query log in memory before start")
 	must0(checkPgQueriesCmd.MarkPersistentFlagRequired("query-log"))
 
-	checkPgQueriesCmd.PersistentFlags().BoolVar(&checkPgQueriesConfig.includeFailed, "include-failed", false, "Extract sessions with failed transactions")
+	checkPgQueriesCmd.PersistentFlags().BoolVar(&checkPgQueriesConfig.includeFailed, "include-failed", true, "Extract sessions with failed transactions")
 	checkPgQueriesCmd.PersistentFlags().StringVar(&checkPgQueriesConfig.ydbConnectionString, "ydb-connection", "grpc://localhost:2136/local", "Connection string to ydb server for check queries")
 	checkPgQueriesCmd.PersistentFlags().IntVar(&checkPgQueriesConfig.limitRequests, "requests-limit", 0, "Limit number of parse requests, 0 mean unlimited")
 	checkPgQueriesCmd.PersistentFlags().StringVar(&checkPgQueriesConfig.rulesFile, "rules-file", "issues.yaml", "Rules for detect issue. Set empty for skip read rules.")
@@ -106,10 +106,8 @@ var checkPgQueriesCmd = &cobra.Command{
 
 		log.Println("Connecting to ydb...")
 		connectCtx, cancel := context.WithTimeout(ctx, time.Second*10)
-		db := must(ydb.Open(
-			connectCtx, checkPgQueriesConfig.ydbConnectionString,
-			internal.GetYdbCredentials(),
-		))
+		connectionStrings := strings.Split(checkPgQueriesConfig.ydbConnectionString, ",")
+		dbPool := internal.OpenYdbPool(connectCtx, connectionStrings, []ydb.Option{internal.GetYdbCredentials()})
 		cancel()
 
 		var queries <-chan string
@@ -122,7 +120,7 @@ var checkPgQueriesCmd = &cobra.Command{
 
 		log.Println("Start check queries")
 		var stats QueryStats
-		checkQueries(rules, &stats, db, queries)
+		checkQueries(rules, &stats, dbPool, queries)
 
 		if checkPgQueriesConfig.writeRulesWithStat != "" {
 			rules.UpdateFromStats(stats, checkPgQueriesConfig.sortRulesByCount)
@@ -209,6 +207,9 @@ func readSortedQueries(reader io.ReadCloser) <-chan string {
 				default:
 					// pass
 				}
+			}
+			if !item.TransactionSuccess && !checkPgQueriesConfig.includeFailed {
+				continue
 			}
 
 			queries <- item.Query
@@ -345,6 +346,10 @@ func extractQueries(sessions []internal.Session) <-chan string {
 		needRemoveLine := false
 		for _, session := range sessions {
 			for _, transaction := range session.Transactions {
+				if !transaction.Success && !checkPgQueriesConfig.includeFailed {
+					continue
+				}
+
 				for _, pgQuery := range transaction.Queries {
 					queryIndex++
 					if queryIndex%checkPgQueriesConfig.printProgressEveryQueries == 0 {
@@ -371,7 +376,7 @@ func printDeleteLine() {
 	fmt.Printf("\033[1A\033[K")
 }
 
-func checkQueries(rules Rules, stats *QueryStats, db *ydb.Driver, queries <-chan string) {
+func checkQueries(rules Rules, stats *QueryStats, dbPool *internal.YdbPool, queries <-chan string) {
 	if checkPgQueriesConfig.checkersCount < 1 {
 		log.Fatalf("can't start less then 1 checker, got: %v", checkPgQueriesConfig.checkersCount)
 	}
@@ -384,7 +389,7 @@ func checkQueries(rules Rules, stats *QueryStats, db *ydb.Driver, queries <-chan
 		go func() {
 			defer wg.Done()
 			for q := range queries {
-				checkQuery(stats, rules, db, q)
+				checkQuery(stats, rules, dbPool, q)
 				counter := itemsCounter.Add(1)
 				if counter%writeStatEveryItems == 0 && checkPgQueriesConfig.writeStatPath != "" {
 					if err := stats.SaveToFile(checkPgQueriesConfig.writeStatPath); err != nil {
@@ -405,7 +410,10 @@ const (
 	checkResultErrUnknown
 )
 
-func checkQuery(stat *QueryStats, rules Rules, db *ydb.Driver, queryText string) (reason string, checkResult checkResultType) {
+func checkQuery(stat *QueryStats, rules Rules, dbPool *internal.YdbPool, queryText string) (reason string, checkResult checkResultType) {
+	db := dbPool.Get()
+	defer dbPool.Release(db)
+
 	queryText = strings.TrimSpace(queryText)
 	queryText = fixSchemaNames(queryText)
 	queryText = fixCreateTable(queryText)
