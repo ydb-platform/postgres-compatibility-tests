@@ -123,7 +123,7 @@ var checkPgQueriesCmd = &cobra.Command{
 		checkQueries(rules, &stats, dbPool, queries)
 
 		if checkPgQueriesConfig.writeRulesWithStat != "" {
-			rules.UpdateFromStats(stats, checkPgQueriesConfig.sortRulesByCount)
+			rules.UpdateFromStats(&stats, checkPgQueriesConfig.sortRulesByCount)
 			if err := rules.WriteToFile(checkPgQueriesConfig.writeRulesWithStat); err != nil {
 				log.Printf("Failed to update rules stat: %v", err)
 			}
@@ -384,6 +384,7 @@ func checkQueries(rules Rules, stats *QueryStats, dbPool *internal.YdbPool, quer
 	var itemsCounter atomic.Int64
 	writeStatEveryItems := int64(checkPgQueriesConfig.writeStatEveryItems)
 	var wg sync.WaitGroup
+	var writeStatMutex sync.Mutex
 	for range checkPgQueriesConfig.checkersCount {
 		wg.Add(1)
 		go func() {
@@ -391,10 +392,20 @@ func checkQueries(rules Rules, stats *QueryStats, dbPool *internal.YdbPool, quer
 			for q := range queries {
 				checkQuery(stats, rules, dbPool, q)
 				counter := itemsCounter.Add(1)
-				if counter%writeStatEveryItems == 0 && checkPgQueriesConfig.writeStatPath != "" {
-					if err := stats.SaveToFile(checkPgQueriesConfig.writeStatPath); err != nil {
-						log.Printf("Stat file written failed %q: %v", checkPgQueriesConfig.writeStatPath, err)
+				if writeStatEveryItems > 0 && counter%writeStatEveryItems == 0 {
+					writeStatMutex.Lock()
+					if checkPgQueriesConfig.writeStatPath != "" {
+						if err := stats.SaveToFile(checkPgQueriesConfig.writeStatPath); err != nil {
+							log.Printf("Stat file written failed %q: %v", checkPgQueriesConfig.writeStatPath, err)
+						}
 					}
+					if checkPgQueriesConfig.writeRulesWithStat != "" {
+						rules.UpdateFromStats(stats, checkPgQueriesConfig.sortRulesByCount)
+						if err := rules.WriteToFile(checkPgQueriesConfig.writeRulesWithStat); err != nil {
+							log.Printf("Failed to update rules stat: %v", err)
+						}
+					}
+					writeStatMutex.Unlock()
 				}
 			}
 		}()
@@ -495,11 +506,25 @@ type QueryStats struct {
 	m              sync.RWMutex
 	writeStatMutex sync.Mutex
 
-	OkCount    int
-	TotalCount int
+	okCount    int
+	totalCount int
 
 	MatchToRules    map[string]*CounterWithExample[string] // [rule name] query example
 	UnknownProblems map[string]*CounterWithExample[string]
+}
+
+func (s *QueryStats) GetTotalCount() int {
+	s.m.Lock()
+	defer s.m.Unlock()
+
+	return s.totalCount
+}
+
+func (s *QueryStats) GetOkCount() int {
+	s.m.Lock()
+	defer s.m.Lock()
+
+	return s.okCount
 }
 
 func (s *QueryStats) GetOkPercent() float64 {
@@ -510,22 +535,22 @@ func (s *QueryStats) GetOkPercent() float64 {
 }
 
 func (s *QueryStats) getOkPercentNeedLock() float64 {
-	return float64(s.OkCount) / float64(s.TotalCount) * 100
+	return float64(s.okCount) / float64(s.totalCount) * 100
 }
 
 func (s *QueryStats) CountASOK(query string) {
 	s.m.Lock()
 	defer s.m.Unlock()
 
-	s.TotalCount++
-	s.OkCount++
+	s.totalCount++
+	s.okCount++
 }
 
 func (s *QueryStats) CountAsKnown(ruleName string, query string) {
 	s.m.Lock()
 	defer s.m.Unlock()
 
-	s.TotalCount++
+	s.totalCount++
 	if s.MatchToRules == nil {
 		s.MatchToRules = make(map[string]*CounterWithExample[string])
 	}
@@ -550,7 +575,7 @@ func (s *QueryStats) CountAsUnknown(reason string, query string) {
 	s.m.Lock()
 	defer s.m.Unlock()
 
-	s.TotalCount++
+	s.totalCount++
 	if s.UnknownProblems == nil {
 		s.UnknownProblems = make(map[string]*CounterWithExample[string])
 	}
@@ -597,7 +622,7 @@ func (s *QueryStats) PrintStats() {
 	defer s.m.Unlock()
 
 	fmt.Println("Queries stat.")
-	fmt.Println("Ok Count:", s.OkCount)
+	fmt.Println("Ok Count:", s.okCount)
 	fmt.Println()
 	fmt.Println("Known issues")
 	SessionStats_printExampleCounter(getTopCounter(s.MatchToRules, 10))
@@ -656,8 +681,8 @@ func (s *QueryStats) SaveToFile(path string) error {
 		KnownIssues   []CounterWithExample[string] `yaml:"known_issues"`
 	}
 
-	statFile.TotalCount = s.TotalCount
-	statFile.OkCount = s.OkCount
+	statFile.TotalCount = s.totalCount
+	statFile.OkCount = s.okCount
 	statFile.OkPercent = s.getOkPercentNeedLock()
 	statFile.UnknownIssues = s.getTopUnknownNeedLock(math.MaxInt)
 	statFile.KnownIssues = s.getTopKnownNeedLock(math.MaxInt)

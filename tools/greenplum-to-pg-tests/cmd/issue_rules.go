@@ -96,9 +96,9 @@ ydbIssue:
 	return res, restYdbIssues
 }
 
-func (r *Rules) UpdateFromStats(stats QueryStats, sortByCount bool) {
-	r.TotalStat.TotalCount = stats.TotalCount
-	r.TotalStat.TotalOk = stats.OkCount
+func (r *Rules) UpdateFromStats(stats *QueryStats, sortByCount bool) {
+	r.TotalStat.TotalCount = stats.GetTotalCount()
+	r.TotalStat.TotalOk = stats.GetOkCount()
 	r.TotalStat.OkPercent = math.Round(stats.GetOkPercent()*100) / 100
 
 	okStats := stats.GetTopKnown(math.MaxInt)
